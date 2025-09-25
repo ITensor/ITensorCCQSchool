@@ -1,1 +1,1 @@
-# ITensorsSchool
+# ITensorCCQSchool
