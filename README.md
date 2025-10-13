@@ -22,7 +22,8 @@ $ julia
 
 julia>
 ```
-3. Create a local copy of the tutorial code in the directory `ITensorCCQSchool/` in you current directory by running:
+3. Create a local copy of the tutorial code in the directory `ITensorCCQSchool/` in you
+current directory by running:
 ```julia
 julia> using LibGit2: LibGit2
 
@@ -48,7 +49,9 @@ julia> Pkg.instantiate()
   [dce04be8] + ArgCheck v2.5.0
   [...]
 ```
-5. Use `include` to run the first example from the REPL:
+5. Use `include` to run the
+[first tutorial](https://github.com/ITensor/ITensorCCQSchool/blob/main/day1/01-julia-intro.jl)
+from the REPL:
 ```julia
 julia> include("day1/01-julia-intro.jl");
 n = 100000
