@@ -87,8 +87,11 @@ julia> error
 ```julia
 julia> edit("day1/01-julia-intro.jl")
 ```
-which will open your file in a text editor determined by Julia (see
-https://docs.julialang.org/en/v1/stdlib/InteractiveUtils/#InteractiveUtils.edit-Tuple{AbstractString,%20Integer}). Otherwise, open the file with your text editor or IDE of choice, such as
+which will open your file in a text editor determined by Julia (see the
+[documentation for `edit`](https://docs.julialang.org/en/v1/stdlib/InteractiveUtils/#InteractiveUtils.edit-Tuple{AbstractString,%20Integer})
+for more details). Otherwise, open the file with your text editor or IDE of choice, such as
 Vim, Emacs, VS Code, etc. Simply save the file and rerun
 `res = include("day1/01-julia-intro.jl");` in your existing Julia session to see your changes
-reflected in the output.
+reflected in the output. Try increasing or decreasing the number of terms in the series for `pi`
+to see the error decrease or increase. How does the error converge with the number of terms
+in the series?
