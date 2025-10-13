@@ -6,6 +6,7 @@ To run the tutorials:
 
 1. Download and install the latest release (v1.12) of Julia following the official
 instructions here: https://julialang.org/install/
+
 2. Start the Julia REPL by executing the `julia` command, which should now be available on
 your computer if you followed the installation instructions in step 1.:
 ```
@@ -30,6 +31,7 @@ other functionality (like linear algebra) requires loading packages.
 The surface level syntax is comparable to other high level interactive languages like
 Python and MATLAB. The Julia documentation provides a helpful guide [comparing Julia to
 other comparable languages](https://docs.julialang.org/en/v1/manual/noteworthy-differences/).
+
 3. Create a local copy of the tutorial code in the directory `ITensorCCQSchool/` in you
 current directory by running:
 ```julia
@@ -37,6 +39,7 @@ julia> using LibGit2: LibGit2
 
 julia> LibGit2.clone("https://github.com/ITensor/ITensorCCQSchool", ".")
 ```
+
 4. Enter the `ITensorCCQSchool/` directory and install the dependencies from the Julia REPL:
 ```julia
 julia> cd("ITensorCCQSchool/")
@@ -58,6 +61,7 @@ julia> Pkg.instantiate()
   [...]
 
 ```
+
 5. Use `include` to run the
 [first tutorial](https://github.com/ITensor/ITensorCCQSchool/blob/main/day1/01-julia-intro.jl)
 from the REPL:
@@ -66,6 +70,7 @@ julia> include("day1/01-julia-intro.jl");
 n = 100000
 pi_approx = 3.1416026534897203
 error = 9.999899927226608e-6
+
 ```
 The `;` at the end of the line suppresses printing the output of the script, to avoid
 getting a potentially large output to your terminal. To access the objects that are
@@ -76,6 +81,7 @@ julia> res = include("day1/01-julia-intro.jl");
 n = 100000
 pi_approx = 3.1416026534897203
 error = 9.999899927226608e-6
+
 ```
 `res = ` captures the output of the script to the
 [NamedTuple](https://docs.julialang.org/en/v1/base/base/#Core.NamedTuple) `res`, which you
@@ -94,10 +100,13 @@ julia> pi_approx
 
 julia> error
 9.999899927226608e-6
+
 ```
+
 6. Edit the file to change parameters, printing, etc.:
 ```julia
 julia> edit("day1/01-julia-intro.jl")
+
 ```
 which will open your file in a text editor determined by Julia (see the
 [documentation for `edit`](https://docs.julialang.org/en/v1/stdlib/InteractiveUtils/#InteractiveUtils.edit-Tuple{AbstractString,%20Integer})
