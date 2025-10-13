@@ -28,6 +28,6 @@ let
     error = abs(pi_approx - pi)
     @show error
 
-    # Return the error to the REPL.
+    # Return the result and error to the REPL.
     return (; pi_approx, error)
 end
