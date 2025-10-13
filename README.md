@@ -22,15 +22,15 @@ $ julia
 
 julia>
 ```
-3. Clone this Github repository to a directory on your computer by running:
+3. Create a local copy of the tutorial code in the directory `ITensorCCQSchool/` in you current directory by running:
 ```julia
 julia> using LibGit2: LibGit2
 
 julia> LibGit2.clone("https://github.com/ITensor/ITensorCCQSchool", ".")
 ```
-4. Enter the directory and install the dependencies from the Julia REPL:
+4. Enter the `ITensorCCQSchool/` directory and install the dependencies from the Julia REPL:
 ```julia
-julia> cd("ITensorCCQSchool")
+julia> cd("ITensorCCQSchool/")
 
 julia> using Pkg: Pkg
 
@@ -57,7 +57,8 @@ error = 9.999899927226608e-6
 ```
 The `;` at the end of the line suppresses printing the output of the script, to avoid
 getting a potentially large output to your terminal. To access the objects that are
-returned from the `let` block in the script, you can call the script like this:
+returned from the `let` block in the script so you can analyze them interactively, you
+can call the script like this:
 ```julia
 julia> res = include("day1/01-julia-intro.jl");
 n = 100000
@@ -73,13 +74,21 @@ julia> res.pi_approx
 
 julia> res.error
 9.999899927226608e-6
+
+julia> (; pi_approx, error) = res
+
+julia> pi_approx
+3.1416026534897203
+
+julia> error
+9.999899927226608e-6
 ```
-6. Edit the files to change parameters, measurements, etc.:
+6. Edit the file to change parameters, printing, etc.:
 ```julia
 julia> edit("day1/01-julia-intro.jl")
 ```
 which will open your file in a text editor determined by Julia (see
 https://docs.julialang.org/en/v1/stdlib/InteractiveUtils/#InteractiveUtils.edit-Tuple{AbstractString,%20Integer}). Otherwise, open the file with your text editor or IDE of choice, such as
-Vim, Emacs,VS Code, etc. Simply save the file and run
-`res = include("day1/01-julia-intro.jl");` in the Julia REPL again to see your changes
+Vim, Emacs, VS Code, etc. Simply save the file and rerun
+`res = include("day1/01-julia-intro.jl");` in your existing Julia session to see your changes
 reflected in the output.
