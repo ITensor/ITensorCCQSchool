@@ -20,8 +20,16 @@ $ julia
 |__/                   |
 
 
-julia>
+julia> 1 + 1
+2
+
 ```
+Try typing a command (such as `1 + 1` shown above) to get a feel for how it works.
+A number of math operations are available out-of-the-box, such as `sin`, `cos`, etc., while
+other functionality (like linear algebra) requires loading packages.
+The surface level syntax is comparable to other high level interactive languages like
+Python and MATLAB. The Julia documentation provides a helpful guide [comparing Julia to
+other comparable languages](https://docs.julialang.org/en/v1/manual/noteworthy-differences/).
 3. Create a local copy of the tutorial code in the directory `ITensorCCQSchool/` in you
 current directory by running:
 ```julia
@@ -48,6 +56,7 @@ julia> Pkg.instantiate()
   [79e6a3ab] + Adapt v4.4.0
   [dce04be8] + ArgCheck v2.5.0
   [...]
+
 ```
 5. Use `include` to run the
 [first tutorial](https://github.com/ITensor/ITensorCCQSchool/blob/main/day1/01-julia-intro.jl)
