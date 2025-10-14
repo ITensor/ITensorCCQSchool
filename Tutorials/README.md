@@ -67,7 +67,10 @@ julia> Pkg.instantiate()
 [first tutorial](https://github.com/ITensor/ITensorCCQSchool/blob/main/day1/01-julia-intro.jl)
 from the REPL:
 ```julia
-julia> include("01-julia-intro.jl");
+julia> include("01-julia-intro.jl")
+main (generic function with 1 method)
+
+julia> main();
 n = 100000
 pi_approx = 3.1416026534897203
 error = 9.999899927226608e-6
@@ -75,10 +78,10 @@ error = 9.999899927226608e-6
 ```
 The `;` at the end of the line suppresses printing the output of the script, to avoid
 getting a potentially large output to your terminal. To access the objects that are
-returned from the `let` block in the script so you can analyze them interactively, you
+returned from the `main()` function in the script so you can analyze them interactively, you
 can call the script like this:
 ```julia
-julia> res = include("01-julia-intro.jl");
+julia> res = main();
 n = 100000
 pi_approx = 3.1416026534897203
 error = 9.999899927226608e-6
@@ -113,7 +116,7 @@ which will open your file in a text editor determined by Julia (see the
 [documentation for `edit`](https://docs.julialang.org/en/v1/stdlib/InteractiveUtils/#InteractiveUtils.edit-Tuple{AbstractString,%20Integer})
 for more details). Otherwise, open the file with your text editor or IDE of choice, such as
 Vim, Emacs, VS Code, etc. Simply save the file and rerun
-`res = include("01-julia-intro.jl");` in your existing Julia session to see your changes
-reflected in the output. Try increasing or decreasing the number of terms in the series for
-`pi` to see the error decrease or increase. How does the error converge with the number of
-terms in the series?
+`include("01-julia-intro.jl"); res = main()` in your existing Julia session to see your
+changes reflected in the output. Try increasing or decreasing the number of terms in the
+series for `pi` to see the error decrease or increase. How does the error converge with the
+number of terms in the series?
