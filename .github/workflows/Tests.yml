@@ -18,10 +18,6 @@ jobs:
         with:
           version: "1"   # Latest stable Julia 1.x
 
-      - name: Install dependencies
-        run: |
-          julia --project=. -e 'import Pkg; Pkg.instantiate()'
-
       - name: Run all scripts
         run: |
           julia -e '
@@ -31,7 +27,7 @@ jobs:
             for day in days
                 Pkg.activate(day)
                 Pkg.instantiate()
-                for f in filter(endswith(".jl"), readdir(day; join=true))
+                for f in filter(endswith(".jl"), readdir(day; join = true))
                     println("Running ", f)
                     @eval module $(gensym())
                         include($f)
