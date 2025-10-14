@@ -23,7 +23,7 @@ jobs:
         run: |
           julia -e '
             using Pkg: Pkg
-            cd(joinpath("Tutorials", "$({{ matrix.day }})"))
+            cd(joinpath("Tutorials", ${{ matrix.day }}))
             Pkg.activate(".")
             Pkg.instantiate()
             for f in filter(endswith(".jl"), readdir())
