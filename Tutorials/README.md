@@ -40,7 +40,8 @@ julia> using LibGit2: LibGit2
 julia> LibGit2.clone("https://github.com/ITensor/ITensorCCQSchool", ".")
 ```
 
-4. Enter the `ITensorCCQSchool/` directory and install the dependencies from the Julia REPL:
+4. Enter the `ITensorCCQSchool/Tutorials/Day1/` directory and install the dependencies from
+the Julia REPL:
 ```julia
 julia> cd("ITensorCCQSchool/")
 

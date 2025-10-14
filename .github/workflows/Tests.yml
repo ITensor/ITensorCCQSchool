@@ -21,6 +21,7 @@ jobs:
       - name: Run all scripts
         run: |
           julia -e '
+            error()
             using Pkg: Pkg
             cd("Tutorials/")
             days = filter(f -> isdir(f) && startswith(f, "day"), readdir())
