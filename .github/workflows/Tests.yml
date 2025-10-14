@@ -1,4 +1,4 @@
-name: Julia CI
+name: Test running scripts
 
 on:
   push:
@@ -22,13 +22,15 @@ jobs:
         run: |
           julia --project=. -e 'import Pkg; Pkg.instantiate()'
 
-      - name: Run all scripts in one Julia session
+      - name: Run all scripts
+        shell: julia --project=. --color=yes {0}
         run: |
-          julia --project=. -e '
-            days = filter(f -> isdir(f) && startswith(f, "day"), readdir())
-            for day in days
-                for f in readdir(day; join=true)
+          days = filter(f -> isdir(f) && startswith(f, "day"), readdir())
+          for day in days
+              for f in readdir(day; join=true)
                     println("Running ", f)
-                    include(f)
-                end
-            end
+                    @eval module $(gensym())
+                        include(f)
+                    end
+              end
+          end
