@@ -24,9 +24,13 @@ jobs:
 
       - name: Run all scripts
         run: |
-          julia --project=. -e '
+          julia -e '
+            using Pkg: Pkg
+            cd("Tutorials/")
             days = filter(f -> isdir(f) && startswith(f, "day"), readdir())
             for day in days
+                Pkg.activate(day)
+                Pkg.instantiate()
                 for f in filter(endswith(".jl"), readdir(day; join=true))
                     println("Running ", f)
                     @eval module $(gensym())
