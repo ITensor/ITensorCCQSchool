@@ -23,7 +23,7 @@ jobs:
           julia --project=. -e 'import Pkg; Pkg.instantiate()'
 
       - name: Run all scripts
-        shell: julia --project=. --color=yes {0}
+        shell: julia --project=. --color=yes
         run: |
           days = filter(f -> isdir(f) && startswith(f, "day"), readdir())
           for day in days
