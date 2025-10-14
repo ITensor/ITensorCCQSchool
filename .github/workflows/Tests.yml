@@ -1,4 +1,4 @@
-name: Test running scripts
+name: Run scripts
 
 on:
   push:
@@ -9,28 +9,27 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        day: ['Day1', 'Day2', 'Day3']   # runs each day in parallel
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
       - name: Set up Julia
         uses: julia-actions/setup-julia@v1
         with:
-          version: "1"   # Latest stable Julia 1.x
-
-      - name: Install dependencies
+          version: "1"
+      - name: Run all scripts for ${{ matrix.day }}
         run: |
-          julia --project=. -e 'import Pkg; Pkg.instantiate()'
-
-      - name: Run all scripts
-        run: |
-          julia --project=. -e '
-            days = filter(f -> isdir(f) && startswith(f, "day"), readdir())
-            for day in days
-                for f in filter(endswith(".jl"), readdir(day; join=true))
-                    println("Running ", f)
-                    @eval module $(gensym())
-                        include($f)
-                    end
+          julia -e '
+            using Pkg: Pkg
+            cd(joinpath("Tutorials", "${{ matrix.day }}"))
+            Pkg.activate(".")
+            Pkg.instantiate()
+            for f in filter(endswith(".jl"), readdir())
+                println("Running ", f)
+                @eval module $(gensym())
+                    include($f)
+                    main()
                 end
             end'
