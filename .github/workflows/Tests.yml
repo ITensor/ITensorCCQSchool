@@ -30,7 +30,7 @@ jobs:
               for f in readdir(day; join=true)
                     println("Running ", f)
                     @eval module $(gensym())
-                        include(f)
+                        include($f)
                     end
               end
           end
