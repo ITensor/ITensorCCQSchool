@@ -1,0 +1,36 @@
+name: Test running scripts
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Julia
+        uses: julia-actions/setup-julia@v1
+        with:
+          version: "1"   # Latest stable Julia 1.x
+
+      - name: Install dependencies
+        run: |
+          julia --project=. -e 'import Pkg; Pkg.instantiate()'
+
+      - name: Run all scripts
+        run: |
+          julia --project=. -e '
+            days = filter(f -> isdir(f) && startswith(f, "day"), readdir())
+            for day in days
+                for f in filter(endswith(".jl"), readdir(day; join=true))
+                    println("Running ", f)
+                    @eval module $(gensym())
+                        include($f)
+                    end
+                end
+            end'
