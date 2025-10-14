@@ -35,6 +35,7 @@ jobs:
                     println("Running ", f)
                     @eval module $(gensym())
                         include($f)
+                        main()
                     end
                 end
             end'
