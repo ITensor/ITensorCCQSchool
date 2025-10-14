@@ -1,0 +1,35 @@
+name: Run Day3 scripts
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Julia
+        uses: julia-actions/setup-julia@v1
+        with:
+          version: "1"   # Latest stable Julia 1.x
+
+      - name: Run all scripts
+        run: |
+          julia -e '
+            d = "Day3"
+            using Pkg: Pkg
+            cd(joinpath("Tutorials", day))
+            Pkg.activate(".")
+            Pkg.instantiate()
+            for f in filter(endswith(".jl"), readdir())
+                println("Running ", f)
+                @eval module $(gensym())
+                    include($f)
+                    main()
+                end
+            end'
