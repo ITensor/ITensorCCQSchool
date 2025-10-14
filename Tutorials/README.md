@@ -43,19 +43,19 @@ julia> LibGit2.clone("https://github.com/ITensor/ITensorCCQSchool", ".")
 4. Enter the `ITensorCCQSchool/Tutorials/Day1/` directory and install the dependencies from
 the Julia REPL:
 ```julia
-julia> cd("ITensorCCQSchool/")
+julia> cd("ITensorCCQSchool/Tutorials/Day1/")
 
 julia> using Pkg: Pkg
 
 julia> Pkg.activate(".")
-  Activating project at `[...]/ITensorCCQSchool`
+  Activating project at `[...]/ITensorCCQSchool/Tutorials/Day1/`
 
 julia> Pkg.instantiate()
     Updating registry at `~/.julia/registries/General.toml`
-    Updating `[...]/ITensorCCQSchool/Project.toml`
+    Updating `[...]/ITensorCCQSchool/Tutorials/Day1/Project.toml`
   [0d1a4710] + ITensorMPS v0.3.22
   [9136182c] + ITensors v0.9.13
-    Updating `[...]/ITensorCCQSchool/Manifest.toml`
+    Updating `[...]/ITensorCCQSchool/Tutorials/Day1/Manifest.toml`
   [7d9f7c33] + Accessors v0.1.42
   [79e6a3ab] + Adapt v4.4.0
   [dce04be8] + ArgCheck v2.5.0
@@ -67,7 +67,7 @@ julia> Pkg.instantiate()
 [first tutorial](https://github.com/ITensor/ITensorCCQSchool/blob/main/day1/01-julia-intro.jl)
 from the REPL:
 ```julia
-julia> include("day1/01-julia-intro.jl");
+julia> include("01-julia-intro.jl");
 n = 100000
 pi_approx = 3.1416026534897203
 error = 9.999899927226608e-6
@@ -78,7 +78,7 @@ getting a potentially large output to your terminal. To access the objects that 
 returned from the `let` block in the script so you can analyze them interactively, you
 can call the script like this:
 ```julia
-julia> res = include("day1/01-julia-intro.jl");
+julia> res = include("01-julia-intro.jl");
 n = 100000
 pi_approx = 3.1416026534897203
 error = 9.999899927226608e-6
@@ -106,14 +106,14 @@ julia> error
 
 6. Edit the file to change parameters, printing, etc.:
 ```julia
-julia> edit("day1/01-julia-intro.jl")
+julia> edit("01-julia-intro.jl")
 
 ```
 which will open your file in a text editor determined by Julia (see the
 [documentation for `edit`](https://docs.julialang.org/en/v1/stdlib/InteractiveUtils/#InteractiveUtils.edit-Tuple{AbstractString,%20Integer})
 for more details). Otherwise, open the file with your text editor or IDE of choice, such as
 Vim, Emacs, VS Code, etc. Simply save the file and rerun
-`res = include("day1/01-julia-intro.jl");` in your existing Julia session to see your changes
-reflected in the output. Try increasing or decreasing the number of terms in the series for `pi`
-to see the error decrease or increase. How does the error converge with the number of terms
-in the series?
+`res = include("01-julia-intro.jl");` in your existing Julia session to see your changes
+reflected in the output. Try increasing or decreasing the number of terms in the series for
+`pi` to see the error decrease or increase. How does the error converge with the number of
+terms in the series?
