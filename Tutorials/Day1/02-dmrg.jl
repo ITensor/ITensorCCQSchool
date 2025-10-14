@@ -1,8 +1,15 @@
 using ITensorMPS: MPO, OpSum, dmrg, maxlinkdim, random_mps, siteinds
 
-let
-    # Build the physical indices for 30 spins (spin 1/2)
-    N = 30
+function main(;
+        # Number of sites
+        N = 30,
+        # DMRG parameters
+        nsweeps = 5,
+        maxdim = [10, 20, 100, 100, 200],
+        cutoff = [1.0e-10],
+        outputlevel = 1,
+    )
+    # Build the physical indices for N spins (spin 1/2)
     sites = siteinds("S=1/2", N)
 
     # Build the Heisenberg Hamiltonian as an MPO
@@ -15,23 +22,19 @@ let
     H = MPO(os, sites)
 
     # It has bond dimension 5
-    println("MPO bond dimension is $(maxlinkdim(H))")
+    outputlevel > 0 && println("MPO bond dimension: ", maxlinkdim(H))
 
     # Initial state for DMRG
     psi0 = random_mps(sites; linkdims = 10)
 
     # It starts with a bond dimension 10
-    println("Initial MPS bond dimension is $(maxlinkdim(psi0))")
-
-    # DMRG Parameters
-    nsweeps = 5
-    maxdim = [10, 20, 100, 100, 200]
-    cutoff = [1.0e-10]
+    outputlevel > 0 && println("Initial MPS bond dimension: ", maxlinkdim(psi0))
 
     # Run DMRG
-    energy, psi = dmrg(H, psi0; nsweeps, maxdim, cutoff)
+    energy, psi = dmrg(H, psi0; nsweeps, maxdim, cutoff, outputlevel)
 
-    println("Optimized MPS bond dimension is $(maxlinkdim(psi))")
+    outputlevel > 0 && println("Optimized MPS bond dimension: ", maxlinkdim(psi))
+    outputlevel > 0 && println("Energy: ", energy)
 
     return (; energy, H, psi)
 end

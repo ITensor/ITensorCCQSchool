@@ -11,19 +11,19 @@ end
 # We use a `let` block to create a local scope, which
 # is good practice in Julia to avoid introducing global
 # variables which can negatively impact performance.
-function main(; n = 10^5)
+function main(; n = 10^5, outputlevel = 1)
     # Print the number of terms to use to approximate `pi`.
-    @show n
+    outputlevel > 0 && println("Number of terms: ", n)
 
     # Approximate `pi` by calling the function defined above.
     pi_approx = approx_pi(n)
-    @show pi_approx
+    outputlevel > 0 && println("Approximate pi: ", pi_approx)
 
     # Compute the error in the approximation.
     # `pi` is a built-in constant in Julia that represents
     # the value of pi to arbitrary precision.
     error = abs(pi_approx - pi)
-    @show error
+    outputlevel > 0 && println("Error: ", error)
 
     # Return the result and error to the REPL.
     return (; n, pi_approx, error)

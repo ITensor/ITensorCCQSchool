@@ -21,11 +21,13 @@ jobs:
       - name: Run all scripts
         run: |
           julia -e '
-            error()
             using Pkg: Pkg
             cd("Tutorials/")
             days = filter(f -> isdir(f) && startswith(f, "day"), readdir())
             for day in days
+
+                @show day
+
                 Pkg.activate(day)
                 Pkg.instantiate()
                 for f in filter(endswith(".jl"), readdir(day; join = true))
