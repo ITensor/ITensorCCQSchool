@@ -7,8 +7,8 @@ To run the tutorials:
 1. Download and install the latest release (v1.12) of Julia following the official
 instructions here: https://julialang.org/install/
 
-2. Start the Julia REPL by executing the `julia` command, which should now be available on
-your computer if you followed the installation instructions in step 1.:
+2. Start the Julia REPL by executing the `julia` command, which should now be available
+on your computer if you followed the installation instructions in step 1.:
 ```
 $ julia
                _
@@ -25,47 +25,36 @@ julia> 1 + 1
 2
 
 ```
-Try typing a command (such as `1 + 1` shown above) to get a feel for how it works.
-A number of math operations are available out-of-the-box, such as `sin`, `cos`, etc., while
-other functionality (like linear algebra) requires loading packages.
-The surface level syntax is comparable to other high level interactive languages like
-Python and MATLAB. The Julia documentation provides a helpful guide [comparing Julia to
-other comparable languages](https://docs.julialang.org/en/v1/manual/noteworthy-differences/).
+Try typing a command (such as `1 + 1` shown above) to get a feel for how it works. A number of math operations are available out-of-the-box, such as `sin`, `cos`, etc., while other functionality (such as [linear algebra](https://docs.julialang.org/en/v1/stdlib/LinearAlgebra/)) requires loading packages. The surface level syntax is similar to other high level interactive languages like Python and MATLAB. The Julia documentation provides a helpful guide [comparing Julia to other comparable languages](https://docs.julialang.org/en/v1/manual/noteworthy-differences/).
 
-3. Create a local copy of the tutorial code in the directory `ITensorCCQSchool/` in you
-current directory by running:
+3. Create a local copy of the tutorial code in the directory `ITensorCCQSchool/` in your current directory by running:
 ```julia
-julia> using LibGit2: LibGit2
+julia> using LibGit2: clone
 
-julia> LibGit2.clone("https://github.com/ITensor/ITensorCCQSchool", ".")
+julia> clone("https://github.com/ITensor/ITensorCCQSchool", ".")
 ```
+Here we use Julia's  [LibGit2 standard library](https://docs.julialang.org/en/v1/stdlib/LibGit2/). Alternatively you can execute `git clone https://github.com/ITensor/ITensorCCQSchool` directly from a shell.
 
-4. Enter the `ITensorCCQSchool/Tutorials/Day1/` directory and install the dependencies from
-the Julia REPL:
+4. Enter the `ITensorCCQSchool/Tutorials/Day1/` directory and install the dependencies from the Julia REPL:
 ```julia
 julia> cd("ITensorCCQSchool/Tutorials/Day1/")
 
-julia> using Pkg: Pkg
+julia> ]
 
-julia> Pkg.activate(".")
+(Day1) pkg> activate .
   Activating project at `[...]/ITensorCCQSchool/Tutorials/Day1/`
 
-julia> Pkg.instantiate()
+(Day1) pkg> instantiate
     Updating registry at `~/.julia/registries/General.toml`
     Updating `[...]/ITensorCCQSchool/Tutorials/Day1/Project.toml`
   [0d1a4710] + ITensorMPS v0.3.22
   [9136182c] + ITensors v0.9.13
-    Updating `[...]/ITensorCCQSchool/Tutorials/Day1/Manifest.toml`
-  [7d9f7c33] + Accessors v0.1.42
-  [79e6a3ab] + Adapt v4.4.0
-  [dce04be8] + ArgCheck v2.5.0
   [...]
 
 ```
+Executing `]` at the REPL enables the Pkg REPL, which is more convenient for entering Pkg commands. `activate .` enables the local environment/project in [./ITensorCCQSchool/Tutorials/Day1/](./Day1/), where the package dependencies for the tutorials on the first day of the school are defined. `instantiate` installs those dependencies and performs some compilation. It may take some time but it will only need to be done once for each project (so in our case, once for each day of the school).
 
-5. Use `include` to run the
-[first tutorial](https://github.com/ITensor/ITensorCCQSchool/blob/main/day1/01-julia-intro.jl)
-from the REPL:
+5. Use `include` to load the [first tutorial](./Day1/01-julia-intro.jl) into the REPL. It introduces the function `main` which you can execute to run the tutorial:
 ```julia
 julia> include("01-julia-intro.jl")
 main (generic function with 1 method)
@@ -76,20 +65,18 @@ pi_approx = 3.1416026534897203
 error = 9.999899927226608e-6
 
 ```
-The `;` at the end of the line suppresses printing the output of the script, to avoid
-getting a potentially large output to your terminal. To access the objects that are
-returned from the `main()` function in the script so you can analyze them interactively, you
-can call the script like this:
+The `;` at the end of the line suppresses printing the output of the script, to avoid getting a potentially large output to your terminal. To access the objects that are returned from the `main` function in the script so you can analyze them interactively, you can call the script like this:
 ```julia
 julia> res = main();
 n = 100000
 pi_approx = 3.1416026534897203
 error = 9.999899927226608e-6
 
+julia> res
+(n = 100000, pi_approx = 3.1416026534897203, error = 9.999899927226608e-6)
+
 ```
-`res = ` captures the output of the script to the
-[NamedTuple](https://docs.julialang.org/en/v1/base/base/#Core.NamedTuple) `res`, which you
-can think of as an anonymous struct. You can access values from `res` as follows:
+`res = ` captures the output of the script to the [NamedTuple](https://docs.julialang.org/en/v1/base/base/#Core.NamedTuple) `res`, which you can think of as an anonymous struct. You can access values from `res` as follows:
 ```julia
 julia> res.pi_approx
 3.1416026534897203
@@ -107,16 +94,119 @@ julia> error
 
 ```
 
-6. Edit the file to change parameters, printing, etc.:
+6. You can run the script with different parameters as follows:
+```julia
+julia> res = main(; n=10^7);
+Number of terms: 10000000
+Approximate pi: 3.1415927535897814
+Error: 9.999998829002266e-8
+
+julia> res.pi_approx
+3.1415927535897814
+
+julia> pi
+π = 3.1415926535897...
+
+```
+and you can learn about other parameters by printing the documentation using Julia's [help mode](https://docs.julialang.org/en/v1/stdlib/REPL/#Help-mode):
+```julia
+julia> ?
+
+help?> main
+search: main @main min Main Pair map join in mark asin wait sin max tan map!
+
+  main(; kwargs...)
+
+  Approximate pi using the Leibniz formula and compute the error.
+
+  Keywords
+  ≡≡≡≡≡≡≡≡
+
+    •  n::Int = 10^5: The number of terms to use in the approximation of pi.
+    •  outputlevel::Int = 1: Controls the verbosity of the output.
+
+  Outputs
+  ≡≡≡≡≡≡≡
+
+    •  n::Int: The number of terms used in the approximation.
+    •  pi_approx::Float64: The approximate value of pi.
+    •  error::Float64: The absolute error in the approximation of pi.
+
+```
+You can get the errors as a function of iterations by running the script multiple times:
+```julia
+julia> ns = [10^k for k in 3:7]
+5-element Vector{Int64}:
+     1000
+    10000
+   100000
+  1000000
+ 10000000
+
+julia> results = [main(; n, outputlevel=0) for n in ns]
+5-element Vector{@NamedTuple{n::Int64, pi_approx::Float64, error::Float64}}:
+ (n = 1000, pi_approx = 3.1425916543395442, error = 0.0009990007497511222)
+ (n = 10000, pi_approx = 3.1416926435905346, error = 9.99900007414567e-5)
+ (n = 100000, pi_approx = 3.1416026534897203, error = 9.999899927226608e-6)
+ (n = 1000000, pi_approx = 3.1415936535887745, error = 9.999989813991306e-7)
+ (n = 10000000, pi_approx = 3.1415927535897814, error = 9.999998829002266e-8)
+
+julia> errors = [res.error for res in results]
+5-element Vector{Float64}:
+ 0.0009990007497511222
+ 9.99900007414567e-5
+ 9.999899927226608e-6
+ 9.999989813991306e-7
+ 9.999998829002266e-8
+
+```
+Here we suppress the printing from the script with `outputlevel = 0`. We can plot the errors in the REPL as a function of inverse number of terms to see a linear relationship:
+```julia
+julia> using Plots: Plots, plot
+
+julia> Plots.unicodeplots(); # Set the plotting backend to UnicodePlots
+
+julia> plot(inv.(ns), errors)
+          ┌────────────────────────────────────────┐  
+0.00102897│⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⠔⠀│y1
+          │⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠤⠊⠀⠀⠀│  
+          │⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⠒⠁⠀⠀⠀⠀⠀│  
+          │⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⠔⠉⠀⠀⠀⠀⠀⠀⠀⠀│  
+          │⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠤⠊⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
+          │⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⠒⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
+          │⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⠔⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
+          │⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠤⠊⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
+          │⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⠒⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
+          │⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⠔⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
+          │⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⢀⠤⠊⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
+          │⠀⡇⠀⠀⠀⠀⠀⠀⡠⠒⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
+          │⠀⡇⠀⠀⠀⣀⠔⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
+          │⠀⡇⢀⠤⠊⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
+-2.9867e⁻⁵│⠤⡷⠥⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤│  
+          └────────────────────────────────────────┘  
+          ⠀-2.9897e⁻⁵⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀0.00103⠀  
+
+```
+
+7. If you want to make more involved changes to the script that can't be controlled through keyword arguments, edit the file to make changes to the script:
 ```julia
 julia> edit("01-julia-intro.jl")
 
 ```
-which will open your file in a text editor determined by Julia (see the
-[documentation for `edit`](https://docs.julialang.org/en/v1/stdlib/InteractiveUtils/#InteractiveUtils.edit-Tuple{AbstractString,%20Integer})
-for more details). Otherwise, open the file with your text editor or IDE of choice, such as
-Vim, Emacs, VS Code, etc. Simply save the file and rerun
-`include("01-julia-intro.jl"); res = main()` in your existing Julia session to see your
-changes reflected in the output. Try increasing or decreasing the number of terms in the
-series for `pi` to see the error decrease or increase. How does the error converge with the
-number of terms in the series?
+which will open your file in a text editor determined by Julia (see the [documentation for `edit`](https://docs.julialang.org/en/v1/stdlib/InteractiveUtils/#InteractiveUtils.edit-Tuple{AbstractString,%20Integer}) for more details). Otherwise, open the file with your text editor or IDE of choice, such as Vim, Emacs, VS Code, etc. A convenient way to do that is by entering Julia's shell mode by executing `;` at the REPL:
+```julia
+julia> ;
+
+shell> vi 01-julia-intro.jl
+
+```
+and press delete/backspace to go back to the Julia REPL. When you are done editing the tutorial script, simply save the file and `include` the file again to get a new `main` function to execute in your existing Julia session to see your changes reflected in the output:
+```julia
+julia> include("01-julia-intro.jl")
+main (generic function with 1 method)
+
+julia> res = main();
+[...]
+
+```
+Note that if you don't call `include` again, you won't see the changes you make to the file reflected when you call the `main` function. (For advanced users, note that you can use [`Revise.includet`](https://timholy.github.io/Revise.jl/stable/cookbook/#includet-usage) as an alternative to `include` which would automatically track changes to the file and update `main` without having to call `include` each time.)

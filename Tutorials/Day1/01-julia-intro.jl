@@ -1,6 +1,10 @@
-# Approximate `pi` using the Leibniz formula.
-# See: https://en.wikipedia.org/wiki/Leibniz_formula_for_%CF%80
-function approx_pi(n)
+"""
+    approx_pi(n::Int)
+
+Approximate `pi` using the Leibniz formula.
+See: https://en.wikipedia.org/wiki/Leibniz_formula_for_%CF%80
+"""
+function approx_pi(n::Int)
     pi_by_4 = 1.0
     for k in 1:n
         pi_by_4 += (-1)^k / (2k + 1)
@@ -8,10 +12,21 @@ function approx_pi(n)
     return 4 * pi_by_4
 end
 
-# We use a `let` block to create a local scope, which
-# is good practice in Julia to avoid introducing global
-# variables which can negatively impact performance.
-function main(; n = 10^5, outputlevel = 1)
+"""
+    main(; kwargs...)
+
+Approximate `pi` using the Leibniz formula and compute the error.
+
+# Keywords
+- `n::Int = 10^5`: The number of terms to use in the approximation of `pi`.
+- `outputlevel::Int = 1`: Controls the verbosity of the output.
+
+# Outputs
+- `n::Int`: The number of terms used in the approximation.
+- `pi_approx::Float64`: The approximate value of `pi`.
+- `error::Float64`: The absolute error in the approximation of `pi`.
+"""
+function main(; n::Int = 10^5, outputlevel::Int = 1)
     # Print the number of terms to use to approximate `pi`.
     outputlevel > 0 && println("Number of terms: ", n)
 
@@ -25,6 +40,7 @@ function main(; n = 10^5, outputlevel = 1)
     error = abs(pi_approx - pi)
     outputlevel > 0 && println("Error: ", error)
 
-    # Return the result and error to the REPL.
+    # Return the number of iterations, approximation to `pi`, and
+    # absolute error.
     return (; n, pi_approx, error)
 end
