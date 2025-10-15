@@ -27,7 +27,7 @@ julia> 1 + 1
 ```
 Try typing a command (such as `1 + 1` shown above) to get a feel for how it works. A number of math operations are available out-of-the-box, such as `sin`, `cos`, etc., while other functionality (such as [linear algebra](https://docs.julialang.org/en/v1/stdlib/LinearAlgebra/)) requires loading packages. The surface level syntax is similar to other high level interactive languages like Python and MATLAB. The Julia documentation provides a helpful guide [comparing Julia to other comparable languages](https://docs.julialang.org/en/v1/manual/noteworthy-differences/).
 
-3. Create a local copy of the tutorial code in the directory `ITensorCCQSchool/` in your current directory by running:
+3. Create a local copy of the tutorial code in a new directory `ITensorCCQSchool` in your current directory by running:
 ```julia
 julia> using LibGit2: clone
 
@@ -35,9 +35,9 @@ julia> clone("https://github.com/ITensor/ITensorCCQSchool", ".")
 ```
 Here we use Julia's  [LibGit2 standard library](https://docs.julialang.org/en/v1/stdlib/LibGit2/). Alternatively you can execute `git clone https://github.com/ITensor/ITensorCCQSchool` directly from a shell.
 
-4. Enter the `ITensorCCQSchool/Tutorials/Day1/` directory and install the dependencies from the Julia REPL:
+4. Enter the `ITensorCCQSchool/Tutorials/Day1` directory and install the dependencies from the Julia REPL:
 ```julia
-julia> cd("ITensorCCQSchool/Tutorials/Day1/")
+julia> cd("ITensorCCQSchool/Tutorials/Day1")
 
 julia> ]
 
@@ -52,9 +52,9 @@ julia> ]
   [...]
 
 ```
-Executing `]` at the REPL enables the Pkg REPL, which is more convenient for entering Pkg commands. `activate .` enables the local environment/project in [./ITensorCCQSchool/Tutorials/Day1/](./Day1/), where the package dependencies for the tutorials on the first day of the school are defined. `instantiate` installs those dependencies and performs some compilation. It may take some time but it will only need to be done once for each project (so in our case, once for each day of the school).
+Executing `]` at the REPL enables the Pkg REPL, which is more convenient for entering Pkg commands. Press delete/backspace to exit the Pkg REPL and go back to the standard Julia REPL prompt. `activate .` enables the local environment/project in [Tutorials/Day1](./Day1/), where the package dependencies for the tutorials on the first day of the school are defined. `instantiate` installs those dependencies and performs some compilation. It may take some time but it will only need to be done once for each project (so in our case, once for each day of the school).
 
-5. Use `include` to load the [first tutorial](./Day1/01-julia-intro.jl) into the REPL. It introduces the function `main` which you can execute to run the tutorial:
+5. Use `include` to load the [first tutorial](./Day1/01-julia-intro.jl) into the REPL. That will introduce the function `main` which you can execute to run the tutorial:
 ```julia
 julia> include("01-julia-intro.jl")
 main (generic function with 1 method)
@@ -65,7 +65,7 @@ pi_approx = 3.1416026534897203
 error = 9.999899927226608e-6
 
 ```
-The `;` at the end of the line suppresses printing the output of the script, to avoid getting a potentially large output to your terminal. To access the objects that are returned from the `main` function in the script so you can analyze them interactively, you can call the script like this:
+The script is approximating the value of `pi` using the [Leibniz formulat](https://en.wikipedia.org/wiki/Leibniz_formula_for_%CF%80) using `n` terms in the series. To access the values that are returned from the `main` function so you can analyze them interactively, you can call the script like this:
 ```julia
 julia> res = main();
 n = 100000
@@ -76,7 +76,7 @@ julia> res
 (n = 100000, pi_approx = 3.1416026534897203, error = 9.999899927226608e-6)
 
 ```
-`res = ` captures the output of the script to the [NamedTuple](https://docs.julialang.org/en/v1/base/base/#Core.NamedTuple) `res`, which you can think of as an anonymous struct. You can access values from `res` as follows:
+`res = main()` captures the output of the script to the [NamedTuple](https://docs.julialang.org/en/v1/base/base/#Core.NamedTuple) `res`, which you can think of as an anonymous struct. You can access values from `res` as follows:
 ```julia
 julia> res.pi_approx
 3.1416026534897203
@@ -104,7 +104,7 @@ Error: 9.999998829002266e-8
 julia> res.pi_approx
 3.1415927535897814
 
-julia> pi
+julia> pi # Julia's built-in definition of pi
 π = 3.1415926535897...
 
 ```
@@ -160,7 +160,7 @@ julia> errors = [res.error for res in results]
  9.999998829002266e-8
 
 ```
-Here we suppress the printing from the script with `outputlevel = 0`. We can plot the errors in the REPL as a function of inverse number of terms to see a linear relationship:
+Here we suppress the printing from within the script with `outputlevel = 0`. We can plot the errors in the REPL as a function of inverse number of terms to see a linear relationship:
 ```julia
 julia> using Plots: Plots, plot
 
