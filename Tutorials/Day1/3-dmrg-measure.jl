@@ -9,19 +9,19 @@ Plots.unicodeplots()
 
 function main(;
         # Number of sites
-        N = 30,
+        nsite = 30,
         # DMRG parameters
         nsweeps = 5,
         maxdim = [10, 20, 100, 100, 200],
         cutoff = [1.0e-10],
         outputlevel = 1,
     )
-    # Build the physical indices for N spins (spin 1/2)
-    sites = siteinds("S=1/2", N)
+    # Build the physical indices for nsite spins (spin 1/2)
+    sites = siteinds("S=1/2", nsite)
 
     # Build the Heisenberg Hamiltonian as an MPO
     os = OpSum()
-    for j in 1:(N - 1)
+    for j in 1:(nsite - 1)
         os += 1 / 2, "S+", j, "S-", j + 1
         os += 1 / 2, "S-", j, "S+", j + 1
         os += "Sz", j, "Sz", j + 1
