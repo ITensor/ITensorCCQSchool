@@ -60,20 +60,20 @@ julia> include("01-julia-intro.jl")
 main (generic function with 1 method)
 
 julia> main();
-n = 100000
+nterm = 100000
 pi_approx = 3.1416026534897203
 error = 9.999899927226608e-6
 
 ```
-The script is approximating the value of `pi` using the [Leibniz formula](https://en.wikipedia.org/wiki/Leibniz_formula_for_%CF%80) using `n` terms in the series. To access the values that are returned from the `main` function so you can analyze them interactively, you can call the script like this:
+The script is approximating the value of `pi` using the [Leibniz formula](https://en.wikipedia.org/wiki/Leibniz_formula_for_%CF%80) using `nterm` terms in the series. To access the values that are returned from the `main` function so you can analyze them interactively, you can call the script like this:
 ```julia
 julia> res = main();
-n = 100000
+nterm = 100000
 pi_approx = 3.1416026534897203
 error = 9.999899927226608e-6
 
 julia> res
-(n = 100000, pi_approx = 3.1416026534897203, error = 9.999899927226608e-6)
+(nterm = 100000, pi_approx = 3.1416026534897203, error = 9.999899927226608e-6)
 
 ```
 `res = main()` captures the output of the script to the [NamedTuple](https://docs.julialang.org/en/v1/base/base/#Core.NamedTuple) `res`, which you can think of as an anonymous struct. You can access values from `res` as follows:
@@ -96,7 +96,7 @@ julia> error
 
 6. You can run the script with different parameters as follows:
 ```julia
-julia> res = main(; n=10^7);
+julia> res = main(; nterm=10^7);
 Number of terms: 10000000
 Approximate pi: 3.1415927535897814
 Error: 9.999998829002266e-8
@@ -122,13 +122,13 @@ search: main @main min Main Pair map join in mark asin wait sin max tan map!
   Keywords
   ≡≡≡≡≡≡≡≡
 
-    •  n::Int = 10^5: The number of terms to use in the approximation of pi.
+    •  nterm::Int = 10^5: The number of terms to use in the approximation of pi.
     •  outputlevel::Int = 1: Controls the verbosity of the output.
 
   Outputs
   ≡≡≡≡≡≡≡
 
-    •  n::Int: The number of terms used in the approximation.
+    •  nterm::Int: The number of terms used in the approximation of pi.
     •  pi_approx::Float64: The approximate value of pi.
     •  error::Float64: The absolute error in the approximation of pi.
 
@@ -137,7 +137,7 @@ julia>
 ```
 You can get the errors as a function of iterations by running the script multiple times:
 ```julia
-julia> ns = [10^k for k in 3:7]
+julia> nterms = [10^k for k in 3:7]
 5-element Vector{Int64}:
      1000
     10000
@@ -145,13 +145,13 @@ julia> ns = [10^k for k in 3:7]
   1000000
  10000000
 
-julia> results = [main(; n, outputlevel=0) for n in ns]
+julia> results = [main(; nterm, outputlevel=0) for nterm in nterms]
 5-element Vector{@NamedTuple{n::Int64, pi_approx::Float64, error::Float64}}:
- (n = 1000, pi_approx = 3.1425916543395442, error = 0.0009990007497511222)
- (n = 10000, pi_approx = 3.1416926435905346, error = 9.99900007414567e-5)
- (n = 100000, pi_approx = 3.1416026534897203, error = 9.999899927226608e-6)
- (n = 1000000, pi_approx = 3.1415936535887745, error = 9.999989813991306e-7)
- (n = 10000000, pi_approx = 3.1415927535897814, error = 9.999998829002266e-8)
+ (nterm = 1000, pi_approx = 3.1425916543395442, error = 0.0009990007497511222)
+ (nterm = 10000, pi_approx = 3.1416926435905346, error = 9.99900007414567e-5)
+ (nterm = 100000, pi_approx = 3.1416026534897203, error = 9.999899927226608e-6)
+ (nterm = 1000000, pi_approx = 3.1415936535887745, error = 9.999989813991306e-7)
+ (nterm = 10000000, pi_approx = 3.1415927535897814, error = 9.999998829002266e-8)
 
 julia> errors = [res.error for res in results]
 5-element Vector{Float64}:
@@ -168,7 +168,7 @@ julia> using Plots: Plots, plot
 
 julia> Plots.unicodeplots(); # Set the plotting backend to UnicodePlots
 
-julia> plot(inv.(ns), errors)
+julia> plot(inv.(nterms), errors)
           ┌────────────────────────────────────────┐  
 0.00102897│⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⠔⠀│y1
           │⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠤⠊⠀⠀⠀│  

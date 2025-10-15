@@ -1,12 +1,13 @@
 """
-    approx_pi(n::Int)
+    approx_pi(nterm::Int)
 
 Approximate `pi` using the
-[Leibniz formula](https://en.wikipedia.org/wiki/Leibniz_formula_for_%CF%80).
+[Leibniz formula](https://en.wikipedia.org/wiki/Leibniz_formula_for_%CF%80)
+using `nterm` terms in the series.
 """
-function approx_pi(n::Int)
+function approx_pi(nterm::Int)
     pi_by_4 = 1.0
-    for k in 1:n
+    for k in 1:nterm
         pi_by_4 += (-1)^k / (2k + 1)
     end
     return 4 * pi_by_4
@@ -20,20 +21,20 @@ Approximate `pi` using the
 error.
 
 # Keywords
-- `n::Int = 10^5`: The number of terms to use in the approximation of `pi`.
+- `nterm::Int = 10^5`: The number of terms to use in the approximation of `pi`.
 - `outputlevel::Int = 1`: Controls the verbosity of the output.
 
 # Outputs
-- `n::Int`: The number of terms used in the approximation.
+- `nterm::Int`: The number of terms used in the approximation of `pi`.
 - `pi_approx::Float64`: The approximate value of `pi`.
 - `error::Float64`: The absolute error in the approximation of `pi`.
 """
-function main(; n::Int = 10^5, outputlevel::Int = 1)
+function main(; nterm::Int = 10^5, outputlevel::Int = 1)
     # Print the number of terms to use to approximate `pi`.
-    outputlevel > 0 && println("Number of terms: ", n)
+    outputlevel > 0 && println("Number of terms: ", nterm)
 
     # Approximate `pi` by calling the function defined above.
-    pi_approx = approx_pi(n)
+    pi_approx = approx_pi(nterm)
     outputlevel > 0 && println("Approximate pi: ", pi_approx)
 
     # Compute the error in the approximation.
@@ -42,7 +43,7 @@ function main(; n::Int = 10^5, outputlevel::Int = 1)
     error = abs(pi_approx - pi)
     outputlevel > 0 && println("Error: ", error)
 
-    # Return the number of iterations, approximation to `pi`, and
+    # Return the number of terms in the series, approximation to `pi`, and
     # absolute error.
-    return (; n, pi_approx, error)
+    return (; nterm, pi_approx, error)
 end
