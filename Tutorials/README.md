@@ -65,7 +65,7 @@ pi_approx = 3.1416026534897203
 error = 9.999899927226608e-6
 
 ```
-The script is approximating the value of `pi` using the [Leibniz formulat](https://en.wikipedia.org/wiki/Leibniz_formula_for_%CF%80) using `n` terms in the series. To access the values that are returned from the `main` function so you can analyze them interactively, you can call the script like this:
+The script is approximating the value of `pi` using the [Leibniz formula](https://en.wikipedia.org/wiki/Leibniz_formula_for_%CF%80) using `n` terms in the series. To access the values that are returned from the `main` function so you can analyze them interactively, you can call the script like this:
 ```julia
 julia> res = main();
 n = 100000
