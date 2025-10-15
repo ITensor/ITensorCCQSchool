@@ -1,5 +1,6 @@
-using ITensorMPS: MPO, OpSum, correlation_matrix, dmrg, expect, inner, maxlinkdim,
-    random_mps, siteinds
+using ITensorMPS: MPO, OpSum, dmrg, maxlinkdim, random_mps, siteinds
+# Functions for performing measurements of MPS
+using ITensorMPS: correlation_matrix, expect, inner
 
 # Load the Plots package for plotting
 using Plots: Plots, plot
@@ -42,8 +43,8 @@ function main(;
     outputlevel > 0 && println("Optimized MPS bond dimension: ", maxlinkdim(psi))
     outputlevel > 0 && println("Energy: ", energy)
 
-    outputlevel > 0 && @show inner(psi, psi)
-    outputlevel > 0 && @show inner(psi', H, psi)
+    outputlevel > 0 && println("⟨ψ|ψ⟩: ", inner(psi, psi))
+    outputlevel > 0 && println("⟨ψ|H|ψ⟩: ", inner(psi', H, psi))
 
     sz = expect(psi, "Sz")
     outputlevel > 0 && display(plot(sz; xlabel = "Site", ylabel = "⟨Sz⟩"))
