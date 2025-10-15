@@ -1,8 +1,8 @@
 """
     approx_pi(n::Int)
 
-Approximate `pi` using the Leibniz formula.
-See: https://en.wikipedia.org/wiki/Leibniz_formula_for_%CF%80
+Approximate `pi` using the
+[Leibniz formula](https://en.wikipedia.org/wiki/Leibniz_formula_for_%CF%80).
 """
 function approx_pi(n::Int)
     pi_by_4 = 1.0
@@ -15,7 +15,9 @@ end
 """
     main(; kwargs...)
 
-Approximate `pi` using the Leibniz formula and compute the error.
+Approximate `pi` using the
+[Leibniz formula](https://en.wikipedia.org/wiki/Leibniz_formula_for_%CF%80) and compute the
+error.
 
 # Keywords
 - `n::Int = 10^5`: The number of terms to use in the approximation of `pi`.

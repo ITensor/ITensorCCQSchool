@@ -132,6 +132,8 @@ search: main @main min Main Pair map join in mark asin wait sin max tan map!
     •  pi_approx::Float64: The approximate value of pi.
     •  error::Float64: The absolute error in the approximation of pi.
 
+julia>
+
 ```
 You can get the errors as a function of iterations by running the script multiple times:
 ```julia
