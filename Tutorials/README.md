@@ -1,6 +1,8 @@
 # ITensor CCQ School Hands-On Tutorials Introduction
 
-Welcome to the ITensor CCQ School hands-on tutorials.
+Welcome to the ITensor CCQ School hands-on tutorials. Here you will find instructions on how to install Julia and get started running the hands-on tutorials. The tutorials for each day can be found in the corresponding subdirectories [Day1](./Day1/), [Day2](./Day2), and [Day3](./Day3).
+
+## Installation Instructions
 
 To run the tutorials:
 
@@ -35,7 +37,7 @@ julia> clone("https://github.com/ITensor/ITensorCCQSchool", ".")
 ```
 Here we use Julia's  [LibGit2 standard library](https://docs.julialang.org/en/v1/stdlib/LibGit2/). Alternatively you can execute `git clone https://github.com/ITensor/ITensorCCQSchool` directly from a shell.
 
-4. Enter the `ITensorCCQSchool/Tutorials/Day1` directory and install the dependencies from the Julia REPL:
+4. Now that you have Julia installed and the tutorial code available, we will give an introduction to running the first tutorial for day 1 ([Day1/1-julia-intro.jl](./Day1/1-julia-intro.jl)). Enter the `ITensorCCQSchool/Tutorials/Day1` directory using Julia's [`cd`](https://docs.julialang.org/en/v1/base/file/#Base.Filesystem.cd-Tuple{AbstractString}) function and install the dependencies from the Julia REPL:
 ```julia
 julia> cd("ITensorCCQSchool/Tutorials/Day1")
 
@@ -136,7 +138,7 @@ julia>
 
 ```
 
-7. Note that you can analyze which directory you are in and what tutorial files are available directly from the Julia REPL:
+7. Note that you can analyze which directory you are in and what tutorial files are available directly from the Julia REPL using functions such as [`pwd`](https://docs.julialang.org/en/v1/base/file/#Base.Filesystem.pwd) and [`readdir`](https://docs.julialang.org/en/v1/base/file/#Base.Filesystem.readdir):
 ```julia
 julia> pwd()
 "[...]/ITensorCCQSchool/Tutorials/Day1"
@@ -171,3 +173,11 @@ julia> res = main();
 
 ```
 Note that if you don't call `include` again, you won't see the changes you make to the file reflected when you call the `main` function. (For advanced users, note that you can use [`Revise.includet`](https://timholy.github.io/Revise.jl/stable/cookbook/#includet-usage) as an alternative to `include` which would automatically track changes to the file and update `main` without having to call `include` each time.)
+
+**Note:** We highly recommend keeping your Julia session open throughout each day of the tutorial, which will keep your package environment active and ensure you don't incur re-compilation of precompiled code. If at some point you close your Julia session, make sure to enter the directory corresponding to the tutorial day (i.e. `Tutorials/Day1`) and execute:
+```julia
+julia> ]
+
+pkg> activate .
+```
+to activate the environment, which will ensure you have the correct dependencies available to run the tutorial scripts for that day.
