@@ -30,7 +30,7 @@ function contract_tensornetwork(tensornetwork::Dict)
     return prod(ITensor[tensornetwork[v] for v in keys(tensornetwork)])[]
 end
 
-function update_message(tensornetwork::Dict, messages::Dict, g::NamedGraph, e::NamedEdge)
+function updated_message(tensornetwork::Dict, messages::Dict, g::NamedGraph, e::NamedEdge)
     v_neighbors = filter(v -> v ≠ dst(e), neighbors(g, src(e)))
     local_tensor = tensornetwork[src(e)]
     messages = copy(messages)
@@ -40,16 +40,18 @@ function update_message(tensornetwork::Dict, messages::Dict, g::NamedGraph, e::N
         incoming_messages = [messages[NamedEdge(vn => src(e))] for vn in v_neighbors]
         m = normalize(local_tensor * prod(incoming_messages))
     end
-    messages[e] = m
-    return messages
+    return m
 end
 
 #TODO: Do this in parallel to make sequence redundant
 function update_messages(tensornetwork::Dict, messages::Dict, g::NamedGraph)
-    for e in vcat(edges(g), reverse.(edges(g)))
-        messages = update_message(tensornetwork, messages, g, e)
+    updated_messages = copy(messages)
+    for e in edges(g)
+        me = updated_message(tensornetwork, messages, g, e)
+        mer = updated_message(tensornetwork, messages, g, reverse(e))
+        updated_messages[e], updated_messages[reverse(e)] = me, mer
     end
-    return messages
+    return updated_messages
 end
 
 function belief_propagation(tn::Dict, g::NamedGraph, niters::Int; tolerance::Float64=1e-10)
@@ -59,11 +61,13 @@ function belief_propagation(tn::Dict, g::NamedGraph, niters::Int; tolerance::Flo
         old_messages = copy(messages)
         messages = update_messages(tn, messages, g)
         if Statistics.mean([1 - dot(messages[e], old_messages[e])^2 for e in all_edges]) < tolerance
-            println("Converged after $i iterations")
+            println("BP Algorithm Converged after $i iterations")
+            return messages, i
             break
         end
+
     end
-    return messages
+    return messages, Inf
 end
 
 function bp_free_energy_density(tn::Dict, messages::Dict, g::NamedGraph)
@@ -82,12 +86,12 @@ function bp_free_energy_density(tn::Dict, messages::Dict, g::NamedGraph)
     return (f_node - f_edge) / length(vertices(g))
 end
 
-function main(; n::Int, β::Number = 0.2)
-    g = named_grid((n,n); periodic = true)
+function main(; Lx::Int, Ly::Int, beta::Number = 0.2, periodic = false)
+    g = named_grid((Lx,Ly); periodic)
 
-    tensornetwork = ising_tn(g, β)
-    messages = belief_propagation(tensornetwork, g, 100)
+    tensornetwork = ising_tn(g, beta)
+    messages, niterations = belief_propagation(tensornetwork, g, 100)
 
-    free_energy_density = bp_free_energy_density(tensornetwork, messages, g)
-    return (; free_energy_density)
+    f = bp_free_energy_density(tensornetwork, messages, g) / beta
+    return (; f, niterations)
 end

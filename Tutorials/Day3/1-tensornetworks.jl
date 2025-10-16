@@ -40,13 +40,13 @@ function contract_tensornetwork(tensornetwork::Dict)
     return prod(ITensor[tensornetwork[v] for v in keys(tensornetwork)])[]
 end
 
-function main(; β::Number = 0.2)
+function main(; beta::Number = 0.2)
     # Create a simple graph
     g = NamedGraph([1,2,3])
     edges = [1 => 2, 2 => 3]
     g = add_edges(g, edges)
 
-    tensornetwork = ising_tn(g, β)
+    tensornetwork = ising_tn(g, beta)
 
     z = contract_tensornetwork(tensornetwork)
 
