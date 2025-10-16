@@ -5,7 +5,7 @@
 1. Run the script like you did as part of the introduction:
 ```julia
 ```julia
-julia> include("01-julia-intro.jl")
+julia> include("1-julia-intro.jl")
 main (generic function with 1 method)
 
 julia> main();

@@ -54,9 +54,9 @@ julia> ]
 ```
 Executing `]` at the REPL enables the Pkg REPL, which is more convenient for entering Pkg commands. Press delete/backspace to exit the Pkg REPL and go back to the standard Julia REPL prompt. `activate .` enables the local environment/project in [Tutorials/Day1](./Day1/), where the package dependencies for the tutorials on the first day of the school are defined. `instantiate` installs those dependencies and performs some compilation. It may take some time but it will only need to be done once for each project (so in our case, once for each day of the school).
 
-5. Use `include` to load the [first tutorial](./Day1/01-julia-intro.jl) into the REPL. That will introduce the function `main` which you can execute to run the tutorial:
+5. Use `include` to load the [first tutorial](./Day1/1-julia-intro.jl) into the REPL. That will introduce the function `main` which you can execute to run the tutorial:
 ```julia
-julia> include("01-julia-intro.jl")
+julia> include("1-julia-intro.jl")
 main (generic function with 1 method)
 
 julia> main();
@@ -138,19 +138,19 @@ julia>
 
 7. If you want to make more involved changes to the script that can't be controlled through keyword arguments, edit the file to make changes to the script:
 ```julia
-julia> edit("01-julia-intro.jl")
+julia> edit("1-julia-intro.jl")
 
 ```
 which will open your file in a text editor determined by Julia (see the [documentation for `edit`](https://docs.julialang.org/en/v1/stdlib/InteractiveUtils/#InteractiveUtils.edit-Tuple{AbstractString,%20Integer}) for more details). Otherwise, open the file with your text editor or IDE of choice, such as Vim, Emacs, VS Code, etc. A convenient way to do that is by entering Julia's shell mode by executing `;` at the REPL:
 ```julia
 julia> ;
 
-shell> vi 01-julia-intro.jl
+shell> vi 1-julia-intro.jl
 
 ```
 and press delete/backspace to go back to the Julia REPL. When you are done editing the tutorial script, simply save the file and `include` the file again to get a new `main` function to execute in your existing Julia session to see your changes reflected in the output:
 ```julia
-julia> include("01-julia-intro.jl")
+julia> include("1-julia-intro.jl")
 main (generic function with 1 method)
 
 julia> res = main();
