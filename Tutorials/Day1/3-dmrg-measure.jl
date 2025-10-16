@@ -10,7 +10,7 @@ using Plots: Plots, plot
 Plots.unicodeplots()
 
 """
-    animate(f; nframes, fps=30)
+    animate(f; nframes::Int, fps::Int = 30)
 
 Call `f(i)` for each frame `i in 1:nframes`, where `f(i)` returns an object to print to the
 terminal at each frame. Renders each frame in-place in the terminal at `fps` frames per
@@ -18,22 +18,22 @@ second.
 """
 function animate(f; nframes::Int, fps::Real = 30)
     io = IOBuffer()
-    # Hide cursor.
+    # Hide cursor
     print(stdout, "\x1b[?25l")
     return try
-        # Clear screen.
+        # Clear screen
         print(stdout, "\x1b[2J")
         for i in 1:nframes
             seekstart(io)
             show(io, MIME("text/plain"), f(i))
             frame_str = String(take!(io))
-            # Move home.
+            # Move home
             print(stdout, "\x1b[H")
             println(frame_str)
             sleep(1 / fps)
         end
     finally
-        # Show cursor again.
+        # Show cursor again
         print(stdout, "\x1b[?25h")
     end
 end
@@ -68,13 +68,17 @@ function main(;
     H = MPO(os, sites)
 
     # It has bond dimension 5
-    outputlevel > 0 && println("MPO bond dimension: ", maxlinkdim(H))
+    if outputlevel > 0
+        println("MPO bond dimension: ", maxlinkdim(H))
+    end
 
     # Initial state for DMRG
     psi0 = random_mps(sites; linkdims = 10)
 
     # It starts with a bond dimension 10
-    outputlevel > 0 && println("Initial MPS bond dimension: ", maxlinkdim(psi0))
+    if outputlevel > 0
+        println("Initial MPS bond dimension: ", maxlinkdim(psi0))
+    end
 
     # Run DMRG
     sz_observer = SzObserver()
@@ -84,27 +88,32 @@ function main(;
     )
     szs = sz_observer.szs
 
-    outputlevel > 0 && println("Optimized MPS bond dimension: ", maxlinkdim(psi))
-    outputlevel > 0 && println("Energy: ", energy)
-
-    outputlevel > 0 && println("⟨ψ|ψ⟩: ", inner(psi, psi))
-    outputlevel > 0 && println("⟨ψ|H|ψ⟩: ", inner(psi', H, psi))
+    if outputlevel > 0
+        println("Optimized MPS bond dimension: ", maxlinkdim(psi))
+        println("Energy: ", energy)
+        println("⟨ψ|ψ⟩: ", inner(psi, psi))
+        println("⟨ψ|H|ψ⟩: ", inner(psi', H, psi))
+    end
 
     sz = expect(psi, "Sz")
-    outputlevel > 1 && display(
-        plot(
-            sz; xlim = (1, nsite), ylim = (-0.25, 0.25), xlabel = "Site", ylabel = "⟨Sz⟩",
-            legend = false
+    if outputlevel > 0
+        display(
+            plot(
+                sz; xlim = (1, nsite), ylim = (-0.25, 0.25), xlabel = "Site", ylabel = "⟨Sz⟩",
+                legend = false
+            )
         )
-    )
+    end
 
     szsz = correlation_matrix(psi, "Sz", "Sz")
-    outputlevel > 1 && display(
-        plot(
-            szsz[nsite ÷ 2, :]; xlim = (1, nsite), ylim = (-0.25, 0.25), xlabel = "Site",
-            ylabel = "⟨SzⱼSz⟩", legend = false
+    if outputlevel > 0
+        display(
+            plot(
+                szsz[nsite ÷ 2, :]; xlim = (1, nsite), ylim = (-0.25, 0.25), xlabel = "Site",
+                ylabel = "⟨SzⱼSz⟩", legend = false
+            )
         )
-    )
+    end
 
     return (; energy, H, psi, sz, szsz, szs, nsite, nsweeps, maxdim, cutoff)
 end
