@@ -7,8 +7,9 @@
 - [Tutorial 2](#tutorial-2)
 - [Tutorial 3](#tutorial-3)
 
+<a id="installation-instructions"></a>
 <details>
-  <summary><strong> Installation Instructions</strong></summary>
+  <summary><strong>Installation Instructions</strong></summary>
 
 To run the tutorials:
 
