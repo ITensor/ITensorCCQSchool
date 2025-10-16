@@ -29,6 +29,7 @@ First, lets run the  script [1-tensornetworks.jl](./1-tensornetworks.jl)
 ```
 julia> include("1-tensornetworks.jl")
 main (generic function with 1 method)
+```
 
 You will see that it builds the 3-site path graph, which can be accessed and viewed via
 
