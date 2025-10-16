@@ -2,8 +2,7 @@
 
 ## Tutorial 1: 1-julia-intro.jl
 
-1. Run the script like you did as part of the introduction:
-```julia
+1. Run the script like you did as part of the [introduction](..):
 ```julia
 julia> include("1-julia-intro.jl")
 main (generic function with 1 method)
