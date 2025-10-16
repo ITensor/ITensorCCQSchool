@@ -10,6 +10,7 @@
 <a id="installation-instructions"></a>
 <details>
   <summary><h2>Installation Instructions</h2></summary>
+  <hr>
 
 To run the tutorials:
 
@@ -191,7 +192,10 @@ to activate the environment, which will ensure you have the correct dependencies
 
 </details>
 
-## Tutorial 1
+<a id="tutorial-1"></a>
+<details>
+  <summary><h2>Tutorial 1</h2></summary>
+  <hr>
 
 Tutorial 1 of day 1 is based on the script [1-julia-intro.jl](./1-julia-intro.jl).
 
@@ -260,6 +264,18 @@ julia> plot(inv.(nterms), errors; legend = false)
 
 ```
 
-## Tutorial 2
+</details>
 
-## Tutorial 3
+<a id="tutorial-2"></a>
+<details>
+  <summary><h2>Tutorial 2</h2></summary>
+  <hr>
+
+</details>
+
+<a id="tutorial-3"></a>
+<details>
+  <summary><h2>Tutorial 3</h2></summary>
+  <hr>
+
+</details>
