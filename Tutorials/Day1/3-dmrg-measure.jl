@@ -16,11 +16,11 @@ Call `f(i)` for each frame `i in 1:nframes`, where `f(i)` returns an object to p
 terminal at each frame. Renders each frame in-place in the terminal at `fps` frames per
 second.
 """
-function animate(f; nframes::Int, fps::Real=30)
+function animate(f; nframes::Int, fps::Real = 30)
     io = IOBuffer()
     # Hide cursor.
     print(stdout, "\x1b[?25l")
-    try
+    return try
         # Clear screen.
         print(stdout, "\x1b[2J")
         for i in 1:nframes
@@ -78,7 +78,10 @@ function main(;
 
     # Run DMRG
     sz_observer = SzObserver()
-    energy, psi = dmrg(H, psi0; nsweeps, maxdim, cutoff, observer = sz_observer, outputlevel)
+    energy, psi = dmrg(
+        H, psi0; nsweeps, maxdim, cutoff, observer = sz_observer,
+        outputlevel = min(outputlevel, 1)
+    )
     szs = sz_observer.szs
 
     outputlevel > 0 && println("Optimized MPS bond dimension: ", maxlinkdim(psi))
@@ -88,10 +91,20 @@ function main(;
     outputlevel > 0 && println("⟨ψ|H|ψ⟩: ", inner(psi', H, psi))
 
     sz = expect(psi, "Sz")
-    outputlevel > 0 && display(plot(sz; xlabel = "Site", ylabel = "⟨Sz⟩"))
+    outputlevel > 1 && display(
+        plot(
+            sz; xlim = (1, nsite), ylim = (-0.25, 0.25), xlabel = "Site", ylabel = "⟨Sz⟩",
+            legend = false
+        )
+    )
 
     szsz = correlation_matrix(psi, "Sz", "Sz")
-    outputlevel > 0 && display(plot(szsz[nsite ÷ 2, :]; xlabel = "Site", ylabel = "⟨SzⱼSz⟩"))
+    outputlevel > 1 && display(
+        plot(
+            szsz[nsite ÷ 2, :]; xlim = (1, nsite), ylim = (-0.25, 0.25), xlabel = "Site",
+            ylabel = "⟨SzⱼSz⟩", legend = false
+        )
+    )
 
     return (; energy, H, psi, sz, szsz, szs, nsite, nsweeps, maxdim, cutoff)
 end
