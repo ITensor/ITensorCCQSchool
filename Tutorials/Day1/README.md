@@ -9,7 +9,7 @@
 
 <a id="installation-instructions"></a>
 <details>
-  <summary><strong>Installation Instructions</strong></summary>
+  <summary><h2>Installation Instructions</h2></summary>
 
 To run the tutorials:
 
