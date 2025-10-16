@@ -190,6 +190,8 @@ pkg> activate .
 ```
 to activate the environment, which will ensure you have the correct dependencies available to run the tutorial scripts for that day.
 
+Click [here](#table-of-contents) to return to the table of contents.
+
 </details>
 
 <a id="tutorial-1"></a>
@@ -264,6 +266,8 @@ julia> plot(inv.(nterms), errors; legend = false)
 
 ```
 
+Click [here](#table-of-contents) to return to the table of contents.
+
 </details>
 
 <a id="tutorial-2"></a>
@@ -271,11 +275,15 @@ julia> plot(inv.(nterms), errors; legend = false)
   <summary><h2>Tutorial 2</h2></summary>
   <hr>
 
+Click [here](#table-of-contents) to return to the table of contents.
+
 </details>
 
 <a id="tutorial-3"></a>
 <details>
   <summary><h2>Tutorial 3</h2></summary>
   <hr>
+
+Click [here](#table-of-contents) to return to the table of contents.
 
 </details>
