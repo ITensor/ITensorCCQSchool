@@ -1,6 +1,14 @@
 # Day 1 Hands-On Tutorials
 
-## Installation Instructions
+## Table of Contents
+
+- [Installation Instructions](#installation-instructions)
+- [Tutorial 1](#tutorial-1)
+- [Tutorial 2](#tutorial-2)
+- [Tutorial 3](#tutorial-3)
+
+<details>
+  <summary><strong> Installation Instructions</strong></summary>
 
 To run the tutorials:
 
@@ -180,7 +188,11 @@ pkg> activate .
 ```
 to activate the environment, which will ensure you have the correct dependencies available to run the tutorial scripts for that day.
 
-## Tutorial 1: 1-julia-intro.jl
+</details>
+
+## Tutorial 1
+
+Tutorial 1 of day 1 is based on the script [1-julia-intro.jl](./1-julia-intro.jl).
 
 1. Run the script like you did as part of the [installation instructions](#installation-instructions):
 ```julia
@@ -247,6 +259,6 @@ julia> plot(inv.(nterms), errors; legend = false)
 
 ```
 
-## Tutorial 2: 2-dmrg.jl
+## Tutorial 2
 
-## Tutorial 3: 3-dmrg-measure.jl
+## Tutorial 3
