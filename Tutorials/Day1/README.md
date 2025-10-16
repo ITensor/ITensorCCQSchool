@@ -275,6 +275,8 @@ Click [here](#table-of-contents) to return to the table of contents.
   <summary><h2>Tutorial 2</h2></summary>
   <hr>
 
+In this tutorial you will run DMRG on the 1D Heisenberg model.
+
 Click [here](#table-of-contents) to return to the table of contents.
 
 </details>
