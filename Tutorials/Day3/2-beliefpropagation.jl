@@ -3,6 +3,18 @@ using LinearAlgebra: normalize, dot
 using NamedGraphs.NamedGraphGenerators: named_grid, named_hexagonal_lattice_graph, named_path_graph
 using ITensors: Index, ITensor, delta, noprime, prime, commonind, randomITensor, onehot
 using Statistics
+using QuadGK
+
+# -β f as a function of β
+function ising_phi(β)
+    g(θ1, θ2) = log(
+        cosh(2β)*cosh(2β) -
+        sinh(2β)*cos(θ1) -
+        sinh(2β)*cos(θ2)
+    )
+    inner(θ2) = quadgk(θ1 -> g(θ1, θ2), 0, 2π)[1]
+    log(2) - (1/(8π^2)) * quadgk(inner, 0, 2π)[1]
+end
 
 function ising_tn(g::NamedGraph, β::Real)
     nv = length(vertices(g))
@@ -17,7 +29,7 @@ function ising_tn(g::NamedGraph, β::Real)
     T = Dict()
     for v in vertices(g)
         inds = [link[e] for e in edges(g) if src(e)==v || dst(e)==v]
-        T[v] = delta(inds)*(2^(1/length(vertices(g))))
+        T[v] = delta(inds)
         for vn in neighbors(g, v)
             e = NamedEdge(v, vn) ∈ edges(g) ? NamedEdge(v, vn) : NamedEdge(vn, v)
             T[v] = noprime(T[v]*ITensor(sqrt_W, link[e], prime(link[e]))) 
@@ -83,7 +95,7 @@ function bp_free_energy_density(tn::Dict, messages::Dict, g::NamedGraph)
         m2 = messages[NamedEdge(dst(e) => src(e))]
         f_edge += log((m1 * m2)[])
     end
-    return (f_node - f_edge) / length(vertices(g))
+    return (-f_node + f_edge) / length(vertices(g))
 end
 
 function main(; Lx::Int, Ly::Int, beta::Number = 0.2, periodic = false)
@@ -92,6 +104,7 @@ function main(; Lx::Int, Ly::Int, beta::Number = 0.2, periodic = false)
     tensornetwork = ising_tn(g, beta)
     messages, niterations = belief_propagation(tensornetwork, g, 100)
 
-    f = bp_free_energy_density(tensornetwork, messages, g) / beta
-    return (; f, niterations)
+    f = bp_free_energy_density(tensornetwork, messages, g)
+    exact_f = ising_phi(beta)
+    return (; f, exact_f, niterations)
 end

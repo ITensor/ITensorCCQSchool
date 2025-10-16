@@ -114,7 +114,7 @@ In the previous tutorial, the `contract_tensornetwork()` function contracted the
 
 In this tutorial we are going to use the script [2-beliefpropagation.jl](./2-beliefpropagation.jl) belief propagation to contract tensor networks in an efficient, but approximate manner - independent of their structure.
 
-The script now builds an `nx x ny` square grid tensornetwork representing the partition function of the Ising model in 2D. Inverse temperature is set via `beta`, periodic boundaries can be added with the flag `periodic = true`.
+The script now builds an `nx x ny` square grid tensornetwork representing the partition function of the Ising model in 2D. Inverse temperature is set via `beta`, periodic boundaries can be added with the flag `periodic = true`. Returned is the number of iterations BP took to converge, and the rescaled free energy density `f = log(Z)/(nx*ny)`
 
 We can do the following to get the BP computed free energy density on a 10x1 OBC square grid. This is just a path graph, like in the previous example.
 ```
@@ -128,7 +128,7 @@ julia> @show res.f
 res.f = 0.15651070076799578
 ```
 1. Compare the result to the 1D free energy density on OBC, 
-$f_{Lx,OBC} = \frac{1}{\beta * Lx}ln(4\cosh^{Lx-1}(\beta))$
+$f_{Lx,OBC} = -\frac{1}{Lx}ln(4\cosh^{Lx-1}(\beta))$
 
 They agree. Why?
 
@@ -144,11 +144,43 @@ res.f = 0.44591394945871987
 ```
 
 2. Compare the result to the 1D free energy density on PBC, 
-$f_{Lx,OBC} = \frac{1}{\beta * Lx}ln(2\cosh^{Lx}(\beta) + 2\sinh^{Lx}(\beta))$
+$f_{Lx,OBC} = -\frac{1}{Lx}ln(2\cosh^{Lx}(\beta) + 2\sinh^{Lx}(\beta))$
 
-They don't agree. Why? Plot the error between the bp approximated free energy density and
-the exact free energy density as a function of $L_{x}$
+They don't agree. Why? Pick a finite value of `beta` and compute both the exact PBC free energy vs `Lx` for `Lx = 3,4,...30` and the `bp` free energy using the `main` function (set `Ly = 1 and `periodic = true`).
 
+Plot the error between the bp approximated free energy density and
+the exact free energy density as a function of $L_{x}$ on a log scale.
 
+```
+julia> plot([Lx for Lx in 3:30], errs, yscale = :ln)
+         ┌────────────────────────────────────────┐  
+ℯ⁻³⸱³³¹⁷⁸│⠀⢆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│y1
+         │⠀⠀⢣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
+         │⠀⠀⠀⠣⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
+         │⠀⠀⠀⠀⠘⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
+         │⠀⠀⠀⠀⠀⠘⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
+         │⠀⠀⠀⠀⠀⠀⠀⠣⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
+         │⠀⠀⠀⠀⠀⠀⠀⠀⠣⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
+         │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
+         │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
+         │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠱⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
+         │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
+         │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
+         │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠳⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
+         │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠢⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
+ℯ⁻²⁴⸱⁸²⁵⁹│⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠒⠒⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠄⠀│  
+         └────────────────────────────────────────┘  
+         ⠀2.19⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀30.81⠀  
+```
 
+Now we're going to move fully into 2D. Let's compute the BP approximate free energy density on a large torus with `Lx = L` and `Ly = L` as a function of `beta`.
 
+```
+julia> bp_free_energies = [main(; Lx=15, Ly = 15, periodic = true, beta = 0.05*i).f for i in 1:20]
+```
+
+Congratulations. You just approximately solved the 2D Ising model on a 15x15 square lattice for twenty different inverse temperatures in about 10 seconds.
+
+3. How does the number of iterations that BP took to converge depend on the inverse temperature? Plot this. Where's the peak? Is it near the critical point of the 2D model? Or somewhere different?
+
+4. Included in `[2-beliefpropagation.jl](./2-beliefpropagation.jl)` is a function for computing the exact rescaled free energy of the 2D model in the thermodynamic limit via Onsager's famous result.
