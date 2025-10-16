@@ -3,7 +3,6 @@ using ITensorMPS: MPO, OpSum, dmrg, maxlinkdim, random_mps, siteinds
 using ITensorMPS: expect, inner
 # Functions for time evolution
 using ITensorMPS: apply, op
-using ITensors: ITensor
 using LinearAlgebra: normalize
 # Use to set the RNG seed for reproducibility
 using StableRNGs: StableRNG
@@ -69,14 +68,12 @@ function main(;
     )
 
     # Make gates (1, 2), (2, 3), (3, 4), ...
-    gates = ITensor[]
-    for j in 1:(nsite - 1)
+    gates = map(1:(nsite - 1)) do j
         si, sj = sites[j], sites[j + 1]
         hj = 1 / 2 * op("S+", si) * op("S-", sj) +
             1 / 2 * op("S-", si) * op("S+", sj) +
             op("Sz", si) * op("Sz", sj)
-        Gj = exp(-im * timestep / 2 * hj)
-        push!(gates, Gj)
+        return exp(-im * timestep / 2 * hj)
     end
     # Include gates in reverse order too
     # (N,N-1),(N-1,N-2),...
@@ -100,6 +97,7 @@ function main(;
                 println("time: ", current_time)
                 println("Bond dimension: ", maxlinkdim(psit))
                 println("⟨ψₜ|Szⱼ|ψₜ⟩: ", sz[j])
+                println("∑ⱼ⟨ψₜ|Szⱼ|ψₜ⟩: ", sum(sz))
                 println("⟨ψₜ|H|ψₜ⟩: ", energy)
             end
         end

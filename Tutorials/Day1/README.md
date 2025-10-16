@@ -94,6 +94,9 @@ julia> res.pi_approx
 julia> res.error
 9.999899927226608e-6
 
+julia> keys(res)
+(:nterm, :pi_approx, :error)
+
 julia> (; pi_approx, error) = res
 
 julia> pi_approx
