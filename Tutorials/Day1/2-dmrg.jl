@@ -1,4 +1,10 @@
 using ITensorMPS: MPO, OpSum, dmrg, maxlinkdim, random_mps, siteinds
+# Use to set the RNG seed for reproducibility
+using StableRNGs: StableRNG
+# Load the Plots library for plotting results
+using Plots: Plots, plot
+# Set the plotting backend to UnicodePlots to print the plots in the terminal
+Plots.unicodeplots()
 
 """
     main(; kwargs...)
@@ -22,6 +28,10 @@ A named tuple containing:
 - `energy`: The optimized ground state energy.
 - `H`: The Hamiltonian as an MPO.
 - `psi`: The optimized ground state wavefunction as an MPS.
+- `nsite::Int`: Same as above.
+- `nsweeps::Int`: Same as above.
+- `maxdim::Vector{Int}`: Same as above.
+- `cutoff::Vector{Float64}`: Same as above.
 """
 function main(;
         # Number of sites
@@ -32,6 +42,12 @@ function main(;
         cutoff = [1.0e-10],
         outputlevel = 1,
     )
+
+    outputlevel > 0 && println("nsite: ", nsite)
+    outputlevel > 0 && println("nsweeps: ", nsweeps)
+    outputlevel > 0 && println("maxdim: ", maxdim)
+    outputlevel > 0 && println("cutoff: ", cutoff)
+
     # Build the physical indices for nsite spins (spin 1/2)
     sites = siteinds("S=1/2", nsite)
 
@@ -48,7 +64,8 @@ function main(;
     outputlevel > 0 && println("MPO bond dimension: ", maxlinkdim(H))
 
     # Initial state for DMRG
-    psi0 = random_mps(sites; linkdims = 10)
+    rng = StableRNG(123)
+    psi0 = random_mps(rng, sites; linkdims = 10)
 
     # It starts with a bond dimension 10
     outputlevel > 0 && println("Initial MPS bond dimension: ", maxlinkdim(psi0))
@@ -57,7 +74,7 @@ function main(;
     energy, psi = dmrg(H, psi0; nsweeps, maxdim, cutoff, outputlevel)
 
     outputlevel > 0 && println("Optimized MPS bond dimension: ", maxlinkdim(psi))
-    outputlevel > 0 && println("Energy: ", energy)
+    outputlevel > 0 && println("DMRG energy: ", energy)
 
-    return (; energy, H, psi)
+    return (; energy, H, psi, nsite, nsweeps, maxdim, cutoff)
 end

@@ -190,6 +190,8 @@ pkg> activate .
 ```
 to activate the environment, which will ensure you have the correct dependencies available to run the tutorial scripts for that day.
 
+Also note that if you want to cancel a calculation that is in-progress, you can use execute Control-C on your keyboard, which will cancel the calculation and return you to the Julia REPL prompt.
+
 Click [here](#table-of-contents) to return to the table of contents.
 
 </details>
@@ -276,6 +278,151 @@ Click [here](#table-of-contents) to return to the table of contents.
   <hr>
 
 In this tutorial you will run DMRG on the 1D Heisenberg model.
+
+1. Run the `main` function provided in the file [2-dmrg.jl](./2-dmrg.jl):
+```julia
+julia> include("2-dmrg.jl")
+main
+
+julia> res = main();
+nsite: 30
+nsweeps: 5
+maxdim: [10, 20, 100, 100, 200]
+cutoff: [1.0e-10]
+MPO bond dimension: 5
+Initial MPS bond dimension: 10
+After sweep 1 energy=-13.096407053604542  maxlinkdim=10 maxerr=1.76E-03 time=0.031
+After sweep 2 energy=-13.11131477426564  maxlinkdim=20 maxerr=3.09E-07 time=0.036
+After sweep 3 energy=-13.111355746388746  maxlinkdim=47 maxerr=9.99E-11 time=0.126
+After sweep 4 energy=-13.11135575201415  maxlinkdim=47 maxerr=9.63E-11 time=0.115
+After sweep 5 energy=-13.111355752020133  maxlinkdim=47 maxerr=9.40E-11 time=0.114
+Optimized MPS bond dimension: 47
+DMRG energy: -13.111355752020133
+
+```
+Note that the first sweep takes a lot longer than the subsequent sweeps. This is because Julia is just-in-time compiled, so it compiles functions the first time they are run in a new Julia session, but then repeated calls to the same function with the same types of inputs don't need to be compiled again.
+
+You can see the energy converges rapidly to a fixed value with the number of sweeps. That isn't always the case for DMRG, in particular the convergence of fermionic systems and 2D systems can be much slower, depend on the initial state used, and even get stuck in local minimima if the optimization isn't performed carefully.
+
+2. Try changing the number of sites and analyze the energy per site as a function of system size:
+```julia
+julia> res = main(; nsite = 40);
+nsite: 40
+nsweeps: 5
+maxdim: [10, 20, 100, 100, 200]
+cutoff: [1.0e-10]
+MPO bond dimension: 5
+Initial MPS bond dimension: 10
+After sweep 1 energy=-17.519729740637832  maxlinkdim=10 maxerr=2.22E-03 time=0.045
+After sweep 2 energy=-17.54130281611256  maxlinkdim=20 maxerr=1.20E-06 time=0.050
+After sweep 3 energy=-17.541473181198704  maxlinkdim=58 maxerr=9.89E-11 time=0.134
+After sweep 4 energy=-17.541473289639278  maxlinkdim=58 maxerr=9.99E-11 time=0.214
+After sweep 5 energy=-17.541473289665372  maxlinkdim=58 maxerr=9.54E-11 time=0.209
+Optimized MPS bond dimension: 58
+DMRG energy: -17.541473289665372
+
+julia> res.energy / res.nsite
+-0.4385368322416343
+
+julia> res = main(; nsite = 50);
+nsite: 50
+nsweeps: 5
+maxdim: [10, 20, 100, 100, 200]
+cutoff: [1.0e-10]
+MPO bond dimension: 5
+Initial MPS bond dimension: 10
+After sweep 1 energy=-21.90903851718557  maxlinkdim=10 maxerr=1.79E-03 time=0.042
+After sweep 2 energy=-21.96988537799032  maxlinkdim=20 maxerr=6.14E-07 time=0.069
+After sweep 3 energy=-21.972103405447253  maxlinkdim=57 maxerr=9.99E-11 time=0.221
+After sweep 4 energy=-21.97211026485518  maxlinkdim=71 maxerr=1.00E-10 time=0.687
+After sweep 5 energy=-21.972110267055612  maxlinkdim=69 maxerr=1.00E-10 time=0.441
+Optimized MPS bond dimension: 69
+DMRG energy: -21.972110267055612
+
+julia> res.energy / res.nsite
+-0.4394422053411122
+
+```
+Note that the bond dimension DMRG needs to represent the ground state accurately increases with system size. This is because the state is gapless, which means the entanglement and correlations increase with system size. You can see that the energy per site increases with system size. That is a reflection of the fact that we are studying finite systems with open boundary conditions, and the energy hasn't converged to the thermodynamic limit yet.
+
+Let's look at the energy as a function of system size:
+```julia
+julia> nsites = 10:10:60
+10:10:60
+
+julia> energies = [main(; nsite, outputlevel = 0).energy for nsite in nsites]
+6-element Vector{Float64}:
+  -4.258035206805344
+  -8.682473330911792
+ -13.111355752020133
+ -17.541473289665372
+ -21.972110267055612
+ -26.40301513042684
+
+```
+Note this will take a few seconds since you are running DMRG multiple times.
+
+We can look at the energy per site as a function of system size:
+```julia
+julia> energies ./ nsites
+6-element Vector{Float64}:
+ -0.4258035206805344
+ -0.4341236665455896
+ -0.4370451917340044
+ -0.4385368322416343
+ -0.4394422053411122
+ -0.4400502521737807
+
+```
+where we use Julia's [broadcasting syntax](https://docs.julialang.org/en/v1/manual/functions/#man-vectorized) to vectorize the division operation (`/`) over the two vectors. If we plot the results we can see the energy per site converging towards something:
+```julia
+julia> plot(nsites, energies ./ nsites; legend = false)
+         ┌────────────────────────────────────────┐
+-0.425376│⠀⢆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+         │⠀⠈⢆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+         │⠀⠀⠘⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+         │⠀⠀⠀⠘⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+         │⠀⠀⠀⠀⠘⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+         │⠀⠀⠀⠀⠀⠱⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+         │⠀⠀⠀⠀⠀⠀⠱⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+         │⠀⠀⠀⠀⠀⠀⠀⢱⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+         │⠀⠀⠀⠀⠀⠀⠀⠀⠣⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+         │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠒⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+         │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠢⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+         │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠑⠤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+         │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠑⠒⠤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+         │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠒⠒⠢⠤⢄⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀│
+-0.440478│⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠉⠑⠒⠒⠒⠤⠀│
+         └────────────────────────────────────────┘
+         ⠀8.5⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀61.5⠀
+
+```
+The convergence is pretty slow, since we are looking at a critical system. It is actually more helpful to look at the energy _differences_ between system sizes:
+```julia
+julia> diff(energies) ./ 10
+5-element Vector{Float64}:
+ -0.4424438124106448
+ -0.4428882421108341
+ -0.44301175376452395
+ -0.443063697739024
+ -0.4430904863371229
+
+```
+where we use the Julia [`diff`](https://docs.julialang.org/en/v1/base/arrays/#Base.diff) function and divide by `10` since the system sizes between DMRG runs differ by `10` sites. We can see these averaged differences start to approach the exact result for the energy in the thermodynamic limit from the Bethe ansatz:
+```julia
+julia> energy_exact = 1 / 4 - log(2)
+-0.4431471805599453
+
+julia> abs.((diff(energies) ./ 10) .- energy_exact)
+5-element Vector{Float64}:
+ 0.0007033681493004984
+ 0.000258938449111179
+ 0.00013542679542133396
+ 8.3482820921299e-5
+ 5.6694222822395446e-5
+
+```
+which is pretty impressive considering the largest system size we ran was only 60 sites! The reason why this is more accurate is that we can think of computing energies differences as subtracting out boundary effects, and more generally can be thought of as a 1D version of a cluster expansion.
 
 Click [here](#table-of-contents) to return to the table of contents.
 
