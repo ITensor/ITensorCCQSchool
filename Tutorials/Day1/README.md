@@ -345,7 +345,7 @@ julia> res.energy / res.nsite
 ```
 Note that the bond dimension DMRG needs to represent the ground state accurately increases with system size. This is because the state is gapless, which means the entanglement and correlations increase with system size. You can see that the energy per site increases with system size. That is a reflection of the fact that we are studying finite systems with open boundary conditions, and the energy hasn't converged to the thermodynamic limit yet.
 
-Let's look at the energy as a function of system size:
+3. Let's look at the energy as a function of system size:
 ```julia
 julia> nsites = 10:10:60
 10:10:60
@@ -432,6 +432,18 @@ Click [here](#table-of-contents) to return to the table of contents.
 <details>
   <summary><h2>Tutorial 3</h2></summary>
   <hr>
+
+```julia
+julia> include("3-dmrg-measure.jl")
+main
+
+julia> res = main(; nsweeps = 4, nsite = 50);
+
+julia> animate(; nframes = length(res.szs), fps = res.nsite) do i
+           return plot(res.szs[i]; xlim = (1, res.nsite), ylim = (-0.25, 0.25), xlabel = "Site j", ylabel = "⟨Szⱼ⟩", legend = false, title = "Sweep = $(i ÷ (2 * res.nsite) + 1)")
+       end
+[...]
+```
 
 Click [here](#table-of-contents) to return to the table of contents.
 
