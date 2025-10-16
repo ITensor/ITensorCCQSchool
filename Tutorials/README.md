@@ -136,7 +136,20 @@ julia>
 
 ```
 
-7. If you want to make more involved changes to the script that can't be controlled through keyword arguments, edit the file to make changes to the script:
+7. Note that you can analyze which directory you are in and what tutorial files are available directly from the Julia REPL:
+```julia
+julia> pwd()
+"[...]/ITensorCCQSchool/Tutorials/Day1"
+
+julia> readdir()
+[...]-element Vector{String}:
+ "1-julia-intro.jl"
+ "2-dmrg.jl"
+ "3-dmrg-measure.jl"
+[...]
+
+```
+Of course, you can also use your terminal and/or file manager as usual. Additionally, if you want to modify the script itself, one way to do that is:
 ```julia
 julia> edit("1-julia-intro.jl")
 

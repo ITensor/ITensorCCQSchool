@@ -70,4 +70,4 @@ julia> plot(inv.(nterms), errors)
 
 ## Tutorial 2: 2-dmrg.jl
 
-## Tutorial 3: 3-dmrg.jl
+## Tutorial 3: 3-dmrg-measure.jl
