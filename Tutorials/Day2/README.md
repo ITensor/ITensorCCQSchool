@@ -19,7 +19,7 @@ julia> res = main();
 
 julia> Plots.unicodeplots(); # Plot in the terminal
 
-julia> plot_init_sz(res) # S⁺|ψ⟩
+julia> plot_tebd_sz(res; step = 1) # S⁺|ψ⟩
      ┌────────────────────────────────────────┐
   0.5│⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⢷⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
      │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│

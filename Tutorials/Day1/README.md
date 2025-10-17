@@ -528,11 +528,11 @@ main
 julia> res = main(; nx = 4, ny = 2, U = 8.0, nsweeps = 5);
 MPO bond dimension: 10
 Initial MPS bond dimension: 10
-After sweep 1 energy=-2.0494632000477755  maxlinkdim=65 maxerr=9.97E-07 time=0.304
-After sweep 2 energy=-2.876598975059923  maxlinkdim=110 maxerr=9.52E-07 time=0.374
-After sweep 3 energy=-3.0234950274964056  maxlinkdim=93 maxerr=9.76E-07 time=0.392
-After sweep 4 energy=-3.025835836258736  maxlinkdim=94 maxerr=9.97E-07 time=0.373
-After sweep 5 energy=-3.025876337152198  maxlinkdim=83 maxerr=9.88E-07 time=0.365
+After sweep 1 energy=-2.5282321813603588  maxlinkdim=89 maxerr=9.77E-07 time=0.302
+After sweep 2 energy=-2.9538560484453478  maxlinkdim=109 maxerr=9.64E-07 time=0.359
+After sweep 3 energy=-3.022619863090767  maxlinkdim=94 maxerr=9.94E-07 time=0.376
+After sweep 4 energy=-3.0258111835432957  maxlinkdim=91 maxerr=9.96E-07 time=0.363
+After sweep 5 energy=-3.025876293895071  maxlinkdim=83 maxerr=9.73E-07 time=0.362
 
 julia> res.ns[end]
 2×4 Matrix{Float64}:

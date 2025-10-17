@@ -30,6 +30,6 @@ jobs:
                 println("Running ", f)
                 @eval module $(gensym())
                     include($f)
-                    main()
+                    main(; outputlevel = 2)
                 end
             end'

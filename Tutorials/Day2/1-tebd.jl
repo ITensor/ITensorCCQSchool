@@ -11,20 +11,15 @@ using Plots: Plots, plot
 
 include("../src/animate.jl")
 
-function plot_init_sz(res)
+function plot_tebd_sz(res; step::Int)
     return plot(
-        res.szs[1]; xlim = (1, res.nsite), ylim = (-0.5, 0.5), xlabel = "Site j",
-        ylabel = "⟨Szⱼ⟩", legend = false
+        res.szs[step]; xlim = (1, res.nsite), ylim = (-0.5, 0.5), xlabel = "Site j",
+        ylabel = "⟨Szⱼ(t=$(res.times[step]))⟩", legend = false
     )
 end
 
 function animate_tebd_sz(res; fps = res.nsite)
-    return animate(; nframes = length(res.szs), fps) do i
-       return plot(
-           res.szs[i]; xlim = (1, res.nsite), ylim = (-0.5, 0.5), xlabel = "Site j",
-           ylabel = "⟨Szⱼ(t=$(res.times[i]))⟩", legend = false
-       )
-   end
+    return animate(i -> plot_tebd_sz(res; step = i); nframes = length(res.szs), fps)
 end
 
 function main(;
@@ -90,5 +85,9 @@ function main(;
         end
     end
 
-    return (; energy, H, psi, times, szs, energies, nsite, time, timestep, cutoff)
+    res = (; energy, H, psi, times, szs, energies, nsite, time, timestep, cutoff)
+    if outputlevel > 1
+        animate_tebd_sz(res)
+    end
+    return res
 end

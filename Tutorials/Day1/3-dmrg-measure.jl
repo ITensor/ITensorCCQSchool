@@ -77,8 +77,8 @@ function main(;
     if outputlevel > 0
         display(
             plot(
-                sz; xlim = (1, nsite), ylim = (-0.25, 0.25), xlabel = "Site", ylabel = "⟨Sz⟩",
-                legend = false
+                sz; xlim = (1, nsite), ylim = (-0.25, 0.25),
+                xlabel = "Site", ylabel = "⟨Sz⟩", legend = false
             )
         )
     end
@@ -87,11 +87,15 @@ function main(;
     if outputlevel > 0
         display(
             plot(
-                szsz[nsite ÷ 2, :]; xlim = (1, nsite), ylim = (-0.25, 0.25), xlabel = "Site",
-                ylabel = "⟨SzⱼSz⟩", legend = false
+                szsz[nsite ÷ 2, :]; xlim = (1, nsite), ylim = (-0.25, 0.25),
+                xlabel = "Site", ylabel = "⟨SzⱼSz⟩", legend = false
             )
         )
     end
 
-    return (; energy, H, psi, sz, szsz, szs, nsite, nsweeps, maxdim, cutoff)
+    res = (; energy, H, psi, sz, szsz, szs, nsite, nsweeps, maxdim, cutoff)
+    if outputlevel > 1
+        animate_dmrg_sz(res)
+    end
+    return res
 end

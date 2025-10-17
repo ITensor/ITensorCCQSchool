@@ -6,9 +6,29 @@ using ITensorMPS: ITensorMPS, AbstractObserver, expect, inner
 # Use to set the RNG seed for reproducibility
 using StableRNGs: StableRNG
 # Load the Plots package for plotting
-using Plots: Plots, plot
+using Plots: Plots, plot, scatter, quiver!
 
 include("../src/animate.jl")
+
+function plot_hubbard(res, i::Int)
+    points = vec(reverse.(Tuple.(CartesianIndices((res.ny, res.nx)))))
+    xs = first.(points)
+    ys = last.(points)
+    n = vec(res.ns[i])
+    markersize = 10 .* n ./ maximum(n)
+    plt = scatter(
+        xs, ys; xlims = (0, res.nx + 1), ylims = (0, res.ny + 1), markersize, markershape = :circle,
+        markercolor = :lightgreen, markeralpha = 0.9, label = "⟨n⟩"
+    )
+    s = vec(res.szs[i])
+    quiver = (zeros(length(xs)), s)
+    quiver!(plt, xs, ys; quiver, color = :blue, arrow = :closed)
+    return plt
+end
+
+function animate_hubbard(res; fps = res.nsite)
+    return animate(i -> plot_hubbard(res, i); nframes = length(res.ns), fps)
+end
 
 @kwdef struct SzObserver <: AbstractObserver
     szs::Vector{Vector{Float64}} = Vector{Float64}[]
@@ -72,7 +92,8 @@ function main(;
 
     # Initial (half-filled) state for DMRG
     state = [isodd(j) ? "↑" : "↓" for j in 1:nsite]
-    psi0 = random_mps(sites, state; linkdims = 10)
+    rng = StableRNG(123)
+    psi0 = random_mps(rng, sites, state; linkdims = 10)
 
     # It starts with a bond dimension 10
     if outputlevel > 0
@@ -87,5 +108,9 @@ function main(;
     szs = observer.szs
     ns = observer.ns
 
-    return (; energy, H, psi, nx, ny, nsite, U, szs, ns, nsweeps, maxdim, cutoff, noise)
+    res = (; energy, H, psi, nx, ny, nsite, U, szs, ns, nsweeps, maxdim, cutoff, noise)
+    if outputlevel > 1
+        animate_hubbard_sz(res)
+    end
+    return res
 end
