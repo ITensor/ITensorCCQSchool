@@ -81,8 +81,8 @@ You can inspect the individual tensors on each vertex of the constructed tensor 
 ```
 julia> res = main(L=3, periodic = false, beta = 0.2);
 
-julia> @show res.tensornetwork[1]
-res.tensornetwork[1] = ITensor ord=1
+julia> show(res.tensornetwork[1])
+ITensor ord=1
 Dim 1: (dim=2|id=103|"e1_2")
 NDTensors.Dense{Float64, Vector{Float64}}
  2-element
