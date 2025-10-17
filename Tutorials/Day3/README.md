@@ -20,7 +20,7 @@ A simple graph `g` is just a series of vertices and edges between pairs of those
 ```
   julia> using NamedGraphs: NamedGraph, NamedEdge
   julia> g = NamedGraph([1,2,3])
-  julia> edges = [NamedEdge(1, 2), NamedEdge(2,3)]
+  julia> edges = [1 => 2, 2 => 3]
   julia> g = add_edges(g, edges)
 ```
 
