@@ -72,9 +72,7 @@ and 5 edge(s):
 We can build a tensor network as a dictionary of tensors, one for each vertex of the `NamedGraph` `g`. The edges of the graph `g` (which are of the  type `NamedEdge`) dictate which tensors share indices to be contracted over. 
 
 Provided in [1-tensornetworks.jl](./1-tensornetworks.jl) is a pre-built constructor for the tensor network representing the partition function of the ising model on a given `NamedGraph` g at a given inverse temperature `β`. The partition function reads 
-$$
-Z(\beta) = \frac{1}{2}\sum_{s_{1} \in {-1, 1}}\sum_{s_{2} \in {-1, 1}} ... \sum_{s_{L} \in {-1, 1}}\exp(-\beta \sum_{ij}s_{i}.s_{j}),
-$$
+$$Z(\beta) = \frac{1}{2}\sum_{s_{1} \in {-1, 1}}\sum_{s_{2} \in {-1, 1}} ... \sum_{s_{L}\in {-1, 1}}\exp(-\beta \sum_{ij}s_{i}.s_{j}),$$
 where we have scaled by a factor of 1/2 for convenience.
 
 You can inspect the individual tensors on each vertex of the constructed tensor network via `res.tensornetwork[v]` where `v` is the name of the vertex.
@@ -101,13 +99,9 @@ res.z = 2.081072371838455
 ```
 
 In 1D the partition function of the Ising model is analytically computable for any system size L and both Periodic and Open Boundaries. The results are
-$$
-Z_{L,OBC}(\beta) = 2\cosh^{L-1}(\beta)
-$$
+$$Z_{L,OBC}(\beta) = 2\cosh^{L-1}(\beta)$$
 for open boundaries and
-$$
-Z_{L, PBC}(\beta) = \cosh^{L}(\beta) + \sinh^{L}(\beta)
-$$
+$$Z_{L, PBC}(\beta) = \cosh^{L}(\beta) + \sinh^{L}(\beta)$$
 for periodic boundaries.
 
 2. Compare the output of `res.z` with these values for both periodic and open boundaries. Do they agree? If they do, then congratulations, you just solved the 1D PBC and OBC Ising model with a tensor network approach.
@@ -122,9 +116,7 @@ In the previous tutorial, the `contract_tensornetwork()` function contracted the
 In this tutorial we are going to use the script [2-beliefpropagation.jl](./2-beliefpropagation.jl) belief propagation to contract tensor networks in an efficient, but approximate manner.
 
 The script now builds an $nx \times ny$ square grid tensornetwork representing the partition function of the Ising model in 2D. Inverse temperature is set via the `beta` kwarg and periodic boundaries (in both directions) can be added with the kwarg `periodic`. Returned is the number of iterations BP took to converge, and the rescaled free energy density 
-$$
-\phi(\beta) = -\beta f(\beta) = log(Z(\beta))/(nx*ny)
-$$
+$$\phi(\beta) = -\beta f(\beta) = log(Z(\beta))/(nx*ny)$$
 
 We can do the following to get the BP computed value for $\phi$ on a 10x1 OBC square grid. This is just a path graph, like in the previous example.
 ```
@@ -138,9 +130,7 @@ julia> res.bp_phi
 0.24429444141332002
 ```
 1. Compare the result to the analytical value for 1D OBC
-$$ 
-\phi_{Lx,OBC}(\beta) = \frac{1}{Lx}ln(2\cosh^{Lx-1}(\beta))
-$$
+$$ \phi_{Lx,OBC}(\beta) = \frac{1}{Lx}ln(2\cosh^{Lx-1}(\beta))$$
 
 They agree, even though we used BP to compute it. Why?
 
@@ -154,9 +144,7 @@ julia> res.bp_phi
 ```
 
 2. Compare the result to the 1D scaled free energy density on PBC, 
-$$
-\phi_{Lx,OBC}(\beta) = \frac{1}{Lx}ln(\cosh^{Lx}(\beta) + \sinh^{Lx}(\beta))
-$$
+$$\phi_{Lx,OBC}(\beta) = \frac{1}{Lx}ln(\cosh^{Lx}(\beta) + \sinh^{Lx}(\beta))$$
 
 They don't agree. Why? Pick a finite value of $\beta$ between $0$ and $1$ and compute both the exact PBC free energy vs $Lx$ for $Lx = 3,4,...30$ and the `bp` free energy using the `main` function (set $Ly = 1$ and `periodic = true`).
 
@@ -200,8 +188,7 @@ Congratulations. You just approximately solved the 2D Ising model on a 15x15 squ
 
 Included in `[2-beliefpropagation.jl](./2-beliefpropagation.jl)` is a function for computing the exact rescaled free energy of the 2D model in the thermodynamic limit via Onsager's famous result. This is returned by `main` as `exact_phi_onsager`.
 
-$$
-\phi(\beta) = \beta f(\beta) =
+$$\phi(\beta) = \beta f(\beta) =
 = -\ln 2 +
 
 * \frac{1}{8\pi^{2}}
@@ -211,19 +198,18 @@ $$
   -\sinh!\left(2\beta J_{1}\right)\cos!\left(\theta_{1}\right)
   -\sinh!\left(2\beta J_{2}\right)\cos!\left(\theta_{2}\right)
   \right],
-  d\theta_{1}, d\theta_{2}.
-$$
+  d\theta_{1}, d\theta_{2}.$$
 
 Lets compare our results to that.
 
 5. Pick a small value for $\beta$ (say $\beta = 0.1$) and plot the error between `bp` and the `exact` result as a function of lattice size $L$ for $L_{x} = L$ and $L_{y} = L$. How does it scale?
 
 Now lets move to periodic boundary conditions. 
-
+```
 julia> res = main(; Lx = 5, Ly = 5, periodic = true, beta = 0.2)
 BP Algorithm Converged after 21 iterations
 (bp_phi = -0.6534110369600732, exact_phi_onsager = -0.6517635488435647, niterations = 21)
-
+```
 6. What do you notice about the dependence of `bp_phi` on $L$?
 
 
@@ -235,6 +221,7 @@ julia> betas = [0.01*(i-1) for i in 1:101]
 
 Plot the absolute error between BP and Onsager's result. Where does it peak? 
 
+```
 julia> plot(betas, errs)
             ┌────────────────────────────────────────┐  
    0.0181699│⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡰⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│y1
@@ -254,7 +241,7 @@ julia> plot(betas, errs)
 -0.000529221│⠤⡧⠤⠤⠴⠶⠮⠥⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠬⠽⠶⠶⠦⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤│  
             └────────────────────────────────────────┘  
             ⠀-0.03⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀1.03⠀  
-
+```
 <a id="tutorial-3"></a>
 <details>
   <summary><h2>Tutorial 3</h2></summary>
