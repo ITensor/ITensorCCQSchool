@@ -123,7 +123,7 @@ In this tutorial we are going to use the script [2-beliefpropagation.jl](./2-bel
 
 The script now builds an $nx \times ny$ square grid tensornetwork representing the partition function of the Ising model in 2D. Inverse temperature is set via the `beta` kwarg and periodic boundaries (in both directions) can be added with the kwarg `periodic`. Returned is the number of iterations BP took to converge, and the rescaled free energy density 
 
-$$\phi(\beta) = -\beta f(\beta) = \frac{1}{L_{x}L_{y}}log(Z(\beta))$$
+$$\phi(\beta) = -\beta f(\beta) = \frac{1}{L_{x}L_{y}}\ln(Z(\beta))$$
 
 We can do the following to get the BP computed value for $\phi$ on a 10x1 OBC square grid. This is just a path graph, like in the previous example.
 ```
@@ -137,7 +137,7 @@ julia> res.bp_phi
 0.24429444141332002
 ```
 1. Compare the result to the analytical value for 1D OBC
-$$ \phi_{Lx,OBC}(\beta) = \frac{1}{Lx}ln(2\cosh^{Lx-1}(\beta))$$
+$$\phi_{Lx,OBC}(\beta) = \frac{1}{Lx}\ln(2\cosh^{Lx-1}(\beta))$$
 
 They agree, even though we used BP to compute it. Why?
 
@@ -152,7 +152,7 @@ julia> res.bp_phi
 
 2. Compare the result to the 1D scaled free energy density on PBC, 
 
-$$\phi_{L_{x},OBC}(\beta) = \frac{1}{L_{x}}ln(\cosh^{Lx}(\beta) + \sinh^{L_{x}}(\beta))$$
+$$\phi_{L_{x},OBC}(\beta) = \frac{1}{L_{x}}\ln(\cosh^{Lx}(\beta) + \sinh^{L_{x}}(\beta))$$
 
 They don't agree. Why? Pick a finite value of $\beta$ between $0$ and $1$ and compute both the exact PBC free energy vs $Lx$ for $Lx = 3,4,...30$ and the `bp` free energy using the `main` function (set $Ly = 1$ and `periodic = true`).
 
@@ -196,16 +196,7 @@ Congratulations. You just approximately solved the 2D Ising model on a 15x15 squ
 
 Included in `[2-beliefpropagation.jl](./2-beliefpropagation.jl)` is a function for computing the exact rescaled free energy of the 2D model in the thermodynamic limit via Onsager's famous result. This is returned by `main` as `exact_phi_onsager`.
 
-$$\phi(\beta) = \beta f(\beta) =
-= -\ln 2 +
-* \frac{1}{8\pi^{2}}
-  \int_{0}^{2\pi}!!\int_{0}^{2\pi}
-  \ln!\left[
-  \cosh!\left(2\beta J_{1}\right)\cosh!\left(2\beta J_{2}\right)
-  -\sinh!\left(2\beta J_{1}\right)\cos!\left(\theta_{1}\right)
-  -\sinh!\left(2\beta J_{2}\right)\cos!\left(\theta_{2}\right)
-  \right],
-  d\theta_{1}, d\theta_{2}.$$
+$$\phi(\beta) = \beta f(\beta) = -\ln 2 + \frac{1}{8\pi^{2}}\int_{0}^{2\pi}!!\int_{0}^{2\pi}\ln!\left[\cosh!\left(2\beta J_{1}\right)\cosh!\left(2\beta J_{2}\right)-\sinh!\left(2\beta J_{1}\right)\cos!\left(\theta_{1}\right)-\sinh!\left(2\beta J_{2}\right)\cos!\left(\theta_{2}\right)\right],d\theta_{1}, d\theta_{2}.$$
 
 Lets compare our results to that.
 
