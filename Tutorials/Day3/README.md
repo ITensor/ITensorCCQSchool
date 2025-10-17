@@ -101,9 +101,13 @@ res.z = 2.081072371838455
 ```
 
 In 1D the partition function of the Ising model is analytically computable for any system size L and both Periodic and Open Boundaries. The results are
+
 $$Z_{L,OBC}(\beta) = 2\cosh^{L-1}(\beta)$$
+
 for open boundaries and
+
 $$Z_{L, PBC}(\beta) = \cosh^{L}(\beta) + \sinh^{L}(\beta)$$
+
 for periodic boundaries.
 
 2. Compare the output of `res.z` with these values for both periodic and open boundaries. Do they agree? If they do, then congratulations, you just solved the 1D PBC and OBC Ising model with a tensor network approach.
@@ -119,7 +123,7 @@ In this tutorial we are going to use the script [2-beliefpropagation.jl](./2-bel
 
 The script now builds an $nx \times ny$ square grid tensornetwork representing the partition function of the Ising model in 2D. Inverse temperature is set via the `beta` kwarg and periodic boundaries (in both directions) can be added with the kwarg `periodic`. Returned is the number of iterations BP took to converge, and the rescaled free energy density 
 
-$$\phi(\beta) = -\beta f(\beta) = log(Z(\beta))/(nx*ny)$$
+$$\phi(\beta) = -\beta f(\beta) = \frac{1}{L_{x}L_{y}}log(Z(\beta))$$
 
 We can do the following to get the BP computed value for $\phi$ on a 10x1 OBC square grid. This is just a path graph, like in the previous example.
 ```
@@ -148,7 +152,7 @@ julia> res.bp_phi
 
 2. Compare the result to the 1D scaled free energy density on PBC, 
 
-$$\phi_{Lx,OBC}(\beta) = \frac{1}{Lx}ln(\cosh^{Lx}(\beta) + \sinh^{Lx}(\beta))$$
+$$\phi_{L_{x},OBC}(\beta) = \frac{1}{L_{x}}ln(\cosh^{Lx}(\beta) + \sinh^{L_{x}}(\beta))$$
 
 They don't agree. Why? Pick a finite value of $\beta$ between $0$ and $1$ and compute both the exact PBC free energy vs $Lx$ for $Lx = 3,4,...30$ and the `bp` free energy using the `main` function (set $Ly = 1$ and `periodic = true`).
 
