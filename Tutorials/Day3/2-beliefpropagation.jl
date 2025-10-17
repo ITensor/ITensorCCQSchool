@@ -18,7 +18,8 @@ end
 
 function ising_tensornetwork(g::NamedGraph, β::Real)
     nv = length(vertices(g))
-    link = Dict(e => Index(2, "e$(src(e))_$(dst(e))") for e in edges(g))
+    links = Dict(e => Index(2, "e$(src(e))_$(dst(e))") for e in edges(g))
+    links = merge(links, Dict(reverse(e) => links[e] for e in edges(g)))
 
     # symmetric sqrt of Boltzmann matrix W = exp(β σσ')
     λ1, λ2 = cosh(β), sinh(β)
@@ -28,11 +29,11 @@ function ising_tensornetwork(g::NamedGraph, β::Real)
 
     T = Dict()
     for v in vertices(g)
-        inds = [link[e] for e in edges(g) if src(e)==v || dst(e)==v]
+        inds = [links[e] for e in edges(g) if src(e)==v || dst(e)==v]
         T[v] = delta(inds)
         for vn in neighbors(g, v)
-            e = NamedEdge(v, vn) ∈ edges(g) ? NamedEdge(v, vn) : NamedEdge(vn, v)
-            T[v] = apply(T[v], ITensor(sqrt_W, link[e], prime(link[e]))) 
+            e = NamedEdge(v, vn)
+            T[v] = apply(T[v], ITensor(sqrt_W, links[e], prime(links[e]))) 
         end
     end
     return T
