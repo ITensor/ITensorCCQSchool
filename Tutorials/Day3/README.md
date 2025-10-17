@@ -121,7 +121,7 @@ In the previous tutorial, the `contract_tensornetwork()` function contracted the
 
 In this tutorial we are going to use the script [2-beliefpropagation.jl](./2-beliefpropagation.jl) belief propagation to contract tensor networks in an efficient, but approximate manner.
 
-The script now builds an $nx \times ny$ square grid tensornetwork representing the partition function of the Ising model in 2D. Inverse temperature is set via the `beta` kwarg and periodic boundaries (in both directions) can be added with the kwarg `periodic`. Returned is the number of iterations BP took to converge, and the rescaled free energy density 
+The script now builds an $L_{x} \times L_{y}$ square grid tensornetwork representing the partition function of the Ising model in 2D. Inverse temperature is set via the `beta` kwarg and periodic boundaries (in both directions) can be added with the kwarg `periodic`. Returned is the number of iterations BP took to converge, and the rescaled free energy density 
 
 $$\phi(\beta) = -\beta f(\beta) = \frac{1}{L_{x}L_{y}}\ln(Z(\beta))$$
 
@@ -137,6 +137,7 @@ julia> res.bp_phi
 0.24429444141332002
 ```
 1. Compare the result to the analytical value for 1D OBC
+
 $$\phi_{OBC}(\beta) = \frac{1}{Lx}\ln(2\cosh^{Lx-1}(\beta))$$
 
 They agree, even though we used BP to compute it. Why?
