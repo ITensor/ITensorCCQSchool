@@ -6,8 +6,6 @@
 - [Tutorial 2](#tutorial-2)
 - [Tutorial 3](#tutorial-3)
 
-</details>
-
 <a id="tutorial-1"></a>
 <details>
   <summary><h2>Tutorial 1</h2></summary>
@@ -94,7 +92,7 @@ ITensor ord=1 (dim=2|id=103|"e1_2")
 NDTensors.Dense{Float64, Vector{Float64}}
 ```
 
-This tensornetwork can be contracted with the `contract_tensornetwork` function provided. Its output is pre-computed for you in `main()`
+This tensornetwork can be contracted by multiplying all the tensors together. This contraction is pre-computed for you in `main()`
 
 ```
 julia> res = main(n=3, periodic = false);
@@ -119,7 +117,7 @@ for periodic boundaries.
   <summary><h2>Tutorial 2</h2></summary>
   <hr>
 
-In the previous tutorial, the `contract_tensornetwork()` function contracted the tensor network exactly by multiplying the tensors together, vertex by vertex. This can only be done efficiently for tree-like networks (those composed of no loops, or a small number of loops) and only when taking careful care over the order of contraction.
+In the previous tutorial, we contracted the tensor network exactly by multiplying the tensors together, vertex by vertex. This can only be done efficiently for tree-like networks (those composed of no loops, or a small number of loops) and only when taking careful care over the order of contraction.
 
 In this tutorial we are going to use the script [2-beliefpropagation.jl](./2-beliefpropagation.jl) belief propagation to contract tensor networks in an efficient, but approximate manner.
 

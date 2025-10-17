@@ -1,8 +1,8 @@
 using NamedGraphs: NamedEdge, NamedGraph, add_edges, vertices, edges, src, dst, neighbors
 using LinearAlgebra: normalize, dot
 using NamedGraphs.NamedGraphGenerators: named_grid, named_hexagonal_lattice_graph, named_path_graph
-using ITensors: Index, ITensor, delta, noprime, prime, commonind, randomITensor, onehot
-using Statistics
+using ITensors: Index, ITensor, apply, delta, prime, commonind, randomITensor, onehot
+using Statistics: mean
 using QuadGK: quadgk
 
 # -β f as a function of β
@@ -32,30 +32,25 @@ function ising_tensornetwork(g::NamedGraph, β::Real)
         T[v] = delta(inds)
         for vn in neighbors(g, v)
             e = NamedEdge(v, vn) ∈ edges(g) ? NamedEdge(v, vn) : NamedEdge(vn, v)
-            T[v] = noprime(T[v]*ITensor(sqrt_W, link[e], prime(link[e]))) 
+            T[v] = apply(T[v], ITensor(sqrt_W, link[e], prime(link[e]))) 
         end
     end
     return T
 end
 
-function contract_tensornetwork(tensornetwork::Dict)
-    return prod(ITensor[tensornetwork[v] for v in keys(tensornetwork)])[]
-end
-
 function updated_message(tensornetwork::Dict, messages::Dict, g::NamedGraph, e::NamedEdge)
-    v_neighbors = filter(v -> v ≠ dst(e), neighbors(g, src(e)))
+    incoming_vs = filter(v -> v ≠ dst(e), neighbors(g, src(e)))
     local_tensor = tensornetwork[src(e)]
     messages = copy(messages)
-    if isempty(v_neighbors) 
+    if isempty(incoming_vs) 
         m = normalize(local_tensor)
     else
-        incoming_messages = [messages[NamedEdge(vn => src(e))] for vn in v_neighbors]
+        incoming_messages = [messages[NamedEdge(vn, src(e))] for vn in incoming_vs]
         m = normalize(local_tensor * prod(incoming_messages))
     end
     return m
 end
 
-#TODO: Do this in parallel to make sequence redundant
 function update_messages(tensornetwork::Dict, messages::Dict, g::NamedGraph)
     updated_messages = copy(messages)
     for e in edges(g)
@@ -66,13 +61,13 @@ function update_messages(tensornetwork::Dict, messages::Dict, g::NamedGraph)
     return updated_messages
 end
 
-function belief_propagation(tn::Dict, g::NamedGraph, niters::Int; tolerance::Float64=1e-10)
+function belief_propagation(tn::Dict, g::NamedGraph, niters::Int; tol::Float64=1e-10)
     all_edges = vcat(edges(g), reverse.(edges(g)))
     messages = Dict(e => normalize(onehot(commonind(tn[src(e)], tn[dst(e)]) => 1)) for e in all_edges)
     for i in 1:niters   
         old_messages = copy(messages)
         messages = update_messages(tn, messages, g)
-        if Statistics.mean([1 - dot(messages[e], old_messages[e])^2 for e in all_edges]) < tolerance
+        if mean([1 - dot(messages[e], old_messages[e])^2 for e in all_edges]) < tol
             println("BP Algorithm Converged after $i iterations")
             return messages, i
             break

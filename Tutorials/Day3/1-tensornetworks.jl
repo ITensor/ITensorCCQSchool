@@ -35,10 +35,6 @@ function ising_tensornetwork(g::NamedGraph, β::Real)
     return T
 end
 
-function contract_tensornetwork(tensornetwork::Dict)
-    return prod(values(tensornetwork))[]
-end
-
 function main(; beta::Number = 0.2)
     # Create a simple graph
     g = NamedGraph([1,2,3])
@@ -47,7 +43,7 @@ function main(; beta::Number = 0.2)
 
     tensornetwork = ising_tensornetwork(g, beta)
 
-    z = contract_tensornetwork(tensornetwork)
+    z = prod(values(tensornetwork))[]
 
     return (; g, tensornetwork, z)
 end
