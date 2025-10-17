@@ -35,8 +35,8 @@ You will see that it builds the 3-site path graph, which can be accessed and vie
 
 ```
 julia> res = main();
-julia> @show res.g
-g = NamedGraph{Int64} with 3 vertices:
+julia> res.g
+NamedGraph{Int64} with 3 vertices:
 3-element NamedGraphs.OrderedDictionaries.OrderedIndices{Int64}:
  1
  2
