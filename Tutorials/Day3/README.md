@@ -72,7 +72,9 @@ and 5 edge(s):
 We can build a tensor network as a dictionary of tensors, one for each vertex of the `NamedGraph` `g`. The edges of the graph `g` (which are of the  type `NamedEdge`) dictate which tensors share indices to be contracted over. 
 
 Provided in [1-tensornetworks.jl](./1-tensornetworks.jl) is a pre-built constructor for the tensor network representing the partition function of the ising model on a given `NamedGraph` g at a given inverse temperature `β`. The partition function reads 
+
 $$Z(\beta) = \frac{1}{2}\sum_{s_{1} \in {-1, 1}}\sum_{s_{2} \in {-1, 1}} ... \sum_{s_{L}\in {-1, 1}}\exp(-\beta \sum_{ij}s_{i}.s_{j}),$$
+
 where we have scaled by a factor of 1/2 for convenience.
 
 You can inspect the individual tensors on each vertex of the constructed tensor network via `res.tensornetwork[v]` where `v` is the name of the vertex.
@@ -116,6 +118,7 @@ In the previous tutorial, the `contract_tensornetwork()` function contracted the
 In this tutorial we are going to use the script [2-beliefpropagation.jl](./2-beliefpropagation.jl) belief propagation to contract tensor networks in an efficient, but approximate manner.
 
 The script now builds an $nx \times ny$ square grid tensornetwork representing the partition function of the Ising model in 2D. Inverse temperature is set via the `beta` kwarg and periodic boundaries (in both directions) can be added with the kwarg `periodic`. Returned is the number of iterations BP took to converge, and the rescaled free energy density 
+
 $$\phi(\beta) = -\beta f(\beta) = log(Z(\beta))/(nx*ny)$$
 
 We can do the following to get the BP computed value for $\phi$ on a 10x1 OBC square grid. This is just a path graph, like in the previous example.
@@ -144,6 +147,7 @@ julia> res.bp_phi
 ```
 
 2. Compare the result to the 1D scaled free energy density on PBC, 
+
 $$\phi_{Lx,OBC}(\beta) = \frac{1}{Lx}ln(\cosh^{Lx}(\beta) + \sinh^{Lx}(\beta))$$
 
 They don't agree. Why? Pick a finite value of $\beta$ between $0$ and $1$ and compute both the exact PBC free energy vs $Lx$ for $Lx = 3,4,...30$ and the `bp` free energy using the `main` function (set $Ly = 1$ and `periodic = true`).
@@ -190,7 +194,6 @@ Included in `[2-beliefpropagation.jl](./2-beliefpropagation.jl)` is a function f
 
 $$\phi(\beta) = \beta f(\beta) =
 = -\ln 2 +
-
 * \frac{1}{8\pi^{2}}
   \int_{0}^{2\pi}!!\int_{0}^{2\pi}
   \ln!\left[
