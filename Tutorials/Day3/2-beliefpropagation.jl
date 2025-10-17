@@ -13,10 +13,10 @@ function ising_phi(β)
         sinh(2β)*cos(θ2)
     )
     inner(θ2) = quadgk(θ1 -> g(θ1, θ2), 0, 2π)[1]
-    log(2) - (1/(8π^2)) * quadgk(inner, 0, 2π)[1]
+    return -log(2) + (1/(8π^2)) * quadgk(inner, 0, 2π)[1]
 end
 
-function ising_tn(g::NamedGraph, β::Real)
+function ising_tensornetwork(g::NamedGraph, β::Real)
     nv = length(vertices(g))
     link = Dict(e => Index(2, "e$(src(e))_$(dst(e))") for e in edges(g))
 
@@ -82,7 +82,7 @@ function belief_propagation(tn::Dict, g::NamedGraph, niters::Int; tolerance::Flo
     return messages, Inf
 end
 
-function bp_free_energy_density(tn::Dict, messages::Dict, g::NamedGraph)
+function calculate_bp_phi(tn::Dict, messages::Dict, g::NamedGraph)
     f_node = 0.0
     for v in vertices(g)
         incoming_messages = [messages[NamedEdge(vn => v)] for vn in neighbors(g, v)]
@@ -95,16 +95,16 @@ function bp_free_energy_density(tn::Dict, messages::Dict, g::NamedGraph)
         m2 = messages[NamedEdge(dst(e) => src(e))]
         f_edge += log((m1 * m2)[])
     end
-    return (-f_node + f_edge) / length(vertices(g))
+    return (f_node - f_edge) / length(vertices(g))
 end
 
 function main(; Lx::Int, Ly::Int, beta::Number = 0.2, periodic = false)
     g = named_grid((Lx,Ly); periodic)
 
-    tensornetwork = ising_tn(g, beta)
+    tensornetwork = ising_tensornetwork(g, beta)
     messages, niterations = belief_propagation(tensornetwork, g, 100)
 
-    f = bp_free_energy_density(tensornetwork, messages, g)
-    exact_f = ising_phi(beta)
-    return (; f, exact_f, niterations)
+    bp_phi = calculate_bp_phi(tensornetwork, messages, g)
+    exact_phi_onsager = ising_phi(beta)
+    return (; bp_phi, exact_phi_onsager, niterations)
 end
