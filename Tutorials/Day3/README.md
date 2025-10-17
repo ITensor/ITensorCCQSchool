@@ -53,6 +53,7 @@ and 2 edge(s):
 With this you should be able to do
 ```
 julia> res = main(; L = 5, periodic = true);
+
 julia> res.g
 NamedGraph{Int64} with 5 vertices:
 5-element NamedGraphs.OrderedDictionaries.OrderedIndices{Int64}:
