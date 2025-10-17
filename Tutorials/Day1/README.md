@@ -250,6 +250,8 @@ Here we suppress the printing from within the script with `outputlevel = 0`.
 
 3. Plot the errors in the REPL as a function of inverse number of terms to see a linear relationship:
 ```julia
+julia> Plots.unicodeplots(); # Enable the UnicodePlots backend to plot in the terminal
+
 julia> plot(inv.(nterms), errors; legend = false)
           ┌────────────────────────────────────────┐
 0.00102897│⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⠔⠀│
@@ -505,13 +507,9 @@ Energy: -21.972110267624643
 ⟨ψ|ψ⟩: 1.0000000000000064
 ⟨ψ|H|ψ⟩: -21.972110267625013
 
-julia> animate(; nframes = length(res.szs), fps = res.nsite) do i
-           return plot(
-               res.szs[i]; xlim = (1, res.nsite), ylim = (-0.25, 0.25), xlabel = "Site j",
-               ylabel = "⟨Szⱼ⟩", legend = false, title = "Sweep = $(i ÷ (2 * res.nsite) + 1)"
-           )
-       end
+julia> animate_dmrg_sz(res)
 [...]
+
 ```
 
 Click [here](#table-of-contents) to return to the table of contents.
@@ -546,21 +544,11 @@ julia> res.szs[end]
   0.000395183  -0.000480938   0.000704163  -0.000843082
  -0.000404015   0.000484498  -0.000699671   0.000843861
 
-julia> animate(; nframes = length(res.ns), fps = res.nsite) do i
-           return plot(
-               res.ns[i][1, :]; xlim = (1, res.nx), ylim = (0, 0.2), xlabel = "Site x",
-               ylabel = "⟨nx⟩", legend = false, title = "Sweep = $(i ÷ (2 * res.nsite) + 1)"
-           )
-       end
+julia> Plots.gr(); # Enable the GR backend to plot in a window
+
+julia> animate_hubbard(res)
 [...]
 
-julia> animate(; nframes = length(res.szs), fps = res.nsite) do i
-           return plot(
-               res.szs[i][1, :]; xlim = (1, res.nx), ylim = (-0.5, 0.5), xlabel = "Site x",
-               ylabel = "⟨Sz_x⟩", legend = false, title = "Sweep = $(i ÷ (2 * res.nsite) + 1)"
-           )
-       end
-[...]
 ```
 
 Click [here](#table-of-contents) to return to the table of contents.

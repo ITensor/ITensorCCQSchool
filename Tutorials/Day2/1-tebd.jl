@@ -8,36 +8,23 @@ using LinearAlgebra: normalize
 using StableRNGs: StableRNG
 # Load the Plots package for plotting
 using Plots: Plots, plot
-# Load the UnicodePlots backend for plotting to the terminal
-Plots.unicodeplots()
 
-"""
-    animate(f; nframes::Int, fps::Int = 30)
+include("../src/animate.jl")
 
-Call `f(i)` for each frame `i in 1:nframes`, where `f(i)` returns an object to print to the
-terminal at each frame. Renders each frame in-place in the terminal at `fps` frames per
-second.
-"""
-function animate(f; nframes::Int, fps::Real = 30)
-    io = IOBuffer()
-    # Hide cursor
-    print(stdout, "\x1b[?25l")
-    return try
-        # Clear screen
-        print(stdout, "\x1b[2J")
-        for i in 1:nframes
-            seekstart(io)
-            show(io, MIME("text/plain"), f(i))
-            frame_str = String(take!(io))
-            # Move home
-            print(stdout, "\x1b[H")
-            println(frame_str)
-            sleep(1 / fps)
-        end
-    finally
-        # Show cursor again
-        print(stdout, "\x1b[?25h")
-    end
+function plot_init_sz(res)
+    return plot(
+        res.szs[1]; xlim = (1, res.nsite), ylim = (-0.5, 0.5), xlabel = "Site j",
+        ylabel = "⟨Szⱼ⟩", legend = false
+    )
+end
+
+function animate_tebd_sz(res; fps = res.nsite)
+    return animate(; nframes = length(res.szs), fps) do i
+       return plot(
+           res.szs[i]; xlim = (1, res.nsite), ylim = (-0.5, 0.5), xlabel = "Site j",
+           ylabel = "⟨Szⱼ(t=$(res.times[i]))⟩", legend = false
+       )
+   end
 end
 
 function main(;
@@ -84,7 +71,8 @@ function main(;
 
     szs = [expect(psit, "Sz")]
     energies = ComplexF64[inner(psit', H, psi)]
-    for current_time in 0.0:timestep:time
+    times = 0.0:timestep:time
+    for current_time in times[2:end]
         psit = apply(gates, psit; cutoff)
         psit = normalize(psit)
         energy = inner(psit', H, psit)
@@ -102,5 +90,5 @@ function main(;
         end
     end
 
-    return (; energy, H, psi, szs, nsite, time, timestep, cutoff)
+    return (; energy, H, psi, times, szs, energies, nsite, time, timestep, cutoff)
 end

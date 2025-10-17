@@ -7,10 +7,8 @@ using ITensorMPS: ITensorMPS, AbstractObserver, expect, inner
 using StableRNGs: StableRNG
 # Load the Plots package for plotting
 using Plots: Plots, plot
-# Load the UnicodePlots backend for plotting to the terminal
-Plots.unicodeplots()
 
-include("animate.jl")
+include("../src/animate.jl")
 
 @kwdef struct SzObserver <: AbstractObserver
     szs::Vector{Vector{Float64}} = Vector{Float64}[]

@@ -5,10 +5,17 @@ using ITensorMPS: ITensorMPS, AbstractObserver, correlation_matrix, expect, inne
 using StableRNGs: StableRNG
 # Load the Plots package for plotting
 using Plots: Plots, plot
-# Load the UnicodePlots backend for plotting to the terminal
-Plots.unicodeplots()
 
-include("animate.jl")
+include("../src/animate.jl")
+
+function animate_dmrg_sz(res; fps = res.nsite)
+    return animate(; nframes = length(res.szs), fps) do i
+        return plot(
+            res.szs[i]; xlim = (1, res.nsite), ylim = (-0.25, 0.25), xlabel = "Site j",
+            ylabel = "⟨Szⱼ⟩", legend = false, title = "Sweep = $(i ÷ (2 * res.nsite) + 1)"
+        )
+    end
+end
 
 @kwdef struct SzObserver <: AbstractObserver
     szs::Vector{Vector{Float64}} = Vector{Float64}[]

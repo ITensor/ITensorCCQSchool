@@ -3,8 +3,6 @@ using ITensorMPS: MPO, OpSum, dmrg, maxlinkdim, random_mps, siteinds
 using StableRNGs: StableRNG
 # Load the Plots library for plotting results
 using Plots: Plots, plot
-# Set the plotting backend to UnicodePlots to print the plots in the terminal
-Plots.unicodeplots()
 
 """
     main(; kwargs...)
