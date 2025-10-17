@@ -11,6 +11,22 @@
   <summary><h2>Tutorial 1</h2></summary>
   <hr>
 
+```julia
+julia> include("1-tebd.jl")
+main
+
+julia> res = main();
+
+julia> animate(; nframes = length(res.szs), fps = res.nsite) do i
+           return plot(
+               res.szs[i]; xlim = (1, res.nsite), ylim = (-0.5, 0.5), xlabel = "Site j",
+               ylabel = "⟨Szⱼ⟩", legend = false, title = "Sweep = $(i ÷ (2 * res.nsite) + 1)"
+           )
+       end
+[...]
+
+```
+
 Click [here](#table-of-contents) to return to the table of contents.
 
 </details>

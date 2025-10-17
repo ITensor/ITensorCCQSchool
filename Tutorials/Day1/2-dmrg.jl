@@ -43,10 +43,12 @@ function main(;
         outputlevel = 1,
     )
 
-    outputlevel > 0 && println("nsite: ", nsite)
-    outputlevel > 0 && println("nsweeps: ", nsweeps)
-    outputlevel > 0 && println("maxdim: ", maxdim)
-    outputlevel > 0 && println("cutoff: ", cutoff)
+    if outputlevel > 0
+        println("nsite: ", nsite)
+        println("nsweeps: ", nsweeps)
+        println("maxdim: ", maxdim)
+        println("cutoff: ", cutoff)
+    end
 
     # Build the physical indices for nsite spins (spin 1/2)
     sites = siteinds("S=1/2", nsite)
@@ -61,20 +63,26 @@ function main(;
     H = MPO(os, sites)
 
     # It has bond dimension 5
-    outputlevel > 0 && println("MPO bond dimension: ", maxlinkdim(H))
+    if outputlevel > 0
+        println("MPO bond dimension: ", maxlinkdim(H))
+    end
 
     # Initial state for DMRG
     rng = StableRNG(123)
     psi0 = random_mps(rng, sites; linkdims = 10)
 
     # It starts with a bond dimension 10
-    outputlevel > 0 && println("Initial MPS bond dimension: ", maxlinkdim(psi0))
+    if outputlevel > 0
+        println("Initial MPS bond dimension: ", maxlinkdim(psi0))
+    end
 
     # Run DMRG
     energy, psi = dmrg(H, psi0; nsweeps, maxdim, cutoff, outputlevel)
 
-    outputlevel > 0 && println("Optimized MPS bond dimension: ", maxlinkdim(psi))
-    outputlevel > 0 && println("DMRG energy: ", energy)
+    if outputlevel > 0
+        println("Optimized MPS bond dimension: ", maxlinkdim(psi))
+        println("DMRG energy: ", energy)
+    end
 
     return (; energy, H, psi, nsite, nsweeps, maxdim, cutoff)
 end

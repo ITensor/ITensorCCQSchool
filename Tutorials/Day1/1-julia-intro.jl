@@ -37,17 +37,23 @@ A named tuple containing:
 """
 function main(; nterm::Int = 10^5, outputlevel::Int = 1)
     # Print the number of terms to use to approximate `pi`.
-    outputlevel > 0 && println("Number of terms: ", nterm)
+    if outputlevel > 0
+        println("Number of terms: ", nterm)
+    end
 
     # Approximate `pi` by calling the function defined above.
     pi_approx = approx_pi(nterm)
-    outputlevel > 0 && println("Approximate pi: ", pi_approx)
+    if outputlevel > 0
+        println("Approximate pi: ", pi_approx)
+    end
 
     # Compute the error in the approximation.
     # `pi` is a built-in constant in Julia that represents
     # the value of pi to arbitrary precision.
     error = abs(pi_approx - pi)
-    outputlevel > 0 && println("Error: ", error)
+    if outputlevel > 0
+        println("Error: ", error)
+    end
 
     # Return the number of terms in the series, approximation to `pi`, and
     # absolute error.
