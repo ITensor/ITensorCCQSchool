@@ -86,7 +86,7 @@ function calculate_bp_phi(tn::Dict, messages::Dict, g::NamedGraph)
     f_node = 0.0
     for v in vertices(g)
         incoming_messages = [messages[NamedEdge(vn => v)] for vn in neighbors(g, v)]
-        m = tn[v] * prod(incoming_messages)
+        m = prod([[tn[v]]; incoming_messages])
         f_node += log(m[])
     end
     f_edge = 0.0
