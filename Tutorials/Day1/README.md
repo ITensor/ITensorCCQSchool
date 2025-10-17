@@ -546,6 +546,9 @@ julia> res.szs[end]
 
 julia> Plots.gr(); # Enable the GR backend to plot in a window
 
+julia> plot_hubbard(res)
+[...]
+
 julia> animate_hubbard(res)
 [...]
 

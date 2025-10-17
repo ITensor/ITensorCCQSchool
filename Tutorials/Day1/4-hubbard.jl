@@ -10,7 +10,7 @@ using Plots: Plots, plot, scatter, quiver!
 
 include("../src/animate.jl")
 
-function plot_hubbard(res, i::Int)
+function plot_hubbard(res, i::Int = length(res.ns))
     points = vec(reverse.(Tuple.(CartesianIndices((res.ny, res.nx)))))
     xs = first.(points)
     ys = last.(points)
@@ -110,7 +110,7 @@ function main(;
 
     res = (; energy, H, psi, nx, ny, nsite, U, szs, ns, nsweeps, maxdim, cutoff, noise)
     if outputlevel > 1
-        animate_hubbard_sz(res)
+        animate_hubbard(res)
     end
     return res
 end
