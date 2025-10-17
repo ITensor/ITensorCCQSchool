@@ -17,9 +17,12 @@ A simple graph `g` is just a series of vertices and edges between pairs of those
 
 ```julia
   julia> using NamedGraphs: NamedGraph, NamedEdge
-  julia> g = NamedGraph([1,2,3])
-  julia> edges = [1 => 2, 2 => 3]
-  julia> g = add_edges(g, edges)
+
+  julia> g = NamedGraph([1,2,3]);
+
+  julia> edges = [1 => 2, 2 => 3];
+
+  julia> g = add_edges(g, edges);
 ```
 
 First, lets run the  script [1-tensornetworks.jl](./1-tensornetworks.jl)
@@ -96,6 +99,7 @@ This tensornetwork can be contracted by multiplying all the tensors together. Th
 
 ```
 julia> res = main(n=3, periodic = false);
+
 julia> res.z
 2.081072371838455
 ```
@@ -188,6 +192,7 @@ Now we're going to move fully into 2D. Let's compute the BP approximate free ene
 
 ```
 julia> betas =[0.05*(i-1) for i in 1:21]
+
 julia> bp_phis = [main(; Lx=15, Ly = 15, periodic = false, beta).bp_phi for beta in betas]
 ```
 
