@@ -79,7 +79,7 @@ where we have scaled by a factor of 1/2 for convenience.
 
 You can inspect the individual tensors on each vertex of the constructed tensor network via `res.tensornetwork[v]` where `v` is the name of the vertex.
 ```
-julia> res = main(L=3, periodic = false, β = 0.2);
+julia> res = main(L=3, periodic = false, beta = 0.2);
 
 julia> @show res.tensornetwork[1]
 res.tensornetwork[1] = ITensor ord=1
@@ -121,9 +121,12 @@ In the previous tutorial, the `contract_tensornetwork()` function contracted the
 
 In this tutorial we are going to use the script [2-beliefpropagation.jl](./2-beliefpropagation.jl) belief propagation to contract tensor networks in an efficient, but approximate manner.
 
-The script now builds an `nx x ny` square grid tensornetwork representing the partition function of the Ising model in 2D. Inverse temperature is set via the `beta` kwarg and periodic boundaries (in both directions) can be added with the kwarg `periodic`. Returned is the number of iterations BP took to converge, and the rescaled free energy density `\phi(\beta) = -\beta f(\beta) = log(Z(\beta))/(nx*ny)`
+The script now builds an $nx \times ny$ square grid tensornetwork representing the partition function of the Ising model in 2D. Inverse temperature is set via the `beta` kwarg and periodic boundaries (in both directions) can be added with the kwarg `periodic`. Returned is the number of iterations BP took to converge, and the rescaled free energy density 
+$$
+\phi(\beta) = -\beta f(\beta) = log(Z(\beta))/(nx*ny)
+$$
 
-We can do the following to get the BP computed value for `\phi` on a 10x1 OBC square grid. This is just a path graph, like in the previous example.
+We can do the following to get the BP computed value for $\phi$ on a 10x1 OBC square grid. This is just a path graph, like in the previous example.
 ```
 julia> include("2-beliefpropagation.jl")
 main (generic function with 1 method)
@@ -155,7 +158,7 @@ $$
 \phi_{Lx,OBC}(\beta) = \frac{1}{Lx}ln(\cosh^{Lx}(\beta) + \sinh^{Lx}(\beta))
 $$
 
-They don't agree. Why? Pick a finite value of `beta` between `0` and `1` and compute both the exact PBC free energy vs `Lx` for `Lx = 3,4,...30` and the `bp` free energy using the `main` function (set `Ly = 1 and `periodic = true`).
+They don't agree. Why? Pick a finite value of $\beta$ between $0$ and $1$ and compute both the exact PBC free energy vs $Lx$ for $Lx = 3,4,...30$ and the `bp` free energy using the `main` function (set $Ly = 1$ and `periodic = true`).
 
 Plot the error between the bp approximated free energy density and
 the exact free energy density as a function of $L_{x}$ on a log scale. What's the scaling? Why?
@@ -184,7 +187,7 @@ julia> plot([Lx for Lx in 3:25], bp_abs_errors, yscale = :ln)
 
 Inspect the values for `phi` returned by `bp` versus system size? Do you notice something odd? Why are they all the same value?
 
-Now we're going to move fully into 2D. Let's compute the BP approximate free energy density on a OBC square grid with `Lx = L` and `Ly = L` as a function of `beta`.
+Now we're going to move fully into 2D. Let's compute the BP approximate free energy density on a OBC square grid with $L_{x} = L$ and $L_{y} = L$ as a function of $\beta$.
 
 ```
 julia> betas =[0.05*(i-1) for i in 1:21]
@@ -213,7 +216,7 @@ $$
 
 Lets compare our results to that.
 
-5. Pick a small value for `beta` (say `beta = 0.1`) and plot the error between `bp` and the `exact` result as a function of lattice size `L` for `Lx = L` and `Ly = L`. How does it scale?
+5. Pick a small value for $\beta$ (say $\beta = 0.1$) and plot the error between `bp` and the `exact` result as a function of lattice size $L$ for $L_{x} = L$ and $L_{y} = L$. How does it scale?
 
 Now lets move to periodic boundary conditions. 
 
@@ -221,10 +224,10 @@ julia> res = main(; Lx = 5, Ly = 5, periodic = true, beta = 0.2)
 BP Algorithm Converged after 21 iterations
 (bp_phi = -0.6534110369600732, exact_phi_onsager = -0.6517635488435647, niterations = 21)
 
-6. What do you notice about the dependence of `bp_phi` on `L`?
+6. What do you notice about the dependence of `bp_phi` on $L$?
 
 
-As BP is letting us work directly in the thermodynamic limit with periodic boundaries, pick a small `L = 3` and a fine-range of betas
+As BP is letting us work directly in the thermodynamic limit with periodic boundaries, pick a small $L = 3$ and a fine-range of betas
 
 ```
 julia> betas = [0.01*(i-1) for i in 1:101]
