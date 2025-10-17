@@ -54,13 +54,13 @@ function main(;
     sites = siteinds("S=1/2", nsite)
 
     # Build the Heisenberg Hamiltonian as an MPO
-    os = OpSum()
+    terms = OpSum()
     for j in 1:(nsite - 1)
-        os += 1 / 2, "S+", j, "S-", j + 1
-        os += 1 / 2, "S-", j, "S+", j + 1
-        os += "Sz", j, "Sz", j + 1
+        terms += 1 / 2, "S+", j, "S-", j + 1
+        terms += 1 / 2, "S-", j, "S+", j + 1
+        terms += "Sz", j, "Sz", j + 1
     end
-    H = MPO(os, sites)
+    H = MPO(terms, sites)
 
     # It has bond dimension 5
     if outputlevel > 0

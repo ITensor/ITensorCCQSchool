@@ -52,15 +52,14 @@ function main(;
     # Build the physical indices for nsite spins (spin 1/2)
     sites = siteinds("S=1/2", nsite)
 
-    os = OpSum()
-    for j in 1:(nsite - 1)
-        os += 1 / 2, "S+", j, "S-", j + 1
-        os += 1 / 2, "S-", j, "S+", j + 1
-        os += "Sz", j, "Sz", j + 1
-    end
-
     # Run DMRG to get starting state for time evolution
-    H = MPO(os, sites)
+    terms = OpSum()
+    for j in 1:(nsite - 1)
+        terms += 1 / 2, "S+", j, "S-", j + 1
+        terms += 1 / 2, "S-", j, "S+", j + 1
+        terms += "Sz", j, "Sz", j + 1
+    end
+    H = MPO(terms, sites)
     psi0 = random_mps(sites; linkdims = 10)
     energy, psi = dmrg(
         H, psi0; nsweeps = 5, maxdim = [10, 20, 100, 100, 200],
@@ -76,7 +75,7 @@ function main(;
         return exp(-im * timestep / 2 * hj)
     end
     # Include gates in reverse order too
-    # (N,N-1),(N-1,N-2),...
+    # (N, N - 1), (N - 1, N - 2), ...
     append!(gates, reverse(gates))
 
     # Make starting state

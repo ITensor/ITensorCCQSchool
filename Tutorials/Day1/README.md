@@ -6,6 +6,7 @@
 - [Tutorial 1](#tutorial-1)
 - [Tutorial 2](#tutorial-2)
 - [Tutorial 3](#tutorial-3)
+- [Tutorial 4](#tutorial-4)
 
 <a id="installation-instructions"></a>
 <details>
@@ -508,6 +509,55 @@ julia> animate(; nframes = length(res.szs), fps = res.nsite) do i
            return plot(
                res.szs[i]; xlim = (1, res.nsite), ylim = (-0.25, 0.25), xlabel = "Site j",
                ylabel = "⟨Szⱼ⟩", legend = false, title = "Sweep = $(i ÷ (2 * res.nsite) + 1)"
+           )
+       end
+[...]
+```
+
+Click [here](#table-of-contents) to return to the table of contents.
+
+</details>
+
+<a id="tutorial-4"></a>
+<details>
+  <summary><h2>Tutorial 4</h2></summary>
+  <hr>
+
+```julia
+julia> include("4-hubbard.jl")
+main
+
+julia> res = main(; nx = 4, ny = 2, U = 8.0, nsweeps = 5);
+MPO bond dimension: 10
+Initial MPS bond dimension: 10
+After sweep 1 energy=-2.0494632000477755  maxlinkdim=65 maxerr=9.97E-07 time=0.304
+After sweep 2 energy=-2.876598975059923  maxlinkdim=110 maxerr=9.52E-07 time=0.374
+After sweep 3 energy=-3.0234950274964056  maxlinkdim=93 maxerr=9.76E-07 time=0.392
+After sweep 4 energy=-3.025835836258736  maxlinkdim=94 maxerr=9.97E-07 time=0.373
+After sweep 5 energy=-3.025876337152198  maxlinkdim=83 maxerr=9.88E-07 time=0.365
+
+julia> res.ns[end]
+2×4 Matrix{Float64}:
+ 0.0341762  0.0431004  0.0430981  0.0341731
+ 0.0341752  0.0430984  0.0430954  0.0341711
+
+julia> res.szs[end]
+2×4 Matrix{Float64}:
+  0.000395183  -0.000480938   0.000704163  -0.000843082
+ -0.000404015   0.000484498  -0.000699671   0.000843861
+
+julia> animate(; nframes = length(res.ns), fps = res.nsite) do i
+           return plot(
+               res.ns[i][1, :]; xlim = (1, res.nx), ylim = (0, 0.2), xlabel = "Site x",
+               ylabel = "⟨nx⟩", legend = false, title = "Sweep = $(i ÷ (2 * res.nsite) + 1)"
+           )
+       end
+[...]
+
+julia> animate(; nframes = length(res.szs), fps = res.nsite) do i
+           return plot(
+               res.szs[i][1, :]; xlim = (1, res.nx), ylim = (-0.5, 0.5), xlabel = "Site x",
+               ylabel = "⟨Sz_x⟩", legend = false, title = "Sweep = $(i ÷ (2 * res.nsite) + 1)"
            )
        end
 [...]
