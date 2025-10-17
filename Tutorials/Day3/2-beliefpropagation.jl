@@ -3,7 +3,7 @@ using LinearAlgebra: normalize, dot
 using NamedGraphs.NamedGraphGenerators: named_grid, named_hexagonal_lattice_graph, named_path_graph
 using ITensors: Index, ITensor, delta, noprime, prime, commonind, randomITensor, onehot
 using Statistics
-using QuadGK
+using QuadGK: quadgk
 
 # -β f as a function of β
 function ising_phi(β)
