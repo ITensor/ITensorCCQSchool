@@ -17,7 +17,7 @@ We are going to combine the `NamedGraphs.jl` and `ITensors.jl` packages to build
 
 A simple graph `g` is just a series of vertices and edges between pairs of those vertices. There are no multiedges or self edges. The package `NamedGraphs.jl` is built around the `NamedGraph` object `g`, which can be constructed using either the pre-built graph constructors or our own via code like 
 
-```
+```julia
   julia> using NamedGraphs: NamedGraph, NamedEdge
   julia> g = NamedGraph([1,2,3])
   julia> edges = [1 => 2, 2 => 3]
