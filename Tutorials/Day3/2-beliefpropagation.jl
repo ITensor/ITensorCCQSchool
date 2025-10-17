@@ -92,7 +92,7 @@ function calculate_bp_phi(tn::Dict, messages::Dict, g::NamedGraph)
     f_edge = 0.0
     for e in edges(g)
         m1 = messages[e]
-        m2 = messages[NamedEdge(dst(e) => src(e))]
+        m2 = messages[reverse(e)]
         f_edge += log((m1 * m2)[])
     end
     return (f_node - f_edge) / length(vertices(g))
