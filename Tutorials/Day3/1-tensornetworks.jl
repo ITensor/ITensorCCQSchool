@@ -36,7 +36,7 @@ function ising_tensornetwork(g::NamedGraph, β::Real)
 end
 
 function contract_tensornetwork(tensornetwork::Dict)
-    return prod(ITensor[tensornetwork[v] for v in keys(tensornetwork)])[]
+    return prod(values(tensornetwork))[]
 end
 
 function main(; beta::Number = 0.2)
