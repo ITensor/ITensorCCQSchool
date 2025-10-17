@@ -96,8 +96,8 @@ This tensornetwork can be contracted with the `contract_tensornetwork` function 
 
 ```
 julia> res = main(n=3, periodic = false);
-julia> @show res.z;
-res.z = 2.081072371838455
+julia> res.z
+2.081072371838455
 ```
 
 In 1D the partition function of the Ising model is analytically computable for any system size L and both Periodic and Open Boundaries. The results are
