@@ -148,7 +148,7 @@ They agree, even though we used BP to compute it. Why?
 
 2. We can also get the bp approximated free energy density for a periodic ring. 
 ```
-julia> res = main(; Lx=  3, Ly = 1, periodic = true);
+julia> res = main(; Lx =  3, Ly = 1, periodic = true);
 BP Algorithm Converged after 8 iterations
 
 julia> res.bp_phi
