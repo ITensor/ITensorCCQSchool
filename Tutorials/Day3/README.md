@@ -144,7 +144,7 @@ julia> res.bp_phi
 ```
 1. Compare the result to the analytical value for 1D OBC
 
-$$\phi_{OBC}(\beta) = \frac{1}{Lx}\ln(2\cosh^{Lx-1}(\beta))$$
+$$\phi_{OBC}(\beta) = \frac{1}{L_{x}}\ln(2\cosh^{Lx-1}(\beta))$$
 
 They agree, even though we used BP to compute it. Why?
 
@@ -161,7 +161,7 @@ julia> res.bp_phi
 
 $$\phi_{OBC}(\beta) = \frac{1}{L_{x}}\ln(\cosh^{Lx}(\beta) + \sinh^{L_{x}}(\beta))$$
 
-They don't agree. Why? Pick a finite value of $\beta$ between $0$ and $1$ and compute both the exact PBC free energy vs $Lx$ for $Lx = 3,4,...30$ and the `bp` free energy using the `main` function (set $Ly = 1$ and `periodic = true`).
+They don't agree. Why? Pick a finite value of $\beta$ between $0$ and $1$ and compute both the exact PBC free energy vs $Lx$ for $Lx = 3,4,...20$ and the `bp` free energy using the `main` function (set $Ly = 1$ and `periodic = true`).
 
 Plot the error between the bp approximated `phi` and
 the exact `phi` as a function of $L_{x}$ on a log scale. What's the scaling? Why?
@@ -207,7 +207,7 @@ Congratulations. You just approximately solved the 2D Ising model on a 15x15 squ
 
 Included in `[2-beliefpropagation.jl](./2-beliefpropagation.jl)` is a function for computing the exact rescaled free energy of the 2D model in the thermodynamic limit via Onsager's famous result. This is returned by `main` as `exact_phi_onsager`.
 
-$$\phi(\beta) = \beta f(\beta) = -\ln 2 + \frac{1}{8\pi^{2}}\int_{0}^{2\pi}\int_{0}^{2\pi}\ln\left[\cosh\left(2\beta \right)\cosh\left(2\beta \right)-\sinh\left(2\beta \right)\cos\left(\theta_{1}\right)-\sinh\left(2\beta \right)\cos\left(\theta_{2}\right)\right]d\theta_{1}, d\theta_{2}.$$
+$$\phi(\beta) = -\beta f(\beta) = -\ln 2 + \frac{1}{8\pi^{2}}\int_{0}^{2\pi}\int_{0}^{2\pi}\ln\left[\cosh\left(2\beta \right)\cosh\left(2\beta \right)-\sinh\left(2\beta \right)\cos\left(\theta_{1}\right)-\sinh\left(2\beta \right)\cos\left(\theta_{2}\right)\right]d\theta_{1}, d\theta_{2}.$$
 
 Lets compare our results to that.
 
