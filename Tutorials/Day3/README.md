@@ -82,7 +82,7 @@ where we have scaled by a factor of 1/2 for convenience.
 
 You can inspect the individual tensors on each vertex of the constructed tensor network via `res.tensornetwork[v]` where `v` is the name of the vertex.
 ```
-julia> res = main(L=3, periodic = false, beta = 0.2);
+julia> res = main(; L = 3, periodic = false, beta = 0.2);
 
 julia> show(res.tensornetwork[1])
 ITensor ord=1
