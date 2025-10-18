@@ -80,9 +80,9 @@ $$Z(\beta) = \frac{1}{2}\sum_{s_{1} \in {-1, 1}}\sum_{s_{2} \in {-1, 1}} ... \su
 
 where we have scaled by a factor of 1/2 for convenience.
 
-You can inspect the individual tensors on each vertex of the constructed tensor network via `res.tensornetwork[v]` where `v` is the name of the vertex.
+This object is returned by `main()`.You can inspect the individual tensors on each vertex of the constructed tensor network via `res.tensornetwork[v]` where `v` is the name of the vertex.
 ```
-julia> res = main(; L = 3, periodic = false, beta = 0.2);
+julia> res = main(L=3, periodic = false, beta = 0.2);
 
 julia> show(res.tensornetwork[1])
 ITensor ord=1
@@ -98,7 +98,7 @@ NDTensors.Dense{Float64, Vector{Float64}}
 This tensornetwork can be contracted by multiplying all the tensors together. This contraction is pre-computed for you in `main()`
 
 ```
-julia> res = main(; n = 3, periodic = false);
+julia> res = main(n=3, periodic = false);
 
 julia> res.z
 2.081072371838455
@@ -115,6 +115,10 @@ $$Z_{PBC}(\beta) = \cosh^{L}(\beta) + \sinh^{L}(\beta)$$
 for periodic boundaries.
 
 2. Compare the output of `res.z` with these values for both periodic and open boundaries. Do they agree? If they do, then congratulations, you just solved the 1D PBC and OBC Ising model with a tensor network approach.
+
+Click [here](#table-of-contents) to return to the table of contents.
+
+</details>
 
 <a id="tutorial-2"></a>
 <details>
@@ -148,7 +152,7 @@ They agree, even though we used BP to compute it. Why?
 
 2. We can also get the bp approximated free energy density for a periodic ring. 
 ```
-julia> res = main(; Lx =  3, Ly = 1, periodic = true);
+julia> res = main(; Lx=  3, Ly = 1, periodic = true);
 BP Algorithm Converged after 8 iterations
 
 julia> res.bp_phi
