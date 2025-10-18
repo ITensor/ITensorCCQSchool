@@ -252,3 +252,7 @@ julia> plot(betas, errs)
   <hr>
 
 Now we are going to try to correct our BP results with a first order cluster expansion.
+
+Click [here](#table-of-contents) to return to the table of contents.
+
+</details>
