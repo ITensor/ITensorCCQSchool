@@ -1,4 +1,4 @@
-using NamedGraphs: NamedEdge, NamedGraph, vertices, edges, src, dst, neighbors
+using NamedGraphs: NamedEdge, NamedGraph, vertices, edges, src, dst, neighbors, simplecycles_limited_length
 using LinearAlgebra: normalize, dot
 using NamedGraphs.NamedGraphGenerators: named_grid
 using ITensors: Index, ITensor, prime, commonind, onehot
@@ -71,13 +71,36 @@ function _bp_phi(tn::Dict, messages::Dict, g::NamedGraph)
     return sum([log(local_factor(tn, messages, g, v)[]) for v in vertices(g)]) / length(vertices(g))
 end
 
-function main(; Lx::Int, Ly::Int, beta::Number = 0.2, periodic = false)
-    g = named_grid((Lx,Ly); periodic)
+function first_order_cluster_expansion_phi(tn::Dict, messages::Dict, g::NamedGraph, smallest_loop_size::Int)
+    bp_phi = _bp_phi(tn, messages, g)
+    rescaled_tn = Dict(v => tn[v] / local_factor(tn, messages, g, v) for v in vertices(g))
+    cycles = filter(c -> length(c) >  2, simplecycles_limited_length(g, smallest_loop_size))
+    cycles = unique(Set.(cycles))
+    isempty(cycles) && error("No cycles found with length $smallest_loop_size")
+    cycle_weights = []
+    for cycle in cycles
+        incoming_es = [vn => v for v in cycle for vn in neighbors(g, v) if vn ∉ cycle]
+        incoming_messages = [messages[NamedEdge(e)] for e in incoming_es]
+        local_tensors = [rescaled_tn[v] for v in cycle]
+        weight = prod([local_tensors; incoming_messages])[]
+        push!(cycle_weights, weight)
+    end
+    return sum(log.(cycle_weights)) / length(vertices(g)) + bp_phi
+end
+
+function main(; beta::Number = 0.2)
+    g = named_grid((5,5); periodic = true)
 
     tensornetwork = ising_tensornetwork(g, beta)
     messages, niterations = belief_propagation(tensornetwork, g, 100)
 
     bp_phi = _bp_phi(tensornetwork, messages, g)
+    smallest_loop_size = 4
+    bp_corrected_phi = first_order_cluster_expansion_phi(tensornetwork, messages, g, smallest_loop_size)
     exact_phi_onsager = ising_phi(beta)
-    return (; bp_phi, exact_phi_onsager, niterations)
+
+    bp_err = abs(bp_phi - exact_phi_onsager)
+    bp_corrected_err = abs(bp_corrected_phi - exact_phi_onsager)
+
+    return (; bp_phi, bp_err, bp_corrected_err, exact_phi_onsager, bp_corrected_phi, niterations)
 end
