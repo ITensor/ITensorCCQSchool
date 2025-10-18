@@ -6,6 +6,7 @@
 - [Tutorial 1](#tutorial-1)
 - [Tutorial 2](#tutorial-2)
 - [Tutorial 3](#tutorial-3)
+- [Tutorial 4](#tutorial-4)
 
 <a id="installation-instructions"></a>
 <details>
@@ -249,6 +250,8 @@ Here we suppress the printing from within the script with `outputlevel = 0`.
 
 3. Plot the errors in the REPL as a function of inverse number of terms to see a linear relationship:
 ```julia
+julia> Plots.unicodeplots(); # Enable the UnicodePlots backend to plot in the terminal
+
 julia> plot(inv.(nterms), errors; legend = false)
           ┌────────────────────────────────────────┐
 0.00102897│⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⠔⠀│
@@ -504,13 +507,51 @@ Energy: -21.972110267624643
 ⟨ψ|ψ⟩: 1.0000000000000064
 ⟨ψ|H|ψ⟩: -21.972110267625013
 
-julia> animate(; nframes = length(res.szs), fps = res.nsite) do i
-           return plot(
-               res.szs[i]; xlim = (1, res.nsite), ylim = (-0.25, 0.25), xlabel = "Site j",
-               ylabel = "⟨Szⱼ⟩", legend = false, title = "Sweep = $(i ÷ (2 * res.nsite) + 1)"
-           )
-       end
+julia> animate_dmrg_sz(res)
 [...]
+
+```
+
+Click [here](#table-of-contents) to return to the table of contents.
+
+</details>
+
+<a id="tutorial-4"></a>
+<details>
+  <summary><h2>Tutorial 4</h2></summary>
+  <hr>
+
+```julia
+julia> include("4-hubbard.jl")
+main
+
+julia> res = main(; nx = 4, ny = 2, U = 8.0, nsweeps = 5);
+MPO bond dimension: 10
+Initial MPS bond dimension: 10
+After sweep 1 energy=-2.5282321813603588  maxlinkdim=89 maxerr=9.77E-07 time=0.302
+After sweep 2 energy=-2.9538560484453478  maxlinkdim=109 maxerr=9.64E-07 time=0.359
+After sweep 3 energy=-3.022619863090767  maxlinkdim=94 maxerr=9.94E-07 time=0.376
+After sweep 4 energy=-3.0258111835432957  maxlinkdim=91 maxerr=9.96E-07 time=0.363
+After sweep 5 energy=-3.025876293895071  maxlinkdim=83 maxerr=9.73E-07 time=0.362
+
+julia> res.ns[end]
+2×4 Matrix{Float64}:
+ 0.0341762  0.0431004  0.0430981  0.0341731
+ 0.0341752  0.0430984  0.0430954  0.0341711
+
+julia> res.szs[end]
+2×4 Matrix{Float64}:
+  0.000395183  -0.000480938   0.000704163  -0.000843082
+ -0.000404015   0.000484498  -0.000699671   0.000843861
+
+julia> Plots.gr(); # Enable the GR backend to plot in a window
+
+julia> plot_hubbard(res)
+[...]
+
+julia> animate_hubbard(res)
+[...]
+
 ```
 
 Click [here](#table-of-contents) to return to the table of contents.

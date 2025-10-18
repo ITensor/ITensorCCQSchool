@@ -8,36 +8,18 @@ using LinearAlgebra: normalize
 using StableRNGs: StableRNG
 # Load the Plots package for plotting
 using Plots: Plots, plot
-# Load the UnicodePlots backend for plotting to the terminal
-Plots.unicodeplots()
 
-"""
-    animate(f; nframes::Int, fps::Int = 30)
+include("../src/animate.jl")
 
-Call `f(i)` for each frame `i in 1:nframes`, where `f(i)` returns an object to print to the
-terminal at each frame. Renders each frame in-place in the terminal at `fps` frames per
-second.
-"""
-function animate(f; nframes::Int, fps::Real = 30)
-    io = IOBuffer()
-    # Hide cursor
-    print(stdout, "\x1b[?25l")
-    return try
-        # Clear screen
-        print(stdout, "\x1b[2J")
-        for i in 1:nframes
-            seekstart(io)
-            show(io, MIME("text/plain"), f(i))
-            frame_str = String(take!(io))
-            # Move home
-            print(stdout, "\x1b[H")
-            println(frame_str)
-            sleep(1 / fps)
-        end
-    finally
-        # Show cursor again
-        print(stdout, "\x1b[?25h")
-    end
+function plot_tebd_sz(res; step::Int)
+    return plot(
+        res.szs[step]; xlim = (1, res.nsite), ylim = (-0.5, 0.5), xlabel = "Site j",
+        ylabel = "⟨Szⱼ(t=$(res.times[step]))⟩", legend = false
+    )
+end
+
+function animate_tebd_sz(res; fps = res.nsite)
+    return animate(i -> plot_tebd_sz(res; step = i); nframes = length(res.szs), fps)
 end
 
 function main(;
@@ -52,15 +34,14 @@ function main(;
     # Build the physical indices for nsite spins (spin 1/2)
     sites = siteinds("S=1/2", nsite)
 
-    os = OpSum()
-    for j in 1:(nsite - 1)
-        os += 1 / 2, "S+", j, "S-", j + 1
-        os += 1 / 2, "S-", j, "S+", j + 1
-        os += "Sz", j, "Sz", j + 1
-    end
-
     # Run DMRG to get starting state for time evolution
-    H = MPO(os, sites)
+    terms = OpSum()
+    for j in 1:(nsite - 1)
+        terms += 1 / 2, "S+", j, "S-", j + 1
+        terms += 1 / 2, "S-", j, "S+", j + 1
+        terms += "Sz", j, "Sz", j + 1
+    end
+    H = MPO(terms, sites)
     psi0 = random_mps(sites; linkdims = 10)
     energy, psi = dmrg(
         H, psi0; nsweeps = 5, maxdim = [10, 20, 100, 100, 200],
@@ -76,7 +57,7 @@ function main(;
         return exp(-im * timestep / 2 * hj)
     end
     # Include gates in reverse order too
-    # (N,N-1),(N-1,N-2),...
+    # (N, N - 1), (N - 1, N - 2), ...
     append!(gates, reverse(gates))
 
     # Make starting state
@@ -85,7 +66,8 @@ function main(;
 
     szs = [expect(psit, "Sz")]
     energies = ComplexF64[inner(psit', H, psi)]
-    for current_time in 0.0:timestep:time
+    times = 0.0:timestep:time
+    for current_time in times[2:end]
         psit = apply(gates, psit; cutoff)
         psit = normalize(psit)
         energy = inner(psit', H, psit)
@@ -103,5 +85,9 @@ function main(;
         end
     end
 
-    return (; energy, H, psi, szs, nsite, time, timestep, cutoff)
+    res = (; energy, H, psi, times, szs, energies, nsite, time, timestep, cutoff)
+    if outputlevel > 1
+        animate_tebd_sz(res)
+    end
+    return res
 end
