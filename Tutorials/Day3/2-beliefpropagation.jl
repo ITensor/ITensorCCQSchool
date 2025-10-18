@@ -1,9 +1,11 @@
-using NamedGraphs: NamedEdge, NamedGraph, add_edges, vertices, edges, src, dst, neighbors
+using NamedGraphs: NamedEdge, NamedGraph, vertices, edges, src, dst, neighbors
 using LinearAlgebra: normalize, dot
-using NamedGraphs.NamedGraphGenerators: named_grid, named_hexagonal_lattice_graph, named_path_graph
-using ITensors: Index, ITensor, apply, delta, prime, commonind, randomITensor, onehot
+using NamedGraphs.NamedGraphGenerators: named_grid
+using ITensors: Index, ITensor, prime, commonind, onehot
 using Statistics: mean
 using QuadGK: quadgk
+
+include("isingtensornetwork.jl")
 
 # -β f as a function of β
 function ising_phi(β)
@@ -14,29 +16,6 @@ function ising_phi(β)
     )
     inner(θ2) = quadgk(θ1 -> g(θ1, θ2), 0, 2π)[1]
     return -log(2) + (1/(8π^2)) * quadgk(inner, 0, 2π)[1]
-end
-
-function ising_tensornetwork(g::NamedGraph, β::Real)
-    nv = length(vertices(g))
-    links = Dict(e => Index(2, "e$(src(e))_$(dst(e))") for e in edges(g))
-    links = merge(links, Dict(reverse(e) => links[e] for e in edges(g)))
-
-    # symmetric sqrt of Boltzmann matrix W = exp(β σσ')
-    λ1, λ2 = cosh(β), sinh(β)
-    α = 0.5*(sqrt(λ1) + sqrt(λ2))
-    ϕ = 0.5*(sqrt(λ1) - sqrt(λ2))
-    sqrt_W = [α ϕ; ϕ α]
-
-    T = Dict()
-    for v in vertices(g)
-        inds = [links[e] for e in edges(g) if src(e)==v || dst(e)==v]
-        T[v] = delta(inds)
-        for vn in neighbors(g, v)
-            e = NamedEdge(v, vn)
-            T[v] = apply(T[v], ITensor(sqrt_W, links[e], prime(links[e]))) 
-        end
-    end
-    return T
 end
 
 function updated_message(tensornetwork::Dict, messages::Dict, g::NamedGraph, e::NamedEdge)
