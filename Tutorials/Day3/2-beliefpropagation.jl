@@ -57,7 +57,7 @@ function belief_propagation(tn::Dict, g::NamedGraph, niters::Int; tol::Float64=1
     return messages, Inf
 end
 
-function calculate_bp_phi(tn::Dict, messages::Dict, g::NamedGraph)
+function _bp_phi(tn::Dict, messages::Dict, g::NamedGraph)
     f_node = 0.0
     for v in vertices(g)
         incoming_messages = [messages[NamedEdge(vn => v)] for vn in neighbors(g, v)]
@@ -79,7 +79,7 @@ function main(; Lx::Int, Ly::Int, beta::Number = 0.2, periodic = false)
     tensornetwork = ising_tensornetwork(g, beta)
     messages, niterations = belief_propagation(tensornetwork, g, 100)
 
-    bp_phi = calculate_bp_phi(tensornetwork, messages, g)
+    bp_phi = _bp_phi(tensornetwork, messages, g)
     exact_phi_onsager = ising_phi(beta)
     return (; bp_phi, exact_phi_onsager, niterations)
 end
