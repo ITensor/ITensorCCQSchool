@@ -98,7 +98,7 @@ NDTensors.Dense{Float64, Vector{Float64}}
 This tensornetwork can be contracted by multiplying all the tensors together. This contraction is pre-computed for you in `main()`
 
 ```
-julia> res = main(n=3, periodic = false);
+julia> res = main(; n = 3, periodic = false);
 
 julia> res.z
 2.081072371838455
