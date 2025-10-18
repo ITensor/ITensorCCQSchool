@@ -252,6 +252,10 @@ julia> plot(betas, abs_errs, xlabel = "Beta", ylabel = "Abs Error")
             ⠀-0.03⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Beta⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀1.03⠀ 
 ```
 
+Click [here](#table-of-contents) to return to the table of contents.
+
+</details>
+
 <a id="tutorial-3"></a>
 <details>
   <summary><h2>Tutorial 3</h2></summary>
