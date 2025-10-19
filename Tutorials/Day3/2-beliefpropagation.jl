@@ -23,7 +23,7 @@ function main(; Lx::Int, Ly::Int, beta::Number = 0.2, periodic = false, outputle
     g = named_grid((Lx,Ly); periodic)
 
     tensornetwork = ising_tensornetwork(g, beta)
-    messages, niterations = belief_propagation(tensornetwork, g, 100; outputlevel)
+    messages, niterations = belief_propagation(tensornetwork, g, 1000; outputlevel)
 
     bp_phi_g = bp_phi(tensornetwork, messages, g)
     exact_phi_onsager = ising_phi(beta)

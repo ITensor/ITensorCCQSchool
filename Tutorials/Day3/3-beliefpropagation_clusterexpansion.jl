@@ -23,7 +23,7 @@ function main(; beta::Number = 0.2, outputlevel::Int=1)
     g = named_grid((5,5); periodic = true)
 
     tensornetwork = ising_tensornetwork(g, beta)
-    messages, niterations = belief_propagation(tensornetwork, g, 100; outputlevel)
+    messages, niterations = belief_propagation(tensornetwork, g, 1000; outputlevel)
 
     bp_phi_g = bp_phi(tensornetwork, messages, g)
     smallest_loop_size = 4

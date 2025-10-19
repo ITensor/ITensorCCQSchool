@@ -4,10 +4,10 @@ using LinearAlgebra: normalize, dot
 using ITensors: Index, ITensor, commonind, onehot
 
 function updated_message(tensornetwork::Dict, messages::Dict, g::NamedGraph, e::NamedEdge)
-    incoming_es = setdiff(boundary_edges(g, [src(e)]), [reverse(e)])
+    incoming_es = setdiff(boundary_edges(g, [src(e)]; dir = :in), [reverse(e)])
     local_tensor = tensornetwork[src(e)]
     messages = copy(messages)
-    if isempty(incoming_vs) 
+    if isempty(incoming_es) 
         m = normalize(local_tensor)
     else
         incoming_messages = [messages[e] for e in incoming_es]
@@ -72,7 +72,7 @@ end
     - `outputlevel::Int = 1`: The verbosity level of the output.
     # Returns
     - `messages::Dict`: A dictionary containing the converged messages for each edge in the graph.
-    - `niterations::Int`: The number of iterations taken to converge, or `Inf` if not converged within `niters`.
+    - `niterations::Int`: The number of iterations taken to converge, or `nothing` if not converged within `niters`.
 """
 function belief_propagation(tn::Dict, g::NamedGraph, niters::Int; tol::Float64=1e-10, outputlevel::Int = 1)
     edges = all_edges(g)
@@ -87,11 +87,11 @@ function belief_propagation(tn::Dict, g::NamedGraph, niters::Int; tol::Float64=1
         end
 
     end
-    return messages, Inf
+    return messages, nothing
 end
 
 function local_factor(tn::Dict, messages::Dict, g::NamedGraph, v)
-    incoming_messages = [messages[e] for e in boundary_edges(g, [v])]
+    incoming_messages = [messages[e] for e in boundary_edges(g, [v]; dir = :in)]
     m = prod([[tn[v]]; incoming_messages])
     return m
 end
@@ -116,7 +116,7 @@ function bp_corrected_phi(tn::Dict, messages::Dict, g::NamedGraph, smallest_loop
     isempty(cycles) && error("No cycles found with length $smallest_loop_size")
     cycle_weights = []
     for cycle in cycles
-        incoming_messages = [messages[e] for e in boundary_edges(g, cycle)]
+        incoming_messages = [messages[e] for e in boundary_edges(g, cycle; dir = :in)]
         local_tensors = [rescaled_tn[v] for v in cycle]
         weight = prod([local_tensors; incoming_messages])[]
         push!(cycle_weights, weight)
