@@ -99,8 +99,5 @@ function main(; beta::Number = 0.2, outputlevel::Int=1)
     bp_corrected_phi = first_order_cluster_expansion_phi(tensornetwork, messages, g, smallest_loop_size)
     exact_phi_onsager = ising_phi(beta)
 
-    bp_err = abs(bp_phi - exact_phi_onsager)
-    bp_corrected_err = abs(bp_corrected_phi - exact_phi_onsager)
-
-    return (; bp_phi, bp_err, bp_corrected_err, exact_phi_onsager, bp_corrected_phi, niterations)
+    return (; bp_phi, exact_phi_onsager, bp_corrected_phi, niterations)
 end
