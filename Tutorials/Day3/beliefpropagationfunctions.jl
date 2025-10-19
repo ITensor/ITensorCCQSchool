@@ -4,13 +4,13 @@ using LinearAlgebra: normalize, dot
 using ITensors: Index, ITensor, commonind, onehot
 
 function updated_message(tensornetwork::Dict, messages::Dict, g::NamedGraph, e::NamedEdge)
-    incoming_vs = filter(v -> v ≠ dst(e), neighbors(g, src(e)))
+    incoming_es = setdiff(boundary_edges(g, [src(e)]), [reverse(e)])
     local_tensor = tensornetwork[src(e)]
     messages = copy(messages)
     if isempty(incoming_vs) 
         m = normalize(local_tensor)
     else
-        incoming_messages = [messages[NamedEdge(vn, src(e))] for vn in incoming_vs]
+        incoming_messages = [messages[e] for e in incoming_es]
         m = normalize(local_tensor * prod(incoming_messages))
     end
     return m
@@ -91,8 +91,7 @@ function belief_propagation(tn::Dict, g::NamedGraph, niters::Int; tol::Float64=1
 end
 
 function local_factor(tn::Dict, messages::Dict, g::NamedGraph, v)
-    incoming_vs = neighbors(g, v)
-    incoming_messages = [messages[NamedEdge(vn, v)] for vn in incoming_vs]
+    incoming_messages = [messages[e] for e in boundary_edges(g, [v])]
     m = prod([[tn[v]]; incoming_messages])
     return m
 end
