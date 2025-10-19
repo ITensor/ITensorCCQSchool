@@ -125,9 +125,9 @@ Click [here](#table-of-contents) to return to the table of contents.
 
 In the previous tutorial, we contracted the tensor network exactly by multiplying the tensors together, vertex by vertex. This can only be done efficiently for tree-like networks (those composed of no loops, or a small number of loops) and only when taking careful care over the order of contraction.
 
-In this tutorial we are going to use the script [2-beliefpropagation.jl](./2-beliefpropagation.jl) belief propagation to contract tensor networks in an efficient, but approximate manner.
+In this tutorial we are going to contract tensor networks in an efficient, but approximate manner via belief propagation. The core belief propagation functions are contained in the script [beliefpropagationfunctions.jl](./beliefpropagationfunctions.jl).
 
-The script now builds an $L_{x} \times L_{y}$ square grid tensornetwork representing the partition function of the Ising model in 2D. Inverse temperature is set via the `beta` kwarg and periodic boundaries (in both directions) can be added with the kwarg `periodic`. Returned is the number of iterations BP took to converge, and the rescaled free energy density 
+The function `main` in [2-beliefpropagation.jl](./2-beliefpropagation.jl) now builds an $L_{x} \times L_{y}$ square grid tensornetwork representing the partition function of the Ising model in 2D. Inverse temperature is set via the `beta` kwarg and periodic boundaries (in both directions) can be added with the kwarg `periodic`. Returned is the number of iterations BP took to converge (`niterations`), and the rescaled free energy density (`bp_phi_g`)
 
 $$\phi(\beta) = -\beta f(\beta) = \frac{1}{L_{x}L_{y}}\ln(Z(\beta))$$
 
@@ -139,7 +139,7 @@ main (generic function with 1 method)
 julia> res = main(; Lx = 3, Ly = 1, beta = 0.2, periodic = false);
 BP Algorithm Converged after 3 iterations
 
-julia> res.bp_phi
+julia> res.bp_phi_g
 0.24429444141332002
 ```
 1. Compare the result to the analytical value for 1D OBC
@@ -148,12 +148,12 @@ $$\phi_{OBC}(\beta) = \frac{1}{L_{x}}\ln(2\cosh^{Lx-1}(\beta))$$
 
 They agree, even though we used BP to compute it. Why?
 
-2. We can also get the bp approximated free energy density for a periodic ring. 
+2. We can also get the bp approximated free energy density for a periodic ring `g`. 
 ```
 julia> res = main(; Lx=  3, Ly = 1, periodic = true);
 BP Algorithm Converged after 8 iterations
 
-julia> res.bp_phi
+julia> res.bp_phi_g
 0.019868071835749606
 ```
 
@@ -165,7 +165,6 @@ They don't agree. Why? Pick a finite value of $\beta$ between $0$ and $1$ and co
 
 Plot the error between the bp approximated `phi` and
 the exact `phi` as a function of $L_{x}$ on a log scale. What's the scaling? Why?
-
 
 ```
 julia> Plots.unicodeplots(); # Enable the UnicodePlots backend to plot in the terminal
@@ -191,14 +190,14 @@ julia> plot(Lxs, bp_abs_errs, yscale = :log, xlabel = "System Size Lx", ylabel =
           ⠀2.49⠀⠀⠀⠀⠀⠀⠀⠀System Size Lx⠀⠀⠀⠀⠀⠀⠀⠀⠀20.51⠀  
 ```
 
-Inspect the values for `bp_phi` returned by `main` versus system size? Do you notice something odd? Why are they all the same value?
+Inspect the values for `bp_phi_g` returned by `main` versus system size? Do you notice something odd? Why are they all the same value?
 
 Now we're going to move fully into 2D. Let's compute the BP approximate free energy density on a OBC square grid with $L_{x} = L$ and $L_{y} = L$ as a function of $\beta$.
 
 ```
 julia> betas =[0.05*(i-1) for i in 1:21]
 
-julia> bp_phis = [main(; Lx=15, Ly = 15, periodic = false, beta, outputlevel=0).bp_phi for beta in betas]
+julia> bp_phis = [main(; Lx=15, Ly = 15, periodic = false, beta, outputlevel=0).bp_phi_g for beta in betas]
 ```
 
 Congratulations. You just approximately solved the 2D Ising model on a 15x15 square lattice for twenty different inverse temperatures in about 10 seconds.
@@ -211,7 +210,7 @@ $$\phi(\beta) = -\beta f(\beta) = -\ln 2 + \frac{1}{8\pi^{2}}\int_{0}^{2\pi}\int
 
 Lets compare our results to that.
 
-5. Pick a small value for $\beta$ (say $\beta = 0.1$) and plot the error between `bp` and the `exact` result as a function of lattice size $L$ for $L_{x} = L$ and $L_{y} = L$. How does it scale?
+5. Pick a small value for $\beta$ (say $\beta = 0.1$) and plot the error between `bp` and the `exact` result as a function of graph size $L$ for $L_{x} = L$ and $L_{y} = L$. How does it scale?
 
 Now lets move to periodic boundary conditions. 
 ```
@@ -219,7 +218,7 @@ julia> res = main(; Lx = 5, Ly = 5, periodic = true, beta = 0.2)
 BP Algorithm Converged after 21 iterations
 (bp_phi = -0.6534110369600732, exact_phi_onsager = -0.6517635488435647, niterations = 21)
 ```
-6. What do you notice about the dependence of `bp_phi` on $L$?
+6. What do you notice about the dependence of `bp_phi_g` on $L$?
 
 
 As BP is letting us work directly in the thermodynamic limit with periodic boundaries, we can pick a small $L >= 3$ and a fine-range of betas and rapidly get the BP answer in the thermodynamic limit.
@@ -271,7 +270,7 @@ where $Z_{\rm BP}$ is the BP approximation of the partition function and the pro
 
 This formula is implemented in `[3-beliefpropagation_clusterexpansion.jl](./3-beliefpropagation_clusterexpansion.jl)` at the level of the rescaled free energy $\phi(\beta) = -\beta f(\beta)$. We use the `NamedGraphs.simple_cycles_limited_length` function to enumerate these loops. 
 
-For the periodic square lattice, setting $L >= 5$ will give us a first order cluster expanded result for $\phi(\beta)$ directly in the thermodynamic limit. This is due to the homogenity of the tensor network and that there is exactly one loop of size $4$ per vertex when $L >= 5$. The parameters $L_{x} = 5, L_{y} = 5$ and `periodic = true` have all been set for you and `main` returns the bp value for `phi` (`bp_phi`), the corrected value for `phi` (`bp_corrected_phi`) and Onsager's exact result (`exact_phi_onsager`) - all in the thermodynamic limit for your choice of $\beta$.
+For the periodic square lattice, setting $L >= 5$ will give us a first order cluster expanded result for $\phi(\beta)$ directly in the thermodynamic limit. This is due to the homogenity of the tensor network and that there is exactly one loop of size $4$ per vertex when $L >= 5$. The parameters $L_{x} = 5, L_{y} = 5$ and `periodic = true` have all been set for you and `main` returns the bp value for `phi` (`bp_phi_g`), the corrected value for `phi` (`bp_corrected_phi_g`) and Onsager's exact result (`exact_phi_onsager`) - all in the thermodynamic limit for your choice of $\beta$.
 
 8. Calculate the bp error and the cluster corrected bp error, with respect to the exact solution, for a range of `betas`. Plot these.
 

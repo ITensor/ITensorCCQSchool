@@ -1,7 +1,4 @@
-using NamedGraphs: NamedEdge, NamedGraph, vertices, edges, src, dst, neighbors
-using LinearAlgebra: normalize, dot
 using NamedGraphs.NamedGraphGenerators: named_grid
-using ITensors: Index, ITensor, prime, commonind, onehot
 using Statistics: mean
 using QuadGK: quadgk
 
@@ -9,6 +6,7 @@ using QuadGK: quadgk
 using Plots: Plots, plot
 
 include("isingtensornetwork.jl")
+include("beliefpropagationfunctions.jl")
 
 # -β f as a function of β
 function ising_phi(β)
@@ -21,63 +19,13 @@ function ising_phi(β)
     return -log(2) + (1/(8π^2)) * quadgk(inner, 0, 2π)[1]
 end
 
-function updated_message(tensornetwork::Dict, messages::Dict, g::NamedGraph, e::NamedEdge)
-    incoming_vs = filter(v -> v ≠ dst(e), neighbors(g, src(e)))
-    local_tensor = tensornetwork[src(e)]
-    messages = copy(messages)
-    if isempty(incoming_vs) 
-        m = normalize(local_tensor)
-    else
-        incoming_messages = [messages[NamedEdge(vn, src(e))] for vn in incoming_vs]
-        m = normalize(local_tensor * prod(incoming_messages))
-    end
-    return m
-end
-
-function update_messages(tensornetwork::Dict, messages::Dict, g::NamedGraph)
-    updated_messages = copy(messages)
-    for e in edges(g)
-        me = updated_message(tensornetwork, messages, g, e)
-        mer = updated_message(tensornetwork, messages, g, reverse(e))
-        updated_messages[e], updated_messages[reverse(e)] = me, mer
-    end
-    return updated_messages
-end
-
-function belief_propagation(tn::Dict, g::NamedGraph, niters::Int; tol::Float64=1e-10, outputlevel::Int = 1)
-    all_edges = vcat(edges(g), reverse.(edges(g)))
-    messages = Dict(e => normalize(onehot(commonind(tn[src(e)], tn[dst(e)]) => 1)) for e in all_edges)
-    for i in 1:niters   
-        old_messages = copy(messages)
-        messages = update_messages(tn, messages, g)
-        if mean([1 - dot(messages[e], old_messages[e])^2 for e in all_edges]) < tol
-            outputlevel >= 1 && println("BP Algorithm Converged after $i iterations")
-            return messages, i
-            break
-        end
-
-    end
-    return messages, Inf
-end
-
-function local_factor(tn::Dict, messages::Dict, g::NamedGraph, v)
-    incoming_vs = neighbors(g, v)
-    incoming_messages = [messages[NamedEdge(vn => v)] for vn in incoming_vs]
-    m = prod([[tn[v]]; incoming_messages])
-    return m
-end
-
-function _bp_phi(tn::Dict, messages::Dict, g::NamedGraph)
-    return sum([log(local_factor(tn, messages, g, v)[]) for v in vertices(g)]) / length(vertices(g))
-end
-
 function main(; Lx::Int, Ly::Int, beta::Number = 0.2, periodic = false, outputlevel::Int = 1)
     g = named_grid((Lx,Ly); periodic)
 
     tensornetwork = ising_tensornetwork(g, beta)
     messages, niterations = belief_propagation(tensornetwork, g, 100; outputlevel)
 
-    bp_phi = _bp_phi(tensornetwork, messages, g)
+    bp_phi_g = bp_phi(tensornetwork, messages, g)
     exact_phi_onsager = ising_phi(beta)
-    return (; bp_phi, exact_phi_onsager, niterations)
+    return (; bp_phi_g, exact_phi_onsager, niterations)
 end

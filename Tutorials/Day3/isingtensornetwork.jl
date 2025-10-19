@@ -3,6 +3,14 @@ using NamedGraphs: NamedGraph, edges, vertices, dst, src, neighbors
 using LinearAlgebra
 using ITensors: ITensor, Index, delta, prime, apply
 
+"""
+    Constructs the tensor network representation of the Ising model on a given graph.
+    # Arguments
+    - `g::NamedGraph`: The graph representing the lattice structure of the Ising model.
+    - `β::Real`: The inverse temperature parameter.
+    # Returns
+    - `Dict{Any, ITensor}`: A dictionary mapping each vertex to its corresponding tensor in the network.
+"""
 function ising_tensornetwork(g::NamedGraph, β::Real)
     nv = length(vertices(g))
     links = Dict(e => Index(2, "e$(src(e))_$(dst(e))") for e in edges(g))
