@@ -32,7 +32,7 @@ end
 function binormalized_messages(messages::Dict, g::NamedGraph)
     binorm_messages = copy(messages)
     for e in edges(g)
-        n = dot(messages[e], messages[reverse(e)])
+        n = (messages[e]*messages[reverse(e)])[]
         if sign(n) < 0
             n = abs(n)
             s = -1

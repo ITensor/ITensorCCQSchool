@@ -7,7 +7,7 @@ using Plots: Plots, plot
 include("isingtensornetwork.jl")
 include("beliefpropagationfunctions.jl")
 
-function main(; Lx::Int, Ly::Int, beta::Number = 0.2, periodic = false, outputlevel::Int = 1)
+function main(; Lx::Int = 3, Ly::Int = 3, beta::Number = 0.2, periodic = false, outputlevel::Int = 1)
     g = named_grid((Lx,Ly); periodic)
 
     tensornetwork = ising_tensornetwork(g, beta)
