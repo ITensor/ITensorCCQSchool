@@ -1,5 +1,5 @@
 
-using NamedGraphs: NamedGraph, edges, vertices, dst, src, neighbors
+using NamedGraphs: NamedGraph, edges, vertices, dst, src, neighbors, incident_edges
 using LinearAlgebra
 using ITensors: ITensor, Index, delta, prime, apply
 
@@ -26,8 +26,7 @@ function ising_tensornetwork(g::NamedGraph, β::Real)
     for v in vertices(g)
         inds = [links[e] for e in edges(g) if src(e)==v || dst(e)==v]
         T[v] = delta(inds)
-        for vn in neighbors(g, v)
-            e = NamedEdge(v, vn)
+        for e in incident_edges(g, v)
             T[v] = apply(T[v], ITensor(sqrt_W, links[e], prime(links[e]))) 
         end
     end
