@@ -32,7 +32,7 @@ julia> include("1-tensornetworks.jl")
 main (generic function with 1 method)
 ```
 
-You will see that it builds the 3-site path graph, which can be accessed and viewed via
+By looking inside it you will see that it builds the 3-site path graph, which can be accessed and viewed via
 
 ```
 julia> res = main();
@@ -161,7 +161,7 @@ julia> res.bp_phi
 
 $$\phi_{OBC}(\beta) = \frac{1}{L_{x}}\ln(\cosh^{Lx}(\beta) + \sinh^{L_{x}}(\beta))$$
 
-They don't agree. Why? Pick a finite value of $\beta$ between $0$ and $1$ and compute both the exact PBC free energy vs $Lx$ for $Lx = 3,4,...20$ and the `bp` free energy using the `main` function (set $Ly = 1$ and `periodic = true`).
+They don't agree. Why? Pick a finite value of $\beta$ between $0$ and $1$ and compute both the exact PBC free energy vs $Lx$ for $Lx = 3,4,...20$ and the `bp` free energy using the `main` function (set $Ly = 1$, `periodic = true`). You can also pass `outputlevel=0` as a `kwarg` to `main` to suppress the output from running BP.
 
 Plot the error between the bp approximated `phi` and
 the exact `phi` as a function of $L_{x}$ on a log scale. What's the scaling? Why?
@@ -198,7 +198,7 @@ Now we're going to move fully into 2D. Let's compute the BP approximate free ene
 ```
 julia> betas =[0.05*(i-1) for i in 1:21]
 
-julia> bp_phis = [main(; Lx=15, Ly = 15, periodic = false, beta).bp_phi for beta in betas]
+julia> bp_phis = [main(; Lx=15, Ly = 15, periodic = false, beta, outputlevel=0).bp_phi for beta in betas]
 ```
 
 Congratulations. You just approximately solved the 2D Ising model on a 15x15 square lattice for twenty different inverse temperatures in about 10 seconds.

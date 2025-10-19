@@ -44,14 +44,14 @@ function update_messages(tensornetwork::Dict, messages::Dict, g::NamedGraph)
     return updated_messages
 end
 
-function belief_propagation(tn::Dict, g::NamedGraph, niters::Int; tol::Float64=1e-10)
+function belief_propagation(tn::Dict, g::NamedGraph, niters::Int; tol::Float64=1e-10, outputlevel::Int=1)
     all_edges = vcat(edges(g), reverse.(edges(g)))
     messages = Dict(e => normalize(onehot(commonind(tn[src(e)], tn[dst(e)]) => 1)) for e in all_edges)
     for i in 1:niters   
         old_messages = copy(messages)
         messages = update_messages(tn, messages, g)
         if mean([1 - dot(messages[e], old_messages[e])^2 for e in all_edges]) < tol
-            println("BP Algorithm Converged after $i iterations")
+            outputlevel >= 1 && println("BP Algorithm Converged after $i iterations")
             return messages, i
             break
         end
@@ -88,11 +88,11 @@ function first_order_cluster_expansion_phi(tn::Dict, messages::Dict, g::NamedGra
     return sum(log.(cycle_weights)) / length(vertices(g)) + bp_phi
 end
 
-function main(; beta::Number = 0.2)
+function main(; beta::Number = 0.2, outputlevel::Int=1)
     g = named_grid((5,5); periodic = true)
 
     tensornetwork = ising_tensornetwork(g, beta)
-    messages, niterations = belief_propagation(tensornetwork, g, 100)
+    messages, niterations = belief_propagation(tensornetwork, g, 100; outputlevel)
 
     bp_phi = _bp_phi(tensornetwork, messages, g)
     smallest_loop_size = 4
