@@ -25,9 +25,9 @@ function ising_tensornetwork(g::NamedGraph, β::Real)
 
     T = Dict()
     for v in vertices(g)
-        inds = [links[e] for e in edges(g) if src(e)==v || dst(e)==v]
-        T[v] = delta(inds)
-        for e in incident_edges(g, v)
+        es = incident_edges(g, v)
+        T[v] = delta([links[e] for e in es])
+        for e in es
             T[v] = apply(T[v], ITensor(sqrt_W, links[e], prime(links[e]))) 
         end
     end
