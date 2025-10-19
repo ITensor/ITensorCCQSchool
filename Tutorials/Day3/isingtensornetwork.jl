@@ -2,6 +2,7 @@
 using NamedGraphs: NamedGraph, edges, vertices, dst, src, neighbors, incident_edges
 using LinearAlgebra
 using ITensors: ITensor, Index, delta, prime, apply
+using QuadGK: quadgk
 
 """
     Constructs the tensor network representation of the Ising model on a given graph.
@@ -31,4 +32,22 @@ function ising_tensornetwork(g::NamedGraph, β::Real)
         end
     end
     return T
+end
+
+"""
+    ising_phi(β::Real)
+    Computes phi(\beta) = - beta * f(beta) for the 2D Ising model in the thermodynamic limit using Onsager's solution.
+    # Arguments
+    - `β::Real`: The inverse temperature parameter.
+    # Returns
+    - `Real`: phi(\beta) = - beta * f(beta) where f(beta) is the exact free energy density .
+"""
+function ising_phi(β)
+    g(θ1, θ2) = log(
+        cosh(2β)*cosh(2β) -
+        sinh(2β)*cos(θ1) -
+        sinh(2β)*cos(θ2)
+    )
+    inner(θ2) = quadgk(θ1 -> g(θ1, θ2), 0, 2π)[1]
+    return -log(2) + (1/(8π^2)) * quadgk(inner, 0, 2π)[1]
 end
