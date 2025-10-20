@@ -26,7 +26,10 @@ jobs:
             cd(joinpath("Tutorials", "${{ matrix.day }}"))
             Pkg.activate(".")
             Pkg.instantiate()
-            for f in filter(endswith(".jl"), readdir())
+            files = filter(readdir()) do f
+                return isfile(f) && endswith(f, ".jl") && isdigit(f[1]) && (f[2] == '\''-'\'')
+            end
+            for f in files
                 println("Running ", f)
                 @eval module $(gensym())
                     include($f)
