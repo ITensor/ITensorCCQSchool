@@ -24,19 +24,11 @@ jobs:
           julia -e '
             using Pkg: Pkg
             cd(joinpath("Tutorials", "${{ matrix.day }}"))
-            @show pwd()
             Pkg.activate(".")
             Pkg.instantiate()
-            @show readdir()
             files = filter(readdir()) do f
-                @show f
-                @show isfile(f)
-                @show endswith(f, ".jl")
-                @show isdigit(f[1])
-                @show (f[2] == '-')
-                return isfile(f) && endswith(f, ".jl") && isdigit(f[1]) && (f[2] == '-')
+                return isfile(f) && endswith(f, ".jl") && isdigit(f[1]) && (f[2] == '\''-'\'')
             end
-            @show files
             for f in files
                 println("Running ", f)
                 @eval module $(gensym())
