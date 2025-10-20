@@ -26,7 +26,7 @@ jobs:
             cd(joinpath("Tutorials", "${{ matrix.day }}"))
             Pkg.activate(".")
             Pkg.instantiate()
-            files = filter(readdir) do f
+            files = filter(readdir()) do f
                 return isfile(f) && endswith(f, ".jl") && isdigit(f[1]) && (f[2] == '-')
             end
             for f in files
