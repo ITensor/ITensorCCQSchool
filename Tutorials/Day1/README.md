@@ -42,7 +42,7 @@ Try typing a command (such as `1 + 1` shown above) to get a feel for how it work
 ```julia
 julia> using LibGit2: clone
 
-julia> clone("https://github.com/ITensor/ITensorCCQSchool", ".")
+julia> clone("https://github.com/ITensor/ITensorCCQSchool", "ITensorCCQSchool")
 ```
 Here we use Julia's  [LibGit2 standard library](https://docs.julialang.org/en/v1/stdlib/LibGit2/). Alternatively you can execute `git clone https://github.com/ITensor/ITensorCCQSchool` directly from a shell.
 
