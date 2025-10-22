@@ -34,7 +34,7 @@ main (generic function with 1 method)
 
 By looking inside it you will see that it builds the 3-site path graph, which can be accessed and viewed via
 
-```
+```julia
 julia> res = main();
 
 julia> res.g
@@ -52,7 +52,7 @@ and 2 edge(s):
 1: Modify the graph construction in `main()` to create a path graph on `L` vertices, where `L` is an integer variable that can be specified as a keyword argument to main. Compare the output to the pre-written constructor `named_path_graph(L::Int)` in `NamedGraphs.jl`. Add in a `periodic` flag to your constructor to add a periodic boundary if the flag is true.
  
 With this you should be able to do
-```
+```julia
 julia> res = main(; L = 5, periodic = true);
 
 julia> res.g
@@ -81,7 +81,7 @@ $$Z(\beta) = \frac{1}{2}\sum_{s_{1} \in {-1, 1}}\sum_{s_{2} \in {-1, 1}} ... \su
 where we have scaled by a factor of 1/2 for convenience.
 
 This object is returned by `main()`.You can inspect the individual tensors on each vertex of the constructed tensor network via `res.tensornetwork[v]` where `v` is the name of the vertex.
-```
+```julia
 julia> res = main(L=3, periodic = false, beta = 0.2);
 
 julia> show(res.tensornetwork[1])
@@ -95,7 +95,7 @@ NDTensors.Dense{Float64, Vector{Float64}}
 
 This tensornetwork can be contracted by multiplying all the tensors together. This contraction is pre-computed for you in `main()`
 
-```
+```julia
 julia> res = main(n=3, periodic = false);
 
 julia> res.z
@@ -132,7 +132,7 @@ The function `main` in [2-beliefpropagation.jl](./2-beliefpropagation.jl) now bu
 $$\phi(\beta) = -\beta f(\beta) = \frac{1}{L_{x}L_{y}}\ln(Z(\beta))$$
 
 We can do the following to get the BP computed value for $\phi$ on a 10x1 OBC square grid. This is just a path graph, like in the previous example.
-```
+```julia
 julia> include("2-beliefpropagation.jl")
 main (generic function with 1 method)
 
@@ -149,7 +149,7 @@ $$\phi_{OBC}(\beta) = \frac{1}{L_{x}}\ln(2\cosh^{Lx-1}(\beta))$$
 They agree, even though we used BP to compute it. Why?
 
 2. We can also get the bp approximated free energy density for a periodic ring `g`. 
-```
+```julia
 julia> res = main(; Lx=  3, Ly = 1, periodic = true);
 BP Algorithm Converged after 8 iterations
 
@@ -166,7 +166,7 @@ They don't agree. Why? Pick a finite value of $\beta$ between $0$ and $1$ and co
 Plot the error between the bp approximated `phi` and
 the exact `phi` as a function of $L_{x}$ on a log scale. What's the scaling? Why?
 
-```
+```julia
 julia> Plots.unicodeplots(); # Enable the UnicodePlots backend to plot in the terminal
 
 julia> plot(Lxs, bp_abs_errs, yscale = :log, xlabel = "System Size Lx", ylabel = "abs error")
@@ -194,7 +194,7 @@ Inspect the values for `bp_phi_g` returned by `main` versus system size? Do you 
 
 Now we're going to move fully into 2D. Let's compute the BP approximate free energy density on a OBC square grid with $L_{x} = L$ and $L_{y} = L$ as a function of $\beta$.
 
-```
+```julia
 julia> betas =[0.05*(i-1) for i in 1:21]
 
 julia> bp_phis = [main(; Lx=15, Ly = 15, periodic = false, beta, outputlevel=0).bp_phi_g for beta in betas]
@@ -213,7 +213,7 @@ Lets compare our results to that.
 5. Pick a small value for $\beta$ (say $\beta = 0.1$) and plot the error between `bp` and the `exact` result as a function of graph size $L$ for $L_{x} = L$ and $L_{y} = L$. How does it scale?
 
 Now lets move to periodic boundary conditions. 
-```
+```julia
 julia> res = main(; Lx = 5, Ly = 5, periodic = true, beta = 0.2)
 BP Algorithm Converged after 21 iterations
 (bp_phi = -0.6534110369600732, exact_phi_onsager = -0.6517635488435647, niterations = 21)
@@ -223,13 +223,13 @@ BP Algorithm Converged after 21 iterations
 
 As BP is letting us work directly in the thermodynamic limit with periodic boundaries, we can pick a small $L >= 3$ and a fine-range of betas and rapidly get the BP answer in the thermodynamic limit.
 
-```
+```julia
 julia> betas = [0.01*(i-1) for i in 1:101]
 ```
 
 7. Plot the absolute error between BP and Onsager's result. Where does it peak? 
 
-```
+```julia
 julia> plot(betas, abs_errs, xlabel = "Beta", ylabel = "Abs Error")
             ┌────────────────────────────────────────┐  
    0.0181705│⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡰⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│y1
@@ -274,7 +274,7 @@ For the periodic square lattice, setting $L >= 5$ will give us a first order clu
 
 8. Calculate the bp error and the cluster corrected bp error, with respect to the exact solution, for a range of `betas`. Plot these.
 
-```
+```julia
 julia> plot(betas, [bp_errs, bp_corrected_errs], xlabel = "Beta", ylabel = "Absolute Err", label = ["BP Err" "BP_Corrected_Err"])
             ┌────────────────────────────────────────┐                
      0.01817│⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡰⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│BP Err          
