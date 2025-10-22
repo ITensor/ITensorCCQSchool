@@ -37,7 +37,29 @@ end
     - `outputlevel::Int=1`: Level of output detail.
     # Returns
     - `res::NamedTuple`: A named tuple containing results and parameters.
-       This Includes energy, Hamiltonian MPO, optimized MPS, ⟨Sz⟩, ⟨SzⱼSz⟩, Sz measurements during DMRG, and input parameters.
+    main(; kwargs...)
+
+Perform DMRG on a Heisenberg spin-1/2 chain and measure ⟨Sz⟩ and ⟨SzⱼSz⟩.
+
+# Keyword Arguments
+- `nsite::Int=30`: Number of sites in the spin chain.
+- `nsweeps::Int=5`: Number of DMRG sweeps.
+- `maxdim::Vector{Int}=[10,20,100,100,200]`: Maximum bond dimensions for each sweep.
+- `cutoff::Vector{Float64}=[1.0e-10]`: Cutoff values for each sweep.
+- `outputlevel::Int=1`: Level of output detail.
+
+# Outputs
+A named tuple containing:
+- `energy`
+- `H`
+- `psi`
+- `sz`
+- `szsz`
+- `szs`
+- `nsite`
+- `nsweeps`
+- `maxdim`
+- `cutoff`
 """
 function main(;
         # Number of sites
