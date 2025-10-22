@@ -26,17 +26,6 @@ function ITensorMPS.measure!(obs::SzObserver; psi, kwargs...)
 end
 
 """
-    main(; nsite::Int=30, nsweeps::Int=5, maxdim::Vector{Int}=[10,20,100,100,200],
-         cutoff::Vector{Float64}=[1.0e-10], outputlevel::Int=1)
-    Perform DMRG on a Heisenberg spin-1/2 chain and measure ⟨Sz⟩ and ⟨SzⱼSz⟩.
-    # Keyword Arguments
-    - `nsite::Int=30`: Number of sites in the spin chain.
-    - `nsweeps::Int=5`: Number of DMRG sweeps.
-    - `maxdim::Vector{Int}=[10,20,100,100,200]`: Maximum bond dimensions for each sweep.
-    - `cutoff::Vector{Float64}=[1.0e-10]`: Cutoff values for each sweep.
-    - `outputlevel::Int=1`: Level of output detail.
-    # Returns
-    - `res::NamedTuple`: A named tuple containing results and parameters.
     main(; kwargs...)
 
 Perform DMRG on a Heisenberg spin-1/2 chain and measure ⟨Sz⟩ and ⟨SzⱼSz⟩.
@@ -50,16 +39,16 @@ Perform DMRG on a Heisenberg spin-1/2 chain and measure ⟨Sz⟩ and ⟨SzⱼSz�
 
 # Outputs
 A named tuple containing:
-- `energy`
-- `H`
-- `psi`
-- `sz`
-- `szsz`
-- `szs`
-- `nsite`
-- `nsweeps`
-- `maxdim`
-- `cutoff`
+- `energy`: The optimized ground state energy.
+- `H`: The Hamiltonian as an MPO.
+- `psi`: The optimized ground state wavefunction as an MPS.
+- `sz`: Vector of ⟨Sz⟩ measurements.
+- `szsz`: Correlation matrix of ⟨SzⱼSz⟩.
+- `szs`: Vector of ⟨Sz⟩ measurements at each DMRG step.
+- `nsite::Int`: Same as above.
+- `nsweeps::Int`: Same as above.
+- `maxdim::Vector{Int}`: Same as above.
+- `cutoff::Vector{Float64}`: Same as above.
 """
 function main(;
         # Number of sites
