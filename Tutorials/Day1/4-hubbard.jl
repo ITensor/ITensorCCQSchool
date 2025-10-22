@@ -50,6 +50,26 @@ function ITensorMPS.measure!(obs::SzAndDensityObserver; psi, kwargs...)
     return nothing
 end
 
+"""
+    main(; nx::Int=4, ny::Int=2, U::Float64=8.0, t::Float64=1.0,
+         nsweeps::Int=5, maxdim::Vector{Int}=[100,200,400,800,1600],
+         cutoff::Vector{Float64}=[1.0e-6], noise::Vector{Float64}=[1.0e-6,1.0e-7,1.0e-8,0.0],
+         outputlevel::Int=1)
+    Perform DMRG on a 2D Hubbard model and measure ⟨Sz⟩ and site densities.
+    # Keyword Arguments
+    - `nx::Int=4`: Number of sites in the x-direction.
+    - `ny::Int=2`: Number of sites in the y-direction.
+    - `U::Float64=8.0`: On-site interaction strength.
+    - `t::Float64=1.0`: Hopping parameter.
+    - `nsweeps::Int=5`: Number of DMRG sweeps.
+    - `maxdim::Vector{Int}=[100,200,400,800,1600]`: Maximum bond dimensions for each sweep.
+    - `cutoff::Vector{Float64}=[1.0e-6]`: Cutoff values for each sweep.
+    - `noise::Vector{Float64}=[1.0e-6,1.0e-7,1.0e-8,0.0]`: Noise values for each sweep.
+    - `outputlevel::Int=1`: Level of output detail.
+    # Returns
+    - `res::NamedTuple`: A named tuple containing results and parameters.
+       This includes energy, Hamiltonian MPO, optimized MPS, measurements during DMRG, and input parameters.
+"""
 function main(;
         # Number of sites in x and y
         nx = 4,

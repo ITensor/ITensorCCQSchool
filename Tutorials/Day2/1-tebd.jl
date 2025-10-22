@@ -22,6 +22,20 @@ function animate_tebd_sz(res; fps = res.nsite)
     return animate(i -> plot_tebd_sz(res; step = i); nframes = length(res.szs), fps)
 end
 
+"""
+    main(; nsite::Int=30, time::Float64=5.0, timestep::Float64=0.1,
+         cutoff::Float64=1.0e-10, outputlevel::Int=1)
+    Perform TEBD time evolution on a Heisenberg spin-1/2 chain starting from a spin-flip excitation.
+    # Keyword Arguments
+    - `nsite::Int=30`: Number of sites in the spin chain.
+    - `time::Float64=5.0`: Total time for evolution.
+    - `timestep::Float64=0.1`: Time step for each TEBD application.
+    - `cutoff::Float64=1.0e-10`: Cutoff for truncating bond dimensions during TEBD.
+    - `outputlevel::Int=1`: Level of output detail.
+    # Returns
+    - `res::NamedTuple`: A named tuple containing results and parameters.
+       This includes final energy, Hamiltonian MPO, initial MPS, time points, ⟨Szⱼ(t)⟩, energies during evolution, and input parameters.
+"""
 function main(;
         # Number of sites
         nsite = 30,
