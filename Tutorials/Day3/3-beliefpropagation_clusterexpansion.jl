@@ -7,6 +7,22 @@ using Plots: Plots, plot
 include("isingtensornetwork.jl")
 include("beliefpropagationfunctions.jl")
 
+"""
+    main(; kwargs...)  
+
+Creates a periodic 5x5 grid graph, constructs the Ising tensor network on it, and computes both the Bethe-Peierls free energy density using belief propagation and a loop-corrected free energy density.
+
+# Keyword Arguments
+- `beta::Number = 0.2`: The inverse temperature parameter (default is 0.2).
+- `outputlevel::Int`: Level of output detail (default is 1).
+
+# Outputs
+A named tuple containing:
+- `bp_phi_g::Number`: The Bethe-Peierls free energy density computed via belief propagation.
+- `bp_corrected_phi_g::Number`: The loop-corrected free energy density.
+- `exact_phi_onsager::Number`: The exact free energy density from Onsager's solution in the thermodynamic limit.
+- `niterations::Int`: The number of iterations taken for convergence in belief propagation.
+"""
 function main(; beta::Number = 0.2, outputlevel::Int=1)
     g = named_grid((5,5); periodic = true)
 
