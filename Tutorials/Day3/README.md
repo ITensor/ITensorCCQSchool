@@ -313,6 +313,7 @@ julia> logz = log(prod(values(tensornetwork))[])
 ```
 
 Study how the error from the BP contraction depends on the geometry of the tensor network.
+
 You might find it useful to know that you can import various pre-defined constructors for your favourite lattices such as
 ```julia
 julia> NamedGraphs.NamedGraphGenerators: named_hexagonal_lattice_graph, named_comb_tree, named_grid
