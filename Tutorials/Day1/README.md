@@ -3,10 +3,10 @@
 ## Table of Contents
 
 - [Installation Instructions](#installation-instructions)
-- [Tutorial 1](#tutorial-1)
-- [Tutorial 2](#tutorial-2)
-- [Tutorial 3](#tutorial-3)
-- [Tutorial 4](#tutorial-4)
+- [Tutorial 1: Julia Intro](#tutorial-1)
+- [Tutorial 2: DMRG](#tutorial-2)
+- [Tutorial 3: DMRG Measurments](#tutorial-3)
+- [Tutorial 4: 2D Hubbard model](#tutorial-4)
 
 <a id="installation-instructions"></a>
 <details>
@@ -202,7 +202,7 @@ Click [here](#table-of-contents) to return to the table of contents.
 
 <a id="tutorial-1"></a>
 <details>
-  <summary><h2>Tutorial 1</h2></summary>
+  <summary><h2>Tutorial 1: Julia Intro</h2></summary>
   <hr>
 
 Tutorial 1 of day 1 is based on the script [1-julia-intro.jl](./1-julia-intro.jl).
@@ -280,7 +280,7 @@ Click [here](#table-of-contents) to return to the table of contents.
 
 <a id="tutorial-2"></a>
 <details>
-  <summary><h2>Tutorial 2</h2></summary>
+  <summary><h2>Tutorial 2: DMRG</h2></summary>
   <hr>
 
 In this tutorial you will run DMRG on the 1D Heisenberg model.
@@ -436,10 +436,13 @@ Click [here](#table-of-contents) to return to the table of contents.
 
 <a id="tutorial-3"></a>
 <details>
-  <summary><h2>Tutorial 3</h2></summary>
+  <summary><h2>Tutorial 3: DMRG Measurements</h2></summary>
   <hr>
 
 ```julia
+julia> include("3-dmrg-meaure.jl")
+main
+
 julia> res = main(; outputlevel = 2);
 MPO bond dimension: 5
 Initial MPS bond dimension: 10
@@ -518,7 +521,7 @@ Click [here](#table-of-contents) to return to the table of contents.
 
 <a id="tutorial-4"></a>
 <details>
-  <summary><h2>Tutorial 4</h2></summary>
+  <summary><h2>Tutorial 4: 2D Hubbard Model</h2></summary>
   <hr>
 
 ```julia

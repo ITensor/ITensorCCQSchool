@@ -2,13 +2,13 @@
 
 ## Table of Contents
 
-- [Tutorial 1](#tutorial-1)
-- [Tutorial 2](#tutorial-2)
-- [Tutorial 3](#tutorial-3)
+- [Tutorial 1: Tensor Networks](#tutorial-1)
+- [Tutorial 2: Belief Propagation](#tutorial-2)
+- [Tutorial 3: BP Cluster Expansion](#tutorial-3)
 
 <a id="tutorial-1"></a>
 <details>
-  <summary><h2>Tutorial 1</h2></summary>
+  <summary><h2>Tutorial 1: Tensor Networks</h2></summary>
   <hr>
 
 We are going to combine the `NamedGraphs.jl` and `ITensors.jl` packages to build tensor networks of varying topology. 
@@ -120,7 +120,7 @@ Click [here](#table-of-contents) to return to the table of contents.
 
 <a id="tutorial-2"></a>
 <details>
-  <summary><h2>Tutorial 2</h2></summary>
+  <summary><h2>Tutorial 2: Belief Propagation</h2></summary>
   <hr>
 
 In the previous tutorial, we contracted the tensor network exactly by multiplying the tensors together, vertex by vertex. This can only be done efficiently for tree-like networks (those composed of no loops, or a small number of loops) and only when taking careful care over the order of contraction.
@@ -257,7 +257,7 @@ Click [here](#table-of-contents) to return to the table of contents.
 
 <a id="tutorial-3"></a>
 <details>
-  <summary><h2>Tutorial 3</h2></summary>
+  <summary><h2>Tutorial 3: BP Cluster Expansion</h2></summary>
   <hr>
 
 Now we are going to try to correct our BP results with a first order cluster expansion.
