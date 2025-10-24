@@ -3,10 +3,10 @@
 ## Table of Contents
 
 - [Installation Instructions](#installation-instructions)
-- [Tutorial 1](#tutorial-1)
-- [Tutorial 2](#tutorial-2)
-- [Tutorial 3](#tutorial-3)
-- [Tutorial 4](#tutorial-4)
+- [Tutorial 1: Julia Intro](#tutorial-1)
+- [Tutorial 2: DMRG](#tutorial-2)
+- [Tutorial 3: DMRG Measurments](#tutorial-3)
+- [Tutorial 4: 2D Hubbard Model](#tutorial-4)
 - [Stretch Goals](#stretch-goals)
 
 <a id="installation-instructions"></a>
@@ -203,7 +203,7 @@ Click [here](#table-of-contents) to return to the table of contents.
 
 <a id="tutorial-1"></a>
 <details>
-  <summary><h2>Tutorial 1</h2></summary>
+  <summary><h2>Tutorial 1: Julia Intro</h2></summary>
   <hr>
 
 Tutorial 1 of day 1 is based on the script [1-julia-intro.jl](./1-julia-intro.jl).
@@ -281,7 +281,7 @@ Click [here](#table-of-contents) to return to the table of contents.
 
 <a id="tutorial-2"></a>
 <details>
-  <summary><h2>Tutorial 2</h2></summary>
+  <summary><h2>Tutorial 2: DMRG</h2></summary>
   <hr>
 
 In this tutorial you will run DMRG on the 1D Heisenberg model.
@@ -437,7 +437,7 @@ Click [here](#table-of-contents) to return to the table of contents.
 
 <a id="tutorial-3"></a>
 <details>
-  <summary><h2>Tutorial 3</h2></summary>
+  <summary><h2>Tutorial 3: DMRG Measurements</h2></summary>
   <hr>
 
 In this tutorial you will explore measurements of MPS ground states, and use them to visualize a DMRG calculation.
@@ -445,11 +445,10 @@ In this tutorial you will explore measurements of MPS ground states, and use the
 1. Run the `main` function provided in the file [3-dmrg-measure.jl](./3-dmrg-measure.jl). DMRG will run and you will see a plot of the expected value of Sz on each site and the ⟨SzⱼSz⟩ correlator between the central site "j" and all other sites.
 
 ```julia
-julia> include("3-dmrg-measure.jl")
+julia> include("3-dmrg-meaure.jl")
 main
 
-julia> res = main();
-Number of sites: 30
+julia> res = main(; outputlevel = 2);
 MPO bond dimension: 5
 Initial MPS bond dimension: 10
 After sweep 1 energy=-13.10019557340779  maxlinkdim=10 maxerr=3.05E-03 time=0.223
@@ -528,7 +527,7 @@ Click [here](#table-of-contents) to return to the table of contents.
 
 <a id="tutorial-4"></a>
 <details>
-  <summary><h2>Tutorial 4</h2></summary>
+  <summary><h2>Tutorial 4: 2D Hubbard Model</h2></summary>
   <hr>
 
 ```julia

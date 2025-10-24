@@ -22,6 +22,32 @@ function animate_tebd_sz(res; fps = res.nsite)
     return animate(i -> plot_tebd_sz(res; step = i); nframes = length(res.szs), fps)
 end
 
+"""
+   main(; kwargs...)
+
+Perform Time-Evolving Block Decimation (TEBD) on a 1D Heisenberg spin-1/2 chain
+starting from an initial state with a spin flip in the center of the chain.
+
+# Keywords
+- `nsite::Int = 30`: Number of sites in the spin chain.
+- `time::Float64 = 5.0`: Total time for evolution.
+- `timestep::Float64 = 0.1`: Time step for each TEBD application.
+- `cutoff::Float64 = 1.0e-10`: Cutoff for truncation during TEBD.
+- `outputlevel::Int = 1`: Controls how much information will be printed by the script.
+
+# Returns
+A named tuple containing:
+- `energy::Float64`: The final energy after time evolution.
+- `H::MPO`: The Hamiltonian as an MPO.
+- `psi::MPS`: The final wavefunction after time evolution as an MPS.
+- `times::Vector{Float64}`: Vector of time points at which measurements were taken.
+- `szs::Vector{Vector{Float64}}`: Vector of ⟨Sz⟩ measurements at each time point.
+- `energies::Vector{Float64}`: Vector of energy measurements at each time point.
+- `nsite::Int`: Same as above.
+- `time::Float64`: Same as above.
+- `timestep::Float64`: Same as above.
+- `cutoff::Float64`: Same as above.
+"""
 function main(;
         # Number of sites
         nsite = 30,
@@ -65,7 +91,7 @@ function main(;
     psit = apply(op("S+", sites[j]), psi)
 
     szs = [expect(psit, "Sz")]
-    energies = ComplexF64[inner(psit', H, psi)]
+    energies = ComplexF64[inner(psi', H, psi)]
     times = 0.0:timestep:time
     for current_time in times[2:end]
         psit = apply(gates, psit; cutoff)
