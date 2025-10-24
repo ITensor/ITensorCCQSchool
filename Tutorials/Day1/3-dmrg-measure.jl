@@ -38,7 +38,7 @@ function main(;
         println("Number of sites: ", nsite)
     end
     # Build the physical indices for nsite spins (spin 1/2)
-    sites = siteinds("S=1", nsite)
+    sites = siteinds("S=1/2", nsite)
 
     # Build the Heisenberg Hamiltonian as an MPO
     terms = OpSum()
