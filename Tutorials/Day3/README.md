@@ -5,6 +5,7 @@
 - [Tutorial 1: Tensor Networks](#tutorial-1)
 - [Tutorial 2: Belief Propagation](#tutorial-2)
 - [Tutorial 3: BP Cluster Expansion](#tutorial-3)
+- [Stretch Goals](#stretch-goals)
 
 <a id="tutorial-1"></a>
 <details>
