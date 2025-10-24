@@ -43,7 +43,7 @@ A named tuple containing:
 - `H::MPO`: The Hamiltonian as an MPO.
 - `psi::MPS`: The optimized ground state wavefunction as an MPS.
 - `sz::Vector{Float64}`: Vector of ⟨Sz⟩ measurements.
-- `szsz::Matrix{Float64}`: Correlation matrix of ⟨SzⱼSz⟩.
+- `szsz::Vector{Float64}`: Correlation matrix of ⟨SzⱼSz⟩.
 - `szs::Vector{Vector{Float64}}`: Vector of ⟨Sz⟩ measurements at each DMRG step.
 - `nsite::Int`: Same as above.
 - `nsweeps::Int`: Same as above.
