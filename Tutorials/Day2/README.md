@@ -20,6 +20,41 @@ julia> include("1-tebd.jl")
 main
 
 julia> res = main();
+After sweep 1 energy=-13.09409636493637  maxlinkdim=10 maxerr=2.21E-03 time=0.033
+After sweep 2 energy=-13.111284122964177  maxlinkdim=20 maxerr=2.27E-07 time=0.042
+After sweep 3 energy=-13.111355718189827  maxlinkdim=46 maxerr=9.95E-11 time=0.083
+After sweep 4 energy=-13.111355752014155  maxlinkdim=47 maxerr=9.93E-11 time=0.116
+After sweep 5 energy=-13.111355752019346  maxlinkdim=47 maxerr=9.40E-11 time=0.111
+time: 1.0
+Bond dimension: 40
+⟨ψₜ|Szⱼ|ψₜ⟩: 0.35502158812014994
+∑ⱼ⟨ψₜ|Szⱼ|ψₜ⟩: 1.0000000000005
+⟨ψₜ|H|ψₜ⟩: -11.929346376724634 - 2.0921203223608671e-16im
+
+time: 2.0
+Bond dimension: 47
+⟨ψₜ|Szⱼ|ψₜ⟩: 0.08355269964032301
+∑ⱼ⟨ψₜ|Szⱼ|ψₜ⟩: 1.0000000000007212
+⟨ψₜ|H|ψₜ⟩: -11.929346333250871 - 4.398013998619169e-15im
+
+time: 3.0
+Bond dimension: 61
+⟨ψₜ|Szⱼ|ψₜ⟩: -0.05027843626159247
+∑ⱼ⟨ψₜ|Szⱼ|ψₜ⟩: 1.000000000000663
+⟨ψₜ|H|ψₜ⟩: -11.929346353874365 - 1.3576397525559596e-15im
+
+time: 4.0
+Bond dimension: 81
+⟨ψₜ|Szⱼ|ψₜ⟩: 0.00558010009598968
+∑ⱼ⟨ψₜ|Szⱼ|ψₜ⟩: 1.0000000000004898
+⟨ψₜ|H|ψₜ⟩: -11.929346384611089 + 4.990890715889457e-15im
+
+time: 5.0
+Bond dimension: 99
+⟨ψₜ|Szⱼ|ψₜ⟩: 0.06961334092046022
+∑ⱼ⟨ψₜ|Szⱼ|ψₜ⟩: 1.000000000002958
+⟨ψₜ|H|ψₜ⟩: -11.929346264124122 - 3.920014918768254e-15im
+
 
 julia> Plots.unicodeplots(); # Plot in the terminal
 
@@ -82,6 +117,56 @@ Click [here](#table-of-contents) to return to the table of contents.
 <details>
   <summary><h2>Tutorial 2: Imaginary Time Evolution</h2></summary>
   <hr>
+
+```julia
+julia> res = main();
+After sweep 1 energy=-13.10580711255933  maxlinkdim=10 maxerr=2.04E-03 time=0.029
+After sweep 2 energy=-13.111348929097458  maxlinkdim=20 maxerr=1.41E-07 time=0.040
+After sweep 3 energy=-13.11135575001343  maxlinkdim=45 maxerr=9.81E-11 time=0.085
+After sweep 4 energy=-13.111355751942149  maxlinkdim=47 maxerr=1.00E-10 time=0.118
+After sweep 5 energy=-13.111355751949796  maxlinkdim=47 maxerr=1.00E-10 time=0.112
+time: 5.0
+Bond dimension: 24
+⟨ψₜ|Szⱼ|ψₜ⟩: -0.07015198148930198
+∑ⱼ⟨ψₜ|Szⱼ|ψₜ⟩: -0.3554642454935465
+⟨ψₜ|H|ψₜ⟩: -12.918726195417213
+
+time: 10.0
+Bond dimension: 38
+⟨ψₜ|Szⱼ|ψₜ⟩: -0.0007049850288560583
+∑ⱼ⟨ψₜ|Szⱼ|ψₜ⟩: -0.12498385296119857
+⟨ψₜ|H|ψₜ⟩: -13.082551163963094
+
+time: 15.0
+Bond dimension: 40
+⟨ψₜ|Szⱼ|ψₜ⟩: 0.007906094151056576
+∑ⱼ⟨ψₜ|Szⱼ|ψₜ⟩: -0.035190911135993715
+⟨ψₜ|H|ψₜ⟩: -13.105243727446057
+
+time: 20.0
+Bond dimension: 40
+⟨ψₜ|Szⱼ|ψₜ⟩: 0.005455558345839978
+∑ⱼ⟨ψₜ|Szⱼ|ψₜ⟩: -0.010092112111528002
+⟨ψₜ|H|ψₜ⟩: -13.109727125683662
+
+
+julia> res.energies .- res.energy
+101-element Vector{Float64}:
+ 13.344740259203546
+ 11.607416095173846
+  9.788767514056136
+  8.027055433275628
+  6.478091389576792
+  5.219661141730995
+  ⋮
+  0.00210452773845482
+  0.0019989336674051117
+  0.001898845407890093
+  0.0018039541390795222
+  0.0017139718695293737
+  0.0016286262661342477
+
+```
 
 Click [here](#table-of-contents) to return to the table of contents.
 

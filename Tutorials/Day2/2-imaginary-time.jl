@@ -26,13 +26,12 @@ end
    main(; kwargs...)
 
 Perform time-evolving block decimation (TEBD) on a 1D Heisenberg spin-1/2 chain to perform
-real time evolution of the Heisenberg ground state with a spin flip in the center of the
-chain.
+imaginary time evolution to find the ground state.
 
 # Keywords
 - `nsite::Int = 30`: Number of sites in the spin chain.
-- `time::Float64 = 5.0`: Total time for evolution.
-- `timestep::Float64 = 0.1`: Time step for each TEBD application.
+- `time::Float64 = 20.0`: Total time for evolution.
+- `timestep::Float64 = 0.2`: Time step for each TEBD application.
 - `cutoff::Float64 = 1.0e-10`: Cutoff for truncation during TEBD.
 - `outputlevel::Int = 1`: Controls how much information will be printed by the script.
 
@@ -53,8 +52,8 @@ function main(;
         # Number of sites
         nsite = 30,
         # TEBD parameters
-        time = 5.0,
-        timestep = 0.1,
+        time = 20.0,
+        timestep = 0.2,
         cutoff = 1.0e-10,
         outputlevel = 1,
     )
@@ -81,21 +80,21 @@ function main(;
         hj = 1 / 2 * op("S+", si) * op("S-", sj) +
             1 / 2 * op("S-", si) * op("S+", sj) +
             op("Sz", si) * op("Sz", sj)
-        return exp(-im * timestep / 2 * hj)
+        return exp(-timestep / 2 * hj)
     end
     # Include gates in reverse order too
     # (N, N - 1), (N - 1, N - 2), ...
     append!(gates, reverse(gates))
 
     # Make starting state
-    j = nsite ÷ 2
-    psit = apply(op("S+", sites[j]), psi)
+    rng = StableRNG(123)
+    psit = random_mps(rng, sites)
     psit = normalize(psit)
 
     szs = [expect(psit, "Sz")]
-    energies = ComplexF64[inner(psit', H, psit)]
+    energies = [inner(psit', H, psit)]
     times = 0.0:timestep:time
-    print_every = 1
+    print_every = 5
     for current_time in times[2:end]
         psit = apply(gates, psit; cutoff)
         psit = normalize(psit)
@@ -108,7 +107,7 @@ function main(;
             if outputlevel > 0
                 println("time: ", current_time)
                 println("Bond dimension: ", maxlinkdim(psit))
-                println("⟨ψₜ|Szⱼ|ψₜ⟩: ", sz_t[j])
+                println("⟨ψₜ|Szⱼ|ψₜ⟩: ", sz_t[nsite ÷ 2])
                 println("∑ⱼ⟨ψₜ|Szⱼ|ψₜ⟩: ", sum(sz_t))
                 println("⟨ψₜ|H|ψₜ⟩: ", energy_t)
                 println()

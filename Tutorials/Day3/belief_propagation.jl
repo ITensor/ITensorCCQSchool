@@ -2,7 +2,7 @@ using NamedGraphs: NamedEdge, NamedGraph, vertices, edges, src, dst, neighbors,
     simplecycles_limited_length
 using NamedGraphs.GraphsExtensions: all_edges, boundary_edges
 using LinearAlgebra: dot, normalize
-using ITensors: Index, ITensor, commonind, onehot
+using ITensors: ITensor, Index, commonind, onehot
 
 function updated_message(tensornetwork::Dict, messages::Dict, g::NamedGraph, e::NamedEdge)
     incoming_es = setdiff(boundary_edges(g, [src(e)]; dir = :in), [reverse(e)])
