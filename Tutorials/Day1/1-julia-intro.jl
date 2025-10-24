@@ -23,11 +23,11 @@ Approximate `pi` using the
 [Leibniz formula](https://en.wikipedia.org/wiki/Leibniz_formula_for_%CF%80) and compute the
 error.
 
-# Keywords Arguments
+# Keywords
 - `nterm::Int = 10^5`: The number of terms to use in the approximation of `pi`.
 - `outputlevel::Int = 1`: Controls how much information will be printed by the script.
 
-# Outputs
+# Returns
 A named tuple containing:
 - `nterm::Int`: The number of terms used in the approximation of `pi`.
 - `pi_approx::Float64`: The approximate value of `pi`.

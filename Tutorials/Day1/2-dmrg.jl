@@ -7,25 +7,25 @@ using Plots: Plots, plot
 """
     main(; kwargs...)
 
-Run the Density Matrix Renormalization Group (DMRG) algorithm to compute the ground state
+Run the density matrix renormalization group (DMRG) algorithm to compute the ground state
 energy and wavefunction of a 1D Heisenberg spin-1/2 chain.
 
-This function constructs the spin chain Hamiltonian as a Matrix Product Operator (MPO),
-initializes a random Matrix Product State (MPS) as the starting point, and performs a series
+This function constructs the spin chain Hamiltonian as a matrix product operator (MPO),
+initializes a random matrix product state (MPS) as the starting point, and performs a series
 of DMRG sweeps to optimize the ground state energy and wavefunction.
 
-# Keyword Arguments
+# Keywords
 - `nsite::Int = 30`: Number of sites in the spin chain.
 - `nsweeps::Int = 5`: Number of DMRG sweeps to perform.
 - `maxdim::Vector{Int} = [10, 20, 100, 100, 200]`: Maximum bond dimensions for each sweep.
 - `cutoff::Vector{Float64} = [1.0e-10]`: Cutoff for truncation.
 - `outputlevel::Int = 1`: Controls how much information will be printed by the script.
 
-# Outputs
+# Returns
 A named tuple containing:
-- `energy`: The optimized ground state energy.
-- `H`: The Hamiltonian as an MPO.
-- `psi`: The optimized ground state wavefunction as an MPS.
+- `energy::Float64`: The optimized ground state energy.
+- `H::MPO`: The Hamiltonian as an MPO.
+- `psi::MPS`: The optimized ground state wavefunction as an MPS.
 - `nsite::Int`: Same as above.
 - `nsweeps::Int`: Same as above.
 - `maxdim::Vector{Int}`: Same as above.

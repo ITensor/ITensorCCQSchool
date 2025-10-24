@@ -10,14 +10,15 @@ include("beliefpropagationfunctions.jl")
 """
     main(; kwargs...)
 
-Creates a grid graph of size Lx by Ly, constructs the Ising tensor network on it, and computes the Bethe-Peierls free energy density using belief propagation.
+Creates a grid graph of size `Lx` by `Ly`, constructs the Ising tensor network on it, and
+computes the Bethe-Peierls free energy density using belief propagation.
 
-# Keyword Arguments
-- `Lx::Int = 3`: The number of columns in the grid (default is 3).
-- `Ly::Int = 3`: The number of rows in the grid (default is 3).
-- `beta::Number = 0.2`: The inverse temperature parameter (default is 0.2).
-- `periodic::Bool = false`: Whether to use periodic boundary conditions (default is false).
-- `outputlevel::Int`: Level of output detail (default is 1).
+# Keywords
+- `Lx::Int = 3`: The number of columns in the grid.
+- `Ly::Int = 3`: The number of rows in the grid.
+- `beta::Number = 0.2`: The inverse temperature parameter.
+- `periodic::Bool = false`: Whether to use periodic boundary conditions.
+- `outputlevel::Int = 1`: Controls how much information will be printed by the script.
 
 # Returns
 A named tuple containing:

@@ -16,18 +16,18 @@ We are going to combine the `NamedGraphs.jl` and `ITensors.jl` packages to build
 A simple graph `g` is just a series of vertices and edges between pairs of those vertices. There are no multiedges or self edges. The package `NamedGraphs.jl` is built around the `NamedGraph` object `g`, which can be constructed using either the pre-built graph constructors or our own via code like 
 
 ```julia
-  julia> using NamedGraphs: NamedGraph, NamedEdge
+julia> using NamedGraphs: NamedGraph, NamedEdge
 
-  julia> g = NamedGraph([1,2,3]);
+julia> g = NamedGraph([1,2,3]);
 
-  julia> edges = [1 => 2, 2 => 3];
+julia> edges = [1 => 2, 2 => 3];
 
-  julia> g = add_edges(g, edges);
+julia> g = add_edges(g, edges);
 ```
 
 First, lets run the  script [1-tensornetworks.jl](./1-tensornetworks.jl)
 
-```
+```julia
 julia> include("1-tensornetworks.jl")
 main (generic function with 1 method)
 ```
@@ -82,7 +82,7 @@ where we have scaled by a factor of 1/2 for convenience.
 
 This object is returned by `main()`.You can inspect the individual tensors on each vertex of the constructed tensor network via `res.tensornetwork[v]` where `v` is the name of the vertex.
 ```julia
-julia> res = main(L=3, periodic = false, beta = 0.2);
+julia> res = main(; L = 3, periodic = false, beta = 0.2);
 
 julia> show(res.tensornetwork[1])
 ITensor ord=1
@@ -96,7 +96,7 @@ NDTensors.Dense{Float64, Vector{Float64}}
 This tensornetwork can be contracted by multiplying all the tensors together. This contraction is pre-computed for you in `main()`
 
 ```julia
-julia> res = main(n=3, periodic = false);
+julia> res = main(; n = 3, periodic = false);
 
 julia> res.z
 2.081072371838455
@@ -150,7 +150,7 @@ They agree, even though we used BP to compute it. Why?
 
 2. We can also get the bp approximated free energy density for a periodic ring `g`. 
 ```julia
-julia> res = main(; Lx=  3, Ly = 1, periodic = true);
+julia> res = main(; Lx =  3, Ly = 1, periodic = true);
 BP Algorithm Converged after 8 iterations
 
 julia> res.bp_phi_g
@@ -169,7 +169,7 @@ the exact `phi` as a function of $L_{x}$ on a log scale. What's the scaling? Why
 ```julia
 julia> Plots.unicodeplots(); # Enable the UnicodePlots backend to plot in the terminal
 
-julia> plot(Lxs, bp_abs_errs, yscale = :log, xlabel = "System Size Lx", ylabel = "abs error")
+julia> plot(Lxs, bp_abs_errs; yscale = :log, xlabel = "System Size Lx", ylabel = "abs error")
           ┌────────────────────────────────────────┐  
 10⁻²⸱³²⁹⁵⁷│⠀⢢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│y1
           │⠀⠀⠑⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
@@ -195,9 +195,9 @@ Inspect the values for `bp_phi_g` returned by `main` versus system size? Do you 
 Now we're going to move fully into 2D. Let's compute the BP approximate free energy density on a OBC square grid with $L_{x} = L$ and $L_{y} = L$ as a function of $\beta$.
 
 ```julia
-julia> betas =[0.05*(i-1) for i in 1:21]
+julia> betas = [0.05 * (i - 1) for i in 1:21]
 
-julia> bp_phis = [main(; Lx=15, Ly = 15, periodic = false, beta, outputlevel=0).bp_phi_g for beta in betas]
+julia> bp_phis = [main(; Lx = 15, Ly = 15, periodic = false, beta, outputlevel = 0).bp_phi_g for beta in betas]
 ```
 
 Congratulations. You just approximately solved the 2D Ising model on a 15x15 square lattice for twenty different inverse temperatures in about 10 seconds.
@@ -223,8 +223,8 @@ BP Algorithm Converged after 21 iterations
 
 As BP is letting us work directly in the thermodynamic limit with periodic boundaries, we can pick a small $L >= 3$ and a fine-range of betas and rapidly get the BP answer in the thermodynamic limit.
 
-```
-julia> betas = [0.01*(i-1) for i in 1:101]
+```julia
+julia> betas = [0.01 * (i - 1) for i in 1:101]
 ```
 
 7. Plot the absolute error between BP and Onsager's result. Where does it peak? 
@@ -268,14 +268,14 @@ $$Z \approx Z_{BP} \prod_{l}Z_{l}$$
 
 where $Z_{\rm BP}$ is the BP approximation of the partition function and the product is over the smallest loops $l$ in the lattice, with $Z_{l}$ defined as the contraction of the loop of tensors, with bp messages incident to it.
 
-This formula is implemented in `[3-beliefpropagation_clusterexpansion.jl](./3-beliefpropagation_clusterexpansion.jl)` at the level of the rescaled free energy $\phi(\beta) = -\beta f(\beta)$. We use the `NamedGraphs.simple_cycles_limited_length` function to enumerate these loops. 
+This formula is implemented in `[3-clusterexpansion.jl](./3-clusterexpansion.jl)` at the level of the rescaled free energy $\phi(\beta) = -\beta f(\beta)$. We use the `NamedGraphs.simple_cycles_limited_length` function to enumerate these loops. 
 
 For the periodic square lattice, setting $L >= 5$ will give us a first order cluster expanded result for $\phi(\beta)$ directly in the thermodynamic limit. This is due to the homogenity of the tensor network and that there is exactly one loop of size $4$ per vertex when $L >= 5$. The parameters $L_{x} = 5, L_{y} = 5$ and `periodic = true` have all been set for you and `main` returns the bp value for `phi` (`bp_phi_g`), the corrected value for `phi` (`bp_corrected_phi_g`) and Onsager's exact result (`exact_phi_onsager`) - all in the thermodynamic limit for your choice of $\beta$.
 
 8. Calculate the bp error and the cluster corrected bp error, with respect to the exact solution, for a range of `betas`. Plot these.
 
 ```julia
-julia> plot(betas, [bp_errs, bp_corrected_errs], xlabel = "Beta", ylabel = "Absolute Err", label = ["BP Err" "BP_Corrected_Err"])
+julia> plot(betas, [bp_errs, bp_corrected_errs], xlabel = "Beta", ylabel = "Absolute Err", label = ["BP Err", "BP_Corrected_Err"])
             ┌────────────────────────────────────────┐                
      0.01817│⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡰⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│BP Err          
             │⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇⢱⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│BP_Corrected_Err
