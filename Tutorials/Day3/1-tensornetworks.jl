@@ -7,11 +7,12 @@ include("isingtensornetwork.jl")
 """
     main(; kwargs...)
     
-Creates a simple path graph, constructs the Ising tensor network on it, and computes the partition function Z by contracting the tensor network.
+Creates a simple path graph, constructs the Ising tensor network on it, and computes the
+partition function Z by contracting the tensor network.
 
-# Keyword Arguments
-- `beta::Number`: The inverse temperature parameter (default is 0.2).
-- `outputlevel::Int`: Level of output detail (default is 1).
+# Keywords
+- `beta::Number = 0.2`: The inverse temperature parameter.
+- `outputlevel::Int = 1`: Controls how much information will be printed by the script.
 
 # Returns
 A named tuple containing:
