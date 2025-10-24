@@ -4,8 +4,8 @@ using Statistics: mean
 # Load the Plots library for plotting results
 using Plots: Plots, plot
 
-include("isingtensornetwork.jl")
-include("beliefpropagationfunctions.jl")
+include("ising_tensornetwork.jl")
+include("belief_propagation.jl")
 
 """
     main(; kwargs...)  
@@ -20,21 +20,21 @@ free energy density.
 
 # Returns
 A named tuple containing:
-- `bp_phi_g::Number`: The Bethe-Peierls free energy density computed via belief propagation.
-- `bp_corrected_phi_g::Number`: The loop-corrected free energy density.
+- `bp_phi_tn::Number`: The Bethe-Peierls free energy density computed via belief propagation.
+- `bp_corrected_phi_tn::Number`: The loop-corrected free energy density.
 - `exact_phi_onsager::Number`: The exact free energy density from Onsager's solution in the thermodynamic limit.
-- `niterations::Int`: The number of iterations taken for convergence in belief propagation.
+- `niters::Int`: The number of iterations taken for convergence in belief propagation.
 """
-function main(; beta::Number = 0.2, outputlevel::Int=1)
-    g = named_grid((5,5); periodic = true)
+function main(; beta::Number = 0.2, outputlevel::Int = 1)
+    graph = named_grid((5, 5); periodic = true)
 
-    tensornetwork = ising_tensornetwork(g, beta)
-    messages, niterations = belief_propagation(tensornetwork, g, 1000; outputlevel)
+    tensornetwork = ising_tensornetwork(graph, beta)
+    messages, niters = belief_propagation(tensornetwork, graph; niters = 1000, outputlevel)
 
-    bp_phi_g = bp_phi(tensornetwork, messages, g)
+    bp_phi_tn = bp_phi(tensornetwork, messages, graph)
     smallest_loop_size = 4
-    bp_corrected_phi_g = bp_corrected_phi(tensornetwork, messages, g, smallest_loop_size)
+    bp_corrected_phi_tn = bp_corrected_phi(tensornetwork, messages, graph; smallest_loop_size)
     exact_phi_onsager = ising_phi(beta)
 
-    return (; bp_phi_g, bp_corrected_phi_g, exact_phi_onsager, niterations)
+    return (; bp_phi_tn, bp_corrected_phi_tn, exact_phi_onsager, niters)
 end
