@@ -89,9 +89,10 @@ function main(;
     # Make starting state
     j = nsite ÷ 2
     psit = apply(op("S+", sites[j]), psi)
+    psit = normalize(psit)
 
     szs = [expect(psit, "Sz")]
-    energies = ComplexF64[inner(psi', H, psi)]
+    energies = ComplexF64[inner(psit', H, psit)]
     times = 0.0:timestep:time
     for current_time in times[2:end]
         psit = apply(gates, psit; cutoff)
