@@ -595,7 +595,7 @@ In the plot of ⟨Sz⟩ shown after the calculation runs, what do you notice abo
 
 To make this change, after the line defining the `sites` array, prepend a `"S=1/2"` site by doing
 ```julia
-sites = [siteind("S=1/2"), sites...]
+sites = [[siteind("S=1/2")]; sites]
 ```
 Include your changed file and rerun DMRG. What do you notice about the shape of ⟨Sz⟩ now?
 
