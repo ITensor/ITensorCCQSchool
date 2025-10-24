@@ -11,6 +11,10 @@
   <summary><h2>Tutorial 1: Real Time Evolution</h2></summary>
   <hr>
 
+In this tutorial we will run time evolution of a spin applied to the 1D spin-1/2 Heisenberg
+model ground state using the time evolving block decimation (TEBD) algorithm. See
+the [ITensorMPS.jl tutorial on TEBD](https://docs.itensor.org/ITensorMPS/stable/tutorials/MPSTimeEvolution.html)
+for more background on the algorithm.
 ```julia
 julia> include("1-tebd.jl")
 main
