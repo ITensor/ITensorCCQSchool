@@ -1,4 +1,4 @@
-using ITensorMPS: MPO, OpSum, dmrg, maxlinkdim, random_mps, siteinds
+using ITensorMPS: MPO, OpSum, dmrg, maxlinkdim, random_mps, siteind, siteinds
 # Functions for performing measurements of MPS
 using ITensorMPS: ITensorMPS, AbstractObserver, correlation_matrix, expect, inner
 # Use to set the RNG seed for reproducibility
@@ -59,6 +59,9 @@ function main(;
         cutoff = [1.0e-10],
         outputlevel = 1,
     )
+    if outputlevel > 0
+        println("Number of sites: ", nsite)
+    end
     # Build the physical indices for nsite spins (spin 1/2)
     sites = siteinds("S=1/2", nsite)
 

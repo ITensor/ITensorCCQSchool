@@ -6,7 +6,8 @@
 - [Tutorial 1: Julia Intro](#tutorial-1)
 - [Tutorial 2: DMRG](#tutorial-2)
 - [Tutorial 3: DMRG Measurments](#tutorial-3)
-- [Tutorial 4: 2D Hubbard model](#tutorial-4)
+- [Tutorial 4: 2D Hubbard Model](#tutorial-4)
+- [Stretch Goals](#stretch-goals)
 
 <a id="installation-instructions"></a>
 <details>
@@ -439,6 +440,10 @@ Click [here](#table-of-contents) to return to the table of contents.
   <summary><h2>Tutorial 3: DMRG Measurements</h2></summary>
   <hr>
 
+In this tutorial you will explore measurements of MPS ground states, and use them to visualize a DMRG calculation.
+
+1. Run the `main` function provided in the file [3-dmrg-measure.jl](./3-dmrg-measure.jl). DMRG will run and you will see a plot of the expected value of Sz on each site and the ⟨SzⱼSz⟩ correlator between the central site "j" and all other sites.
+
 ```julia
 julia> include("3-dmrg-meaure.jl")
 main
@@ -494,10 +499,9 @@ Energy: -13.11135575201543
 
 ```
 
-```julia
-julia> include("3-dmrg-measure.jl")
-main
+2. Try changing the number of sites and sweeps. By saving the results `res` then passing them into the provided `animate_dmrg_sz` function, you can see a live animation or replay of the calculation!
 
+```julia
 julia> res = main(; nsweeps = 4, nsite = 50);
 MPO bond dimension: 5
 Initial MPS bond dimension: 10
@@ -509,6 +513,7 @@ Optimized MPS bond dimension: 70
 Energy: -21.972110267624643
 ⟨ψ|ψ⟩: 1.0000000000000064
 ⟨ψ|H|ψ⟩: -21.972110267625013
+[...]
 
 julia> animate_dmrg_sz(res)
 [...]
@@ -518,6 +523,7 @@ julia> animate_dmrg_sz(res)
 Click [here](#table-of-contents) to return to the table of contents.
 
 </details>
+
 
 <a id="tutorial-4"></a>
 <details>
@@ -558,5 +564,38 @@ julia> animate_hubbard(res)
 ```
 
 Click [here](#table-of-contents) to return to the table of contents.
+
+</details>
+
+<a id="stretch-goals"></a>
+<details>
+  <summary><h2>Stretch Goals</h2></summary>
+  <hr>
+
+If you completed all the tutorials and would like more of a challenge, choose from among the following "stretch goal" activities.
+
+1. Exploring topological physics through the spin-1 Heisenberg chain. 
+
+The S=1 version of the 1D Heisenberg chain is in a topological phase (the "Haldane phase") which is characterized by emergent S=1/2 edge states on each end and an associated four-fold ground state degeneracy. (Another model in the same phase is the exactly solvable "AKLT" model.)
+
+We can explore this phase using ITensor DMRG by making the following changes to the Tutorial 3 file `3-dmrg-measure.jl` and re-running the main function in this file.
+
+1a. First, change the local Hilbert space type to "S=1". This is the first argument to the `siteinds` function which appears near the top of the `main` function.
+
+1b. Now, include your changed file and rerun the calculation. We recommend using `nsite=100` and calling `main` for this part as
+```julia
+julia> res = main(; nsweeps = 6, nsite = 100);
+```
+If the calculation is too slow, try passing a larger `cutoff` parameter such as `cutoff=1E-6`.
+
+In the plot of ⟨Sz⟩ shown after the calculation runs, what do you notice about the shape of ⟨Sz⟩?
+
+1c. Now we will attempt to 'quench' one of the emergent S=1/2 edge states by placing an actual S=1/2 spin at the left edge. The idea is that the Heisenberg coupling between this spin and the edge state will form a singlet and quench any non-zero magnetization at that edge.
+
+To make this change, after the line defining the `sites` array, prepend a `"S=1/2"` site by doing
+```julia
+sites = [[siteind("S=1/2")]; sites]
+```
+Include your changed file and rerun DMRG. What do you notice about the shape of ⟨Sz⟩ now?
 
 </details>
