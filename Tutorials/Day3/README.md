@@ -312,7 +312,14 @@ If you completed all the tutorials and would like more of a challenge, choose fr
 julia> logz = log(prod(values(tensornetwork))[])
 ```
 
-How do you think the error from the BP contraction depends on the geometry of the tensor network, the bond dimension and the randomness in the tensor elements? Try investigating to see if you're ideas are correct.
+Study how the error from the BP contraction depends on the geometry of the tensor network.
+You can import various pre-defined constructors for your favourite lattices such as
+```julia
+julia> NamedGraphs.NamedGraphGenerators: named_hexagonal_lattice_graph, named_comb_tree, named_grid
+g1 = named_hexagonal_lattice_graph(4,4; periodic = true)
+g2 = named_comb_tree((4,3))
+g3 = named_grid((4,4,4))
+```
 
 Click [here](#table-of-contents) to return to the table of contents.
 
