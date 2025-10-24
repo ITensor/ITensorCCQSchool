@@ -173,9 +173,5 @@ function main(;
         psi = MPS(sites, state)
     end
 
-    res = (; H, psi, betas, energies, energy_dmrg, nsite, beta, betastep, cutoff)
-    if outputlevel > 1
-        animate_tebd_sz(res)
-    end
-    return res
+    return (; H, psi, betas, energies, energy_dmrg, nsite, beta, betastep, cutoff)
 end
