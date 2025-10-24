@@ -514,7 +514,7 @@ Optimized MPS bond dimension: 70
 Energy: -21.972110267624643
 ⟨ψ|ψ⟩: 1.0000000000000064
 ⟨ψ|H|ψ⟩: -21.972110267625013
-...
+[...]
 
 julia> animate_dmrg_sz(res)
 [...]
