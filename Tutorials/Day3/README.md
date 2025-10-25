@@ -308,10 +308,7 @@ If you completed all the tutorials and would like more of a challenge, choose fr
 
 1. You can use the `named_grid((nx,ny,nz,...); periodic)` to construct any hypercubic lattice in your choice of dimension. Try using the code to use BP (and the cluster expansion if you're feeling confident) to solve the 3D Ising model. Do you think the errors are better or worse than in 2D? Why? What about in 4D?
 
-2. Try writing a function to construct a tensornetwork on a graph `g` with some bond dimension $\chi$ and random entries in the tensors. Use the function `ising_tensornetwork` in `[ising_tensornetwork.jl](./ising_tensornetwork.jl)` for a template. The `bp_phi` function, when passed converged `messages`, approximates the logarithm of the contraction of the given tensornetwork you pass it. Compare that result to exact contraction of the network, which can be done by taking the log of the product of all the tensors of the network, i.e.
-```julia
-julia> logz = log(prod(values(tensornetwork))[])
-```
+2. Try writing a function to construct a tensornetwork on a graph `g` with some bond dimension $\chi$ and random entries in the tensors. Use the function `ising_tensornetwork` in `[ising_tensornetwork.jl](./ising_tensornetwork.jl)` for a template. The `phi_bp` function, when passed converged `messages`, approximates the logarithm of the contraction of the given tensornetwork you pass it. Compare that result to exact contraction of the network, for which a function is provided in `[contract_network.jl](./contract_network.jl)`
 
 Study how the error from the BP contraction depends on the geometry of the tensor network.
 
