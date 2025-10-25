@@ -15,6 +15,8 @@ In this tutorial we will run time evolution of a spin applied to the 1D spin-1/2
 model ground state using the time evolving block decimation (TEBD) algorithm. See
 the [ITensorMPS.jl tutorial on TEBD](https://docs.itensor.org/ITensorMPS/stable/tutorials/MPSTimeEvolution.html)
 for more background on the algorithm.
+
+If we run the code the dynamics up until time $t=5.0$ will be run by default.
 ```julia
 julia> include("1-tebd.jl")
 main
@@ -108,6 +110,24 @@ julia> animate_tebd_sz(res) # Animation of ⟨Szⱼ⟩ as a function of time
 [...]
 
 ```
+The animation lets us visualize how the excitation propagates through the system as a function of time.
+
+1. Modify the script to save the bond dimension of the tensornetwork at each time step and return it as a vector, one entry for each time step. Plot this as a function of time $t$, how does it scale?
+
+2. We can change the initial state to something different. Let's try a state where all the spins are polarised along the z-axis. This can be done by replacing Line 64 -> 76 with
+```julia
+julia> psit = ITensorMPS(i -> "Z+", sites)
+```
+You should also comment out lines 91 -> 93.
+
+What do you notice about the dynamics? Why is this happening?
+
+3. Now try initializing the system polarised in the X direction instead
+```julia
+julia> psi = ITensorMPS(i -> "X+", sites)
+```
+
+what happens in this case? How does the entanglement growth compare to the excited initial state we started with? What's your physical intuition for this?
 
 Click [here](#table-of-contents) to return to the table of contents.
 
