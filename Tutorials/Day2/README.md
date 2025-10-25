@@ -144,28 +144,14 @@ Is this what you would expect for a quench? Why or why not? What happens around 
 ```julia
 julia> psit = ITensorMPS.MPS(sites, ["Z+" for i in 1:nsite])
 ```
-Note that you will have to comment out parts of the code where the initial state was created by DMRG and then excited. It is sufficient to comment out lines 81-85:
-```julia
-    psi0 = random_mps(sites; linkdims = 10)
-    initial_energy, psi = dmrg(
-        H, psi0; nsweeps = 5, maxdim = [10, 20, 100, 100, 200],
-        cutoff = [1.0e-10], outputlevel = min(outputlevel, 1)
-    )
-```
-
-and lines 100-102:
-```julia
-    j = nsite ÷ 2
-    psit = apply(op("S+", sites[j]), psi)
-    psit = normalize(psit)
-```
-
-and replace them with 
+Note that you should comment out parts of the code where the initial state was created by DMRG and then excited (lines 81-85 and 100-102) and substitute them for:
 
 ```julia
     psit = ITensorMPS.MPS(sites, ["Z+" for i in 1:nsite])
     initial_energy = inner(psit', H, psit)
 ```
+
+alternatively, if you are feeling lazy, you can just paste the above on line 103 to overwrite the current inital state.
 
 What do you notice about the dynamics of the quench now? Hint: think about the symmetries of the model.
 
