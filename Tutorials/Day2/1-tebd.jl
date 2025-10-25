@@ -1,9 +1,9 @@
-using ITensorMPS: MPO, OpSum, dmrg, maxlinkdim, random_mps, siteinds
+using ITensorMPS: MPO, OpSum, dmrg, maxlinkdim, random_mps, siteinds, linkinds
 # Functions for performing measurements of MPS
-using ITensorMPS: expect, inner
+using ITensorMPS: expect, inner, MPS, orthogonalize, svd
 # Functions for time evolution
 using ITensorMPS: apply, op
-using LinearAlgebra: normalize
+using LinearAlgebra: normalize, diag
 # Use to set the RNG seed for reproducibility
 using StableRNGs: StableRNG
 # Load the Plots package for plotting
@@ -20,6 +20,15 @@ end
 
 function animate_tebd_sz(res; fps = res.nsite)
     return animate(i -> plot_tebd_sz(res; step = i); nframes = length(res.szs), fps)
+end
+
+function entanglement_entropy(ψ::MPS, bond::Int = round(Int, length(ψ) / 2); cutoff = 1e-12, kwargs...)
+    ψ = normalize(ψ)
+    ψ = orthogonalize(ψ, bond)
+    U, S, V = svd(ψ[bond], (linkinds(ψ, bond - 1)..., siteinds(ψ, bond)...))
+    Sd = Array(diag(S))
+    Sd = Sd .^ 2
+    return sum(d -> (d > cutoff) ? -d * log(d) : 0.0, Sd)
 end
 
 """
@@ -53,7 +62,7 @@ function main(;
         # Number of sites
         nsite = 30,
         # TEBD parameters
-        time = 5.0,
+        time = 6.0,
         timestep = 0.1,
         cutoff = 1.0e-10,
         outputlevel = 1,
@@ -70,7 +79,7 @@ function main(;
     end
     H = MPO(terms, sites)
     psi0 = random_mps(sites; linkdims = 10)
-    energy, psi = dmrg(
+    initial_energy, psi = dmrg(
         H, psi0; nsweeps = 5, maxdim = [10, 20, 100, 100, 200],
         cutoff = [1.0e-10], outputlevel = min(outputlevel, 1)
     )
@@ -94,6 +103,7 @@ function main(;
 
     szs = [expect(psit, "Sz")]
     energies = ComplexF64[inner(psit', H, psit)]
+    entanglements = [entanglement_entropy(psit, nsite ÷ 2)]
     times = 0.0:timestep:time
     print_every = 1
     for current_time in times[2:end]
@@ -103,6 +113,7 @@ function main(;
         sz_t = expect(psit, "Sz")
         push!(szs, sz_t)
         push!(energies, energy_t)
+        push!(entanglements, entanglement_entropy(psit, nsite ÷ 2))
         if floor(current_time - timestep + 10eps()) ≠ floor(current_time) &&
                 floor(current_time) % print_every == 0
             if outputlevel > 0
@@ -116,7 +127,7 @@ function main(;
         end
     end
 
-    res = (; energy, H, psi, times, szs, energies, nsite, time, timestep, cutoff)
+    res = (; initial_energy, H, psi, times, szs, energies, entanglements, nsite, time, timestep, cutoff)
     if outputlevel > 1
         animate_tebd_sz(res)
     end
