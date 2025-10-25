@@ -11,12 +11,12 @@
   <summary><h2>Tutorial 1: Real Time Evolution</h2></summary>
   <hr>
 
-In this tutorial we will run time evolution of a spin applied to the 1D spin-1/2 Heisenberg
-model ground state using the time evolving block decimation (TEBD) algorithm. See
+In this tutorial we will simulate the time evolution of several initial states under the 1D spin-1/2 Heisenberg
+Hamiltonian using the time evolving block decimation (TEBD) algorithm. See
 the [ITensorMPS.jl tutorial on TEBD](https://docs.itensor.org/ITensorMPS/stable/tutorials/MPSTimeEvolution.html)
 for more background on the algorithm.
 
-If we run the code the dynamics up until time $t=5.0$ will be run by default.
+The initial state constructed in `main` is the ground state of the Hamiltonian with the central spin excited. If we run this, the dynamics up until time $t=5.0$ will be simulated
 ```julia
 julia> include("1-tebd.jl")
 main
@@ -144,7 +144,28 @@ Is this what you would expect for a quench? Why or why not? What happens around 
 ```julia
 julia> psit = ITensorMPS.MPS(sites, ["Z+" for i in 1:nsite])
 ```
-Note that you will have to comment out parts of the code where the initial state was created by DMRG and then excited by the "S+" operator.  
+Note that you will have to comment out parts of the code where the initial state was created by DMRG and then excited. It is sufficient to comment out lines 81-85:
+```julia
+    psi0 = random_mps(sites; linkdims = 10)
+    initial_energy, psi = dmrg(
+        H, psi0; nsweeps = 5, maxdim = [10, 20, 100, 100, 200],
+        cutoff = [1.0e-10], outputlevel = min(outputlevel, 1)
+    )
+```
+
+and lines 100-102:
+```julia
+    j = nsite ÷ 2
+    psit = apply(op("S+", sites[j]), psi)
+    psit = normalize(psit)
+```
+
+and replace them with 
+
+```julia
+    psit = ITensorMPS.MPS(sites, ["Z+" for i in 1:nsite])
+    initial_energy = inner(psit', H, psit)
+```
 
 What do you notice about the dynamics of the quench now? Hint: think about the symmetries of the model.
 

@@ -79,7 +79,7 @@ function main(;
     end
     H = MPO(terms, sites)
     psi0 = random_mps(sites; linkdims = 10)
-    energy, psi = dmrg(
+    initial_energy, psi = dmrg(
         H, psi0; nsweeps = 5, maxdim = [10, 20, 100, 100, 200],
         cutoff = [1.0e-10], outputlevel = min(outputlevel, 1)
     )
@@ -127,7 +127,7 @@ function main(;
         end
     end
 
-    res = (; energy, H, psi, times, szs, energies, vn_ees, nsite, time, timestep, cutoff)
+    res = (; inital_energy, H, psi, times, szs, energies, vn_ees, nsite, time, timestep, cutoff)
     if outputlevel > 1
         animate_tebd_sz(res)
     end
