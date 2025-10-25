@@ -113,13 +113,13 @@ julia> animate_tebd_sz(res) # Animation of ⟨Szⱼ⟩ as a function of time
 ```
 The animation lets us visualize how the excitation propagates through the system as a function of time.
 
-1. Included in `main()` is a function `vonneumann_ee(ψ::MPS, bond::Int = round(Int, length(ψ) / 2))` to compute the von Neumann entanglement entropy between sites `1..bond` and `bond+1...N` of the MPS. The vector of half-chain entanglement entropies is outputted by `main` as `vn_ees`.
+1. Included in `main()` is a function `entanglement_entropy(ψ::MPS, bond::Int = round(Int, length(ψ) / 2))` to compute the von Neumann entanglement entropy between sites `1..bond` and `bond+1...N` of the MPS. The vector of half-chain entanglement entropies is outputted by `main` as `entanglements`.
 Plot this half chain entanglement entropy as a function of time, how does it behave?
 
 ```julia
 julia> Plots.unicodeplots()
 
-julia> plot(res.times, res.vn_ees, xlabel = "Time", ylabel = "Entanglement")
+julia> plot(res.times, res.entanglements, xlabel = "Time", ylabel = "Entanglement")
             ┌────────────────────────────────────────┐  
      1.28615│⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠤⠔⠒⠲⠤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│y1
             │⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡔⠁⠀⠀⠀⠀⠀⠀⠉⠒⠢⣄⣀⠀⠀⠀⢀⣀⠤⠀│  
@@ -164,7 +164,7 @@ What do you notice about the dynamics of the quench now? Hint: think about the s
 Plot the entanglement entropy as a function of time.
 
 ```julia
-julia> plot(res.times, res.vn_ees, xlabel = "Time", ylabel = "Entanglement")
+julia> plot(res.times, res.entanglements, xlabel = "Time", ylabel = "Entanglement")
             ┌────────────────────────────────────────┐  
       3.0758│⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⠔⠀│y1
             │⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⠴⠊⠀⠀⠀│  
