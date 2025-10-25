@@ -455,7 +455,7 @@ Specific Heat│⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠎⠁�
 
 If you completed all the tutorials and would like more of a challenge, choose from among the   following "stretch goal" activities.
 
-1. In the low temperature regime the spin 1/2 1D Heisenberg model is known to be a gappless Luttinger Liquid which is a phase of matter characterised by a specific heat $C_{v} \propto T$. See if you can confirm this by running the METTS code in the low temperature regime (say $8.0 \leq \beta \leq 10.0$)  and measuring the specific heat capacity. Note that in this low temperature regime, fluctuations and finite-size effects will be more significant (we have been working on a small chain), so you will have to be careful over the parameters you choose and simulations could take some time. It can help to take a large enough `betastep` (say `betastep = O(0.1)`) so your simulations run in reasonable time.
+1. In the low temperature regime the spin 1/2 1D Heisenberg model is known to be a gapless Luttinger Liquid which is a phase of matter characterised by a specific heat $C_{v} \propto T$. See if you can confirm this by running the METTS code in the low temperature regime (say $8.0 \leq \beta \leq 10.0$) and measuring the specific heat capacity. Note that in this low-temperature regime, fluctuations and finite-size effects will be more significant (we have been working on a small chain), so you will have to be careful about the parameters you choose and simulations could take some time. It can help to take a large enough `betastep` (say `betastep = O(0.1)`) so your simulations run in reasonable time.
 
 Click [here](#table-of-contents) to return to the table of contents.
 
