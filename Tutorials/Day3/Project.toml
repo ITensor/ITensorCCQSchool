@@ -7,5 +7,7 @@ UnicodePlots = "b8865327-cd53-5732-bb35-84acbb429228"
 
 [compat]
 ITensors = "0.9.14"
+NamedGraphs = "0.7.2"
 Plots = "1.41.1"
+QuadGK = "2.11.2"
 UnicodePlots = "3.8.1"

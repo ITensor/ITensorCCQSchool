@@ -174,10 +174,5 @@ function main(;
         psi = MPS(sites, state)
     end
 
-    avg_energy = sum(energies) / NMETTS
-    res = (; H, psi, betas, energies, avg_energy, energy_dmrg, nsite, beta, betastep, cutoff)
-    if outputlevel > 1
-        animate_tebd_sz(res)
-    end
-    return res
+    return (; H, psi, betas, energies, energy_dmrg, nsite, beta, betastep, cutoff)
 end

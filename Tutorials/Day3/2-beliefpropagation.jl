@@ -22,17 +22,20 @@ computes the Bethe-Peierls free energy density using belief propagation.
 
 # Returns
 A named tuple containing:
-- `bp_phi_tn::Number`: The Bethe-Peierls free energy density computed via belief propagation.
-- `exact_phi_onsager::Number`: The exact free energy density from Onsager's solution in the thermodynamic limit.
+- `phi_bp_tn::Number`: The Bethe-Peierls free energy density computed via belief propagation.
+- `phi_exact::Number`: The exact free energy density from Onsager's solution in the thermodynamic limit.
+- `tn::Dict`: The Ising tensor network.
+- `g::NamedGraph`: The graph of the tensor network.
+- `messages::Dict`: The converged belief propagation messages.
 - `niters::Int`: The number of iterations taken for convergence in belief propagation.
 """
 function main(; Lx::Int = 3, Ly::Int = 3, beta::Number = 0.2, periodic = false, outputlevel::Int = 1)
     g = named_grid((Lx, Ly); periodic)
 
-    tensornetwork = ising_tensornetwork(g, beta)
-    messages, niters = belief_propagation(tensornetwork, g; niters = 1000, outputlevel)
+    tn = ising_tensornetwork(g, beta)
+    messages, niters = belief_propagation(tn, g; niters = 1000, outputlevel)
 
-    bp_phi_tn = bp_phi(tensornetwork, messages, g)
-    exact_phi_onsager = ising_phi(beta)
-    return (; bp_phi_tn, exact_phi_onsager, niters)
+    phi_bp_tn = phi_bp(tn, g, messages)
+    phi_exact = ising_phi(beta)
+    return (; phi_bp_tn, phi_exact, tn, g, messages, niters)
 end

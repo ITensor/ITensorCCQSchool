@@ -37,7 +37,7 @@ By looking inside it you will see that it builds the 3-site path graph, which ca
 ```julia
 julia> res = main();
 
-julia> res.graph
+julia> res.g
 NamedGraph{Int64} with 3 vertices:
 3-element NamedGraphs.OrderedDictionaries.OrderedIndices{Int64}:
  1
@@ -55,7 +55,7 @@ With this you should be able to do
 ```julia
 julia> res = main(; L = 5, periodic = true);
 
-julia> res.graph
+julia> res.g
 NamedGraph{Int64} with 5 vertices:
 5-element NamedGraphs.OrderedDictionaries.OrderedIndices{Int64}:
  1
@@ -74,17 +74,17 @@ and 5 edge(s):
 
 We can build a tensor network as a dictionary of tensors, one for each vertex of the `NamedGraph` `g`. The edges of the graph `g` (which are of the  type `NamedEdge`) dictate which tensors share indices to be contracted over. 
 
-Provided in [isingtensornetwork.jl](./isingtensornetwork.jl) is a pre-built constructor for the tensor network representing the partition function of the ising model on a given `NamedGraph` g at a given inverse temperature `β`. The partition function reads 
+Provided in [ising_tensornetwork.jl](./ising_tensornetwork.jl) is a pre-built constructor for the tensor network representing the partition function of the ising model on a given `NamedGraph` g at a given inverse temperature `β`. The partition function reads 
 
 $$Z(\beta) = \frac{1}{2}\sum_{s_{1} \in {-1, 1}}\sum_{s_{2} \in {-1, 1}} ... \sum_{s_{L}\in {-1, 1}}\exp(-\beta \sum_{ij}s_{i}.s_{j}),$$
 
 where we have scaled by a factor of 1/2 for convenience.
 
-This object is returned by `main()`.You can inspect the individual tensors on each vertex of the constructed tensor network via `res.tensornetwork[v]` where `v` is the name of the vertex.
+This object is returned by `main()`.You can inspect the individual tensors on each vertex of the constructed tensor network via `res.tn[v]` where `v` is the name of the vertex.
 ```julia
 julia> res = main(; L = 3, periodic = false, beta = 0.2);
 
-julia> show(res.tensornetwork[1])
+julia> show(res.tn[1])
 ITensor ord=1
 Dim 1: (dim=2|id=290|"e1_2")
 NDTensors.Dense{Float64, Vector{Float64}}
@@ -93,7 +93,7 @@ NDTensors.Dense{Float64, Vector{Float64}}
  1.0099835422515933
 ```
 
-This tensornetwork can be contracted by multiplying all the tensors together. This contraction is pre-computed for you in `main()`
+This tensor network can be contracted by multiplying all the tensors together. This contraction is pre-computed for you in `main()`
 
 ```julia
 julia> res = main(; n = 3, periodic = false);
@@ -125,9 +125,9 @@ Click [here](#table-of-contents) to return to the table of contents.
 
 In the previous tutorial, we contracted the tensor network exactly by multiplying the tensors together, vertex by vertex. This can only be done efficiently for tree-like networks (those composed of no loops, or a small number of loops) and only when taking careful care over the order of contraction.
 
-In this tutorial we are going to contract tensor networks in an efficient, but approximate manner via belief propagation. The core belief propagation functions are contained in the script [beliefpropagationfunctions.jl](./beliefpropagationfunctions.jl).
+In this tutorial we are going to contract tensor networks in an efficient, but approximate manner via belief propagation. The core belief propagation functions are contained in the script [belief_propagation.jl](./beliefpropagationfunctions.jl).
 
-The function `main` in [2-beliefpropagation.jl](./2-beliefpropagation.jl) now builds an $L_{x} \times L_{y}$ square grid tensornetwork representing the partition function of the Ising model in 2D. Inverse temperature is set via the `beta` kwarg and periodic boundaries (in both directions) can be added with the kwarg `periodic`. Returned is the number of iterations BP took to converge (`niters`), and the rescaled free energy density (`bp_phi_tn`)
+The function `main` in [2-beliefpropagation.jl](./2-beliefpropagation.jl) now builds an $L_{x} \times L_{y}$ square grid tensornetwork representing the partition function of the Ising model in 2D. Inverse temperature is set via the `beta` kwarg and periodic boundaries (in both directions) can be added with the kwarg `periodic`. Returned is the number of iterations BP took to converge (`niters`), and the rescaled free energy density (`phi_bp_tn`)
 
 $$\phi(\beta) = -\beta f(\beta) = \frac{1}{L_{x}L_{y}}\ln(Z(\beta))$$
 
@@ -139,7 +139,7 @@ main (generic function with 1 method)
 julia> res = main(; Lx = 3, Ly = 1, beta = 0.2, periodic = false);
 BP Algorithm Converged after 3 iterations
 
-julia> res.bp_phi_tn
+julia> res.phi_bp_tn
 0.24429444141332002
 ```
 1. Compare the result to the analytical value for 1D OBC
@@ -153,7 +153,7 @@ They agree, even though we used BP to compute it. Why?
 julia> res = main(; Lx =  3, Ly = 1, periodic = true);
 BP Algorithm Converged after 8 iterations
 
-julia> res.bp_phi_tn
+julia> res.phi_bp_tn
 0.019868071835749606
 ```
 
@@ -190,21 +190,21 @@ julia> plot(Lxs, bp_abs_errs; yscale = :log, xlabel = "System Size Lx", ylabel =
           ⠀2.49⠀⠀⠀⠀⠀⠀⠀⠀System Size Lx⠀⠀⠀⠀⠀⠀⠀⠀⠀20.51⠀  
 ```
 
-Inspect the values for `bp_phi_tn` returned by `main` versus system size? Do you notice something odd? Why are they all the same value?
+Inspect the values for `phi_bp_tn` returned by `main` versus system size? Do you notice something odd? Why are they all the same value?
 
 Now we're going to move fully into 2D. Let's compute the BP approximate free energy density on a OBC square grid with $L_{x} = L$ and $L_{y} = L$ as a function of $\beta$.
 
 ```julia
 julia> betas = [0.05 * (i - 1) for i in 1:21]
 
-julia> bp_phis = [main(; Lx = 15, Ly = 15, periodic = false, beta, outputlevel = 0).bp_phi_tn for beta in betas]
+julia> phi_bps = [main(; Lx = 15, Ly = 15, periodic = false, beta, outputlevel = 0).phi_bp_tn for beta in betas]
 ```
 
 Congratulations. You just approximately solved the 2D Ising model on a 15x15 square lattice for twenty different inverse temperatures in about 10 seconds.
 
 3. How does the number of iterations that BP took to converge depend on the inverse temperature? Plot this. Where's the peak? Is it near the critical point of the 2D model? Or somewhere different?
 
-Included in `[2-beliefpropagation.jl](./2-beliefpropagation.jl)` is a function for computing the exact rescaled free energy of the 2D model in the thermodynamic limit via Onsager's famous result. This is returned by `main` as `exact_phi_onsager`.
+Included in `[2-beliefpropagation.jl](./2-beliefpropagation.jl)` is a function for computing the exact rescaled free energy of the 2D model in the thermodynamic limit via Onsager's famous result. This is returned by `main` as `phi_exact`.
 
 $$\phi(\beta) = -\beta f(\beta) = -\ln 2 + \frac{1}{8\pi^{2}}\int_{0}^{2\pi}\int_{0}^{2\pi}\ln\left[\cosh\left(2\beta \right)\cosh\left(2\beta \right)-\sinh\left(2\beta \right)\cos\left(\theta_{1}\right)-\sinh\left(2\beta \right)\cos\left(\theta_{2}\right)\right]d\theta_{1}, d\theta_{2}.$$
 
@@ -216,9 +216,9 @@ Now lets move to periodic boundary conditions.
 ```julia
 julia> res = main(; Lx = 5, Ly = 5, periodic = true, beta = 0.2)
 BP Algorithm Converged after 21 iterations
-(bp_phi_tn = -0.6534110369600732, exact_phi_onsager = -0.6517635488435647, niters = 21)
+(phi_bp_tn = -0.6534110369600732, phi_exact = -0.6517635488435647, niters = 21)
 ```
-6. What do you notice about the dependence of `bp_phi_tn` on $L$?
+6. What do you notice about the dependence of `phi_bp_tn` on $L$?
 
 
 As BP is letting us work directly in the thermodynamic limit with periodic boundaries, we can pick a small $L >= 3$ and a fine-range of betas and rapidly get the BP answer in the thermodynamic limit.
@@ -270,7 +270,7 @@ where $Z_{\rm BP}$ is the BP approximation of the partition function and the pro
 
 This formula is implemented in `[3-clusterexpansion.jl](./3-clusterexpansion.jl)` at the level of the rescaled free energy $\phi(\beta) = -\beta f(\beta)$. We use the `NamedGraphs.simple_cycles_limited_length` function to enumerate these loops. 
 
-For the periodic square lattice, setting $L >= 5$ will give us a first order cluster expanded result for $\phi(\beta)$ directly in the thermodynamic limit. This is due to the homogenity of the tensor network and that there is exactly one loop of size $4$ per vertex when $L >= 5$. The parameters $L_{x} = 5, L_{y} = 5$ and `periodic = true` have all been set for you and `main` returns the bp value for `phi` (`bp_phi_tn`), the corrected value for `phi` (`bp_corrected_phi_tn`) and Onsager's exact result (`exact_phi_onsager`) - all in the thermodynamic limit for your choice of $\beta$.
+For the periodic square lattice, setting $L >= 5$ will give us a first order cluster expanded result for $\phi(\beta)$ directly in the thermodynamic limit. This is due to the homogenity of the tensor network and that there is exactly one loop of size $4$ per vertex when $L >= 5$. The parameters $L_{x} = 5, L_{y} = 5$ and `periodic = true` have all been set for you and `main` returns the bp value for `phi` (`phi_bp_tn`), the corrected value for `phi` (`phi_bp_corrected_tn`) and Onsager's exact result (`phi_exact`) - all in the thermodynamic limit for your choice of $\beta$.
 
 8. Calculate the bp error and the cluster corrected bp error, with respect to the exact solution, for a range of `betas`. Plot these.
 
