@@ -14,7 +14,7 @@
 In this tutorial we will simulate the time evolution of several initial states under the 1D spin-1/2 Heisenberg
 Hamiltonian using the time evolving block decimation (TEBD) algorithm. See
 the [ITensorMPS.jl tutorial on TEBD](https://docs.itensor.org/ITensorMPS/stable/tutorials/MPSTimeEvolution.html)
-for more background on the algorithm.
+for more background on the algorithm. We will work off of the script [1-tebd.jl](./1-tebd.jl).
 
 The initial state constructed in `main` is the ground state of the Hamiltonian with the central spin excited. If we run this, the dynamics up until time $t=5.0$ will be simulated
 ```julia
@@ -195,6 +195,11 @@ Click [here](#table-of-contents) to return to the table of contents.
   <summary><h2>Tutorial 2: Imaginary Time Evolution</h2></summary>
   <hr>
 
+Now we are going to switch from real time to imaginary time evolution. This is incredibly easy with tensor networks, as we can just perform the substitution `dt -> - im * d\beta`. 
+
+We will be working off the script [1-imaginary-time.jl](./1-imaginary-time.jl) which does this for you and implements the imaginary time dynamics of a random initial state under the Heisenberg Hamiltonian.
+
+
 ```julia
 julia> res = main();
 After sweep 1 energy=-13.10580711255933  maxlinkdim=10 maxerr=2.04E-03 time=0.029
@@ -244,6 +249,39 @@ julia> res.energies .- res.energy
   0.0016286262661342477
 
 ```
+
+1. Notice how the energy is converging to that of the DMRG calculation. You can show an animation of the local $Sz$ of each spin in the chain by passing `outputlevel = 2` as a `kwarg` to `main()`. Observe how the system relaxes to a state with no local magnetisation. 
+
+We can calculate the variance of `psit` to observe how close it is to an eigenstate of `H`. Specifically the variance is given by
+
+```julia
+julia> energy_var = inner(apply(H, psit),apply(H, psit)) - inner(psit',H,psit)^2
+```
+
+2. Calculate the variance of the energy as a function of time in your simulation and have `main` return it. Plot it. 
+
+```julia
+julia> plot(res.times, res.energy_vars, xlabel = "Imaginary Time", ylabel = "Energy Variance")
+               ┌────────────────────────────────────────┐  
+        4.67397│⠀⡷⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│y1
+               │⠀⡇⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
+               │⠀⡇⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
+               │⠀⡇⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
+               │⠀⡇⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
+               │⠀⡇⠸⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
+               │⠀⡇⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
+Energy Variance│⠀⡇⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
+               │⠀⡇⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
+               │⠀⡇⠀⠘⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
+               │⠀⡇⠀⠀⢧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
+               │⠀⡇⠀⠀⠘⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
+               │⠀⡇⠀⠀⠀⢣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
+               │⠀⡇⠀⠀⠀⠀⠣⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
+      -0.135919│⠤⡧⠤⠤⠤⠤⠤⠬⠶⠶⠶⠶⠦⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤│  
+               └────────────────────────────────────────┘  
+               ⠀-0.6⠀⠀⠀⠀⠀⠀⠀⠀Imaginary Time⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀20.6⠀  
+```
+
 
 Click [here](#table-of-contents) to return to the table of contents.
 
