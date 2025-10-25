@@ -24,15 +24,15 @@ function ising_tensornetwork(g::NamedGraph, β::Real)
     ϕ = 0.5 * (sqrt(λ1) - sqrt(λ2))
     sqrt_W = [α ϕ; ϕ α]
 
-    T = Dict()
-    for v in vertices(g)
+    ts = map(vertices(g)) do v
         es = incident_edges(g, v)
-        T[v] = delta([links[e] for e in es])
+        t = delta([links[e] for e in es])
         for e in es
-            T[v] = apply(T[v], ITensor(sqrt_W, links[e], prime(links[e])))
+            t = apply(t, ITensor(sqrt_W, links[e], prime(links[e])))
         end
+        return v => t
     end
-    return T
+    return Dict(ts)
 end
 
 """
