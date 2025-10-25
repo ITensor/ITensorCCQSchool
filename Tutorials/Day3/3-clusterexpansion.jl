@@ -20,21 +20,21 @@ free energy density.
 
 # Returns
 A named tuple containing:
-- `bp_phi_tn::Number`: The Bethe-Peierls free energy density computed via belief propagation.
-- `bp_corrected_phi_tn::Number`: The loop-corrected free energy density.
-- `exact_phi_onsager::Number`: The exact free energy density from Onsager's solution in the thermodynamic limit.
+- `phi_bp_tn::Number`: The Bethe-Peierls free energy density computed via belief propagation.
+- `phi_bp_corrected_tn::Number`: The loop-corrected free energy density.
+- `phi_exact::Number`: The exact free energy density from Onsager's solution in the thermodynamic limit.
 - `niters::Int`: The number of iterations taken for convergence in belief propagation.
 """
 function main(; beta::Number = 0.2, outputlevel::Int = 1)
-    graph = named_grid((5, 5); periodic = true)
+    g = named_grid((5, 5); periodic = true)
 
-    tensornetwork = ising_tensornetwork(graph, beta)
-    messages, niters = belief_propagation(tensornetwork, graph; niters = 1000, outputlevel)
+    tn = ising_tensornetwork(g, beta)
+    messages, niters = belief_propagation(tn, g; niters = 1000, outputlevel)
 
-    bp_phi_tn = bp_phi(tensornetwork, messages, graph)
+    phi_bp_tn = phi_bp(tn, g, messages)
     smallest_loop_size = 4
-    bp_corrected_phi_tn = bp_corrected_phi(tensornetwork, messages, graph; smallest_loop_size)
-    exact_phi_onsager = ising_phi(beta)
+    phi_bp_corrected_tn = phi_bp_tn + phi_cluster_correction(tn, g, messages; smallest_loop_size)
+    phi_exact = ising_phi(beta)
 
-    return (; bp_phi_tn, bp_corrected_phi_tn, exact_phi_onsager, niters)
+    return (; phi_bp_tn, phi_bp_corrected_tn, phi_exact, tn, g, messages, niters)
 end
