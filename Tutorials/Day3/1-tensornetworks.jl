@@ -1,4 +1,5 @@
-using NamedGraphs: NamedEdge, NamedGraph, add_edges
+using Graphs: add_edge!
+using NamedGraphs: NamedEdge, NamedGraph
 using NamedGraphs.NamedGraphGenerators: named_path_graph
 
 include("ising_tensornetwork.jl")
@@ -23,8 +24,10 @@ A named tuple containing:
 function main(; beta::Number = 0.2, outputlevel::Int = 1)
     # Create a simple graph
     g = NamedGraph([1, 2, 3])
-    edges = [1 => 2, 2 => 3]
-    g = add_edges(g, edges)
+    es = [1 => 2, 2 => 3]
+    for e in es
+        add_edge!(g, e)
+    end
 
     # Construct the tensor network of the classical Ising partition function on the graph
     tn = ising_tensornetwork(g, beta)
@@ -32,5 +35,5 @@ function main(; beta::Number = 0.2, outputlevel::Int = 1)
     # Contract the tensor network to compute the partition function Z
     z = contract_network(tn, g)[]
 
-    return (; tn, g, z)
+    return (; tn, g, beta, z)
 end
