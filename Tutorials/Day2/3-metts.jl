@@ -159,12 +159,13 @@ function main(;
         end
 
         # Measure in X or Z basis on alternating steps
+        rng = StableRNG(123*step)
         if step % 2 == 1
             psi = apply(Ry_gates, psi)
-            samp = sample!(psi)
+            samp = sample!(rng, psi)
             state = [samp[j] == 1 ? "X+" : "X-" for j in 1:nsite]
         else
-            samp = sample!(psi)
+            samp = sample!(rng,psi)
             state = [samp[j] == 1 ? "Z+" : "Z-" for j in 1:nsite]
         end
         if outputlevel > 0 && step % print_every == 0
@@ -173,7 +174,8 @@ function main(;
         psi = MPS(sites, state)
     end
 
-    res = (; H, psi, betas, energies, energy_dmrg, nsite, beta, betastep, cutoff)
+    avg_energy = sum(energies) / NMETTS
+    res = (; H, psi, betas, energies, avg_energy, energy_dmrg, nsite, beta, betastep, cutoff)
     if outputlevel > 1
         animate_tebd_sz(res)
     end
