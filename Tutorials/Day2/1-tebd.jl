@@ -127,7 +127,7 @@ function main(;
         end
     end
 
-    res = (; inital_energy, H, psi, times, szs, energies, entanglements, nsite, time, timestep, cutoff)
+    res = (; initial_energy, H, psi, times, szs, energies, entanglements, nsite, time, timestep, cutoff)
     if outputlevel > 1
         animate_tebd_sz(res)
     end
