@@ -24,7 +24,7 @@ function main(; beta::Number = 0.2, outputlevel::Int = 1)
     # Create a simple graph
     g = NamedGraph([1, 2, 3])
     edges = [1 => 2, 2 => 3]
-    g = add_edges(graph, edges)
+    g = add_edges(g, edges)
 
     # Construct the tensor network of the classical Ising partition function on the graph
     tn = ising_tensornetwork(g, beta)
