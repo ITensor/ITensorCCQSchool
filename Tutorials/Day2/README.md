@@ -282,6 +282,14 @@ Energy Variance│⠀⡇⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀�
                ⠀-0.6⠀⠀⠀⠀⠀⠀⠀⠀Imaginary Time⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀20.6⠀  
 ```
 
+The initial state we used is a random `MPS`constructed via the lines
+```julia>
+    rng = StableRNG(123)
+    psit = random_mps(rng, sites)
+```
+
+3. Try changing the seed of the initial state. Does the result still converge to the ground state? Can you think of what initial states might prevent this happening? Hint: think about the symmetries of the model. Try to construct some. Does the variance still go to zero?
+
 
 Click [here](#table-of-contents) to return to the table of contents.
 
