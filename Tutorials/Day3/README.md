@@ -314,7 +314,7 @@ Study how the error from the BP contraction depends on the geometry of the tenso
 
 You might find it useful to know that you can import various pre-defined constructors for your favourite lattices such as
 ```julia
-julia> NamedGraphs.NamedGraphGenerators: named_hexagonal_lattice_graph, named_comb_tree, named_grid
+julia> using NamedGraphs.NamedGraphGenerators: named_hexagonal_lattice_graph, named_comb_tree, named_grid
 g1 = named_hexagonal_lattice_graph(4,4; periodic = true)
 g2 = named_comb_tree((4,3))
 g3 = named_grid((4,4,4))
