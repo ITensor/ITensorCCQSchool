@@ -20,6 +20,7 @@ A named tuple containing:
 - `tn::Dict{Any, ITensor}`: The tensor network representation of the Ising model on the graph.
 - `g::NamedGraph`: The created graph.
 - `z::Number`: The partition function Z computed by contracting the tensor network.
+- `beta::Number`: Same as above.
 """
 function main(; beta::Number = 0.2, outputlevel::Int = 1)
     # Create a simple graph
@@ -35,5 +36,5 @@ function main(; beta::Number = 0.2, outputlevel::Int = 1)
     # Contract the tensor network to compute the partition function Z
     z = contract_network(tn, g)[]
 
-    return (; tn, g, beta, z)
+    return (; tn, g, z, beta)
 end
