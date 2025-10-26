@@ -69,7 +69,9 @@ function main(;
     end
     H = MPO(terms, sites)
 
-    # Run DMRG to get a reference energy for imaginary time evolution
+    if outputlevel > 0
+        println("Run DMRG to get a reference energy for imaginary time evolution")
+    end
     psi0 = random_mps(sites; linkdims = 10)
     energy_ground_state, psi_ground_state = dmrg(
         H, psi0; nsweeps = 5, maxdim = [10, 20, 100, 100, 200],
@@ -92,6 +94,9 @@ function main(;
     rng = StableRNG(123)
     psit = random_mps(rng, sites)
 
+    if outputlevel > 0
+        println("\nStarting imaginary time evolution")
+    end
     szs = [expect(psit, "Sz")]
     energies = [inner(psit', H, psit)]
     times = 0.0:timestep:time
@@ -116,7 +121,8 @@ function main(;
     end
 
     res = (;
-        H, psit, psi_ground_state, energy_ground_state, times, szs, energies, nsite, time, timestep, cutoff,
+        H, psit, psi_ground_state, energy_ground_state, times, szs, energies, nsite, time,
+        timestep, cutoff,
     )
     if outputlevel > 1
         animate_tebd_sz(res)

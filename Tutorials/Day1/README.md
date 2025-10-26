@@ -75,7 +75,7 @@ Executing `]` at the REPL enables the Pkg REPL, which is more convenient for ent
 5. Use `include` to load the [first tutorial](./Day1/1-julia-intro.jl) into the REPL. That will introduce the function `main` which you can execute to run the tutorial:
 ```julia
 julia> include("1-julia-intro.jl")
-main (generic function with 1 method)
+main
 
 julia> main();
 nterm = 100000
