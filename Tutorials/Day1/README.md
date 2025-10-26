@@ -51,7 +51,7 @@ julia> using LibGit2: clone
 
 julia> clone("https://github.com/ITensor/ITensorCCQSchool", "ITensorCCQSchool")
 ```
-Here we use Julia's  [LibGit2 standard library](https://docs.julialang.org/en/v1/stdlib/LibGit2/). Alternatively you can execute `git clone https://github.com/ITensor/ITensorCCQSchool` directly from a shell.
+Here we use Julia's  [LibGit2 standard library](https://docs.julialang.org/en/v1/stdlib/LibGit2/) to clone the repository containing the tutorials. Alternatively you can execute `git clone https://github.com/ITensor/ITensorCCQSchool` directly from the command line (outside of the Julia REPL).
 
 4. Now that you have Julia installed and the tutorial code available, we will give an introduction to running the first tutorial for day 1 ([Day1/1-julia-intro.jl](./Day1/1-julia-intro.jl)). Enter the `ITensorCCQSchool/Tutorials/Day1` directory using Julia's [`cd`](https://docs.julialang.org/en/v1/base/file/#Base.Filesystem.cd-Tuple{AbstractString}) function and install the dependencies from the Julia REPL:
 ```julia
