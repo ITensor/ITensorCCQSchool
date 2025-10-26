@@ -330,6 +330,8 @@ Using cluster expanded results to improve tensor network contraction is an activ
 
 This is the end of the current tutorial, continue on to the next tutorial or click [here](#table-of-contents) to return to the table of contents.
 
+</details>
+
 <a id="stretch-goals"></a>
 <details>
   <summary><h2>Stretch Goals</h2></summary>
