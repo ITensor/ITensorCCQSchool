@@ -251,7 +251,7 @@ julia> res.energies .- res.energy
 
 ```
 
-1. Notice how the energy is converging to that of the DMRG calculation. You can show an animation of the local $Sz$ of each spin in the chain by passing `outputlevel = 2` as a `kwarg` to `main()`. Observe how the system relaxes to a state with no local magnetisation. 
+1. Notice how the energy is converging to that of the DMRG calculation. You can show an animation of the local $Sz$ of each spin in the chain by passing `outputlevel = 2` as a keyword argument to `main()`. Observe how the system relaxes to a state with no local magnetization. 
 
 We can calculate the variance of `psit` to observe how close it is to an eigenstate of `H`. Specifically the variance is given by
 
