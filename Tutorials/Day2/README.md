@@ -148,7 +148,7 @@ julia> psit = MPS(sites, ["Z+" for i in 1:nsite])
 Note that you should comment out parts of the code where the initial state was created by DMRG and then excited (lines 81-85 and 100-102) and substitute them for:
 
 ```julia
-    psit = ITensorMPS.MPS(sites, ["Z+" for i in 1:nsite])
+    psit = MPS(sites, ["Z+" for i in 1:nsite])
     initial_energy = inner(psit', H, psit)
 ```
 
