@@ -29,9 +29,9 @@ error.
 
 # Returns
 A named tuple containing:
-- `nterm::Int`: The number of terms used in the approximation of `pi`.
 - `pi_approx::Float64`: The approximate value of `pi`.
 - `error::Float64`: The absolute error in the approximation of `pi`.
+- `nterm::Int`: Same as above.
 """
 function main(; nterm::Int = 10^5, outputlevel::Int = 1)
     # Print the number of terms to use to approximate `pi`.
@@ -53,7 +53,7 @@ function main(; nterm::Int = 10^5, outputlevel::Int = 1)
         println("Error: ", error)
     end
 
-    # Return the number of terms in the series, approximation to `pi`, and
-    # absolute error.
-    return (; nterm, pi_approx, error)
+    # Return the approximation to `pi`, the absolute error,
+    # and the number of terms used in the approximation.
+    return (; pi_approx, error, nterm)
 end
