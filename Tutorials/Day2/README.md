@@ -301,7 +301,7 @@ Click [here](#table-of-contents) to return to the table of contents.
   <summary><h2>Tutorial 3: Finite Temperature</h2></summary>
   <hr>
 
-We are now going to run the METTS (Minimally entangled thermal states) algorithm to extract finite temperature properties of the system whilst remaining in the pure state picture. This is done in the file [3-metts.jl](./3-metts.jl).
+We are now going to run the METTS (minimally entangled thermal states) algorithm to extract finite temperature properties of the system whilst remaining in the pure state picture. This is done in the file [3-metts.jl](./3-metts.jl).
 
 ```julia
 julia> include("3-metts.jl")
