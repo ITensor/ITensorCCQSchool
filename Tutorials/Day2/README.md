@@ -185,7 +185,7 @@ Entanglement│⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡠⠊⠁�
             ⠀-0.18⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Time⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀6.18⠀ 
 ``` 
 
-How does this differ to the first initial state we used (the locally excited ground state)? What does this imply for the growth of the bond dimension of the function of time to maintain accuracy? Hint: for an arbitrary MPS of bond dimension $\chi$, the bound $S_{\rm Von Neumann} \leq log_{2}(\chi)$ is true. 
+How does this differ to the first initial state we used (the locally excited ground state)? What does this imply for the growth of the bond dimension of the function of time to maintain accuracy? Hint: for an arbitrary MPS of bond dimension $\chi$, $S_{\rm Von Neumann} \leq log_{2}(\chi)$.
 
 Click [here](#table-of-contents) to return to the table of contents.
 
