@@ -8,13 +8,26 @@ using Plots: Plots, plot
 
 include("../src/animate.jl")
 
+function plot_dmrg_sz(sz::Vector{Float64}, nsite::Int; title = "")
+    return plot(
+        sz; xlim = (1, nsite), ylim = (-0.25, 0.25),
+        xlabel = "Site j", ylabel = "⟨Szⱼ⟩", legend = false, title
+    )
+end
+function plot_dmrg_sz(res; kwargs...)
+    return plot_dmrg_sz(res.sz, res.nsite; kwargs...)
+end
 function animate_dmrg_sz(res; fps = res.nsite)
     return animate(; nframes = length(res.szs), fps) do i
-        return plot(
-            res.szs[i]; xlim = (1, res.nsite), ylim = (-0.25, 0.25), xlabel = "Site j",
-            ylabel = "⟨Szⱼ⟩", legend = false, title = "Sweep = $(i ÷ (2 * res.nsite) + 1)"
-        )
+        return plot_dmrg_sz(res.szs[i], res.nsite; title = "Sweep = $(i ÷ (2 * res.nsite) + 1)")
     end
+end
+
+function plot_dmrg_szsz(res)
+    return plot(
+        res.szsz[res.nsite ÷ 2, :]; xlim = (1, res.nsite), ylim = (-0.25, 0.25),
+        xlabel = "Site k", ylabel = "⟨SzⱼSzₖ⟩", legend = false
+    )
 end
 
 @kwdef struct SzObserver <: AbstractObserver
@@ -102,26 +115,13 @@ function main(;
     end
 
     sz = expect(psi, "Sz")
-    if outputlevel > 0
-        display(
-            plot(
-                sz; xlim = (1, nsite), ylim = (-0.25, 0.25),
-                xlabel = "Site j", ylabel = "⟨Szⱼ⟩", legend = false
-            )
-        )
-    end
-
     szsz = correlation_matrix(psi, "Sz", "Sz")
-    if outputlevel > 0
-        display(
-            plot(
-                szsz[nsite ÷ 2, :]; xlim = (1, nsite), ylim = (-0.25, 0.25),
-                xlabel = "Site k", ylabel = "⟨SzⱼSzₖ⟩", legend = false
-            )
-        )
-    end
 
     res = (; energy, H, psi, sz, szsz, szs, nsite, nsweeps, maxdim, cutoff)
+    if outputlevel > 0
+        display(plot_dmrg_sz(res))
+        display(plot_dmrg_szsz(res))
+    end
     if outputlevel > 1
         animate_dmrg_sz(res)
     end
