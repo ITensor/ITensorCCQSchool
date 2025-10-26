@@ -22,7 +22,7 @@ function animate_tebd_sz(res; fps = res.nsite)
     return animate(i -> plot_tebd_sz(res; step = i); nframes = length(res.szs), fps)
 end
 
-function entanglement_entropy(ψ::MPS, bond::Int = round(Int, length(ψ) / 2); cutoff = 1e-12, kwargs...)
+function entanglement_entropy(ψ::MPS, bond::Int = length(ψ) ÷ 2); cutoff = 1e-12)
     ψ = normalize(ψ)
     ψ = orthogonalize(ψ, bond)
     U, S, V = svd(ψ[bond], (linkinds(ψ, bond - 1)..., siteinds(ψ, bond)...))
