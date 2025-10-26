@@ -230,7 +230,7 @@ Bond dimension: 40
 ⟨ψₜ|H|ψₜ⟩: -13.109727125683662
 
 
-julia> res.energies .- res.energy
+julia> res.energies .- res.energy_ground_state
 101-element Vector{Float64}:
  13.344740259203546
  11.607416095173846

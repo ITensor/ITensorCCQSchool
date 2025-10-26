@@ -128,7 +128,7 @@ function main(;
     end
 
     res = (;
-        H, psi, energy_ground_state, times, szs, energies, entanglements, nsite, time,
+        H, psi, times, szs, energies, entanglements, nsite, time,
         timestep, cutoff,
     )
     if outputlevel > 1

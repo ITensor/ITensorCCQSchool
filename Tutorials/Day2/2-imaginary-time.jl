@@ -37,9 +37,10 @@ imaginary time evolution to find the ground state.
 
 # Returns
 A named tuple containing:
-- `energy::Float64`: The final energy after time evolution.
 - `H::MPO`: The Hamiltonian as an MPO.
-- `psi::MPS`: The final wavefunction after time evolution as an MPS.
+- `psit::MPS`: The final wavefunction after time evolution as an MPS.
+- `psi_ground_state::MPS`: The ground state from DMRG.
+- `energy_ground_state::Float64`: The ground state energy from DMRG.
 - `times::Vector{Float64}`: Vector of time points at which measurements were taken.
 - `szs::Vector{Vector{Float64}}`: Vector of ⟨Sz⟩ measurements at each time point.
 - `energies::Vector{Float64}`: Vector of energy measurements at each time point.
@@ -70,7 +71,7 @@ function main(;
 
     # Run DMRG to get a reference energy for imaginary time evolution
     psi0 = random_mps(sites; linkdims = 10)
-    energy, psi = dmrg(
+    energy_ground_state, psi_ground_state = dmrg(
         H, psi0; nsweeps = 5, maxdim = [10, 20, 100, 100, 200],
         cutoff = [1.0e-10], outputlevel = min(outputlevel, 1)
     )
@@ -114,7 +115,9 @@ function main(;
         end
     end
 
-    res = (; energy, H, psi, times, szs, energies, nsite, time, timestep, cutoff)
+    res = (;
+        H, psit, psi_ground_state, energy_ground_state, times, szs, energies, nsite, time, timestep, cutoff,
+    )
     if outputlevel > 1
         animate_tebd_sz(res)
     end

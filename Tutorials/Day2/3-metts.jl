@@ -25,11 +25,13 @@ function animate_tebd_sz(res; fps = res.nsite)
 end
 
 """
+    mean_and_sem(v::Vector)
+
 Given a Vector of numbers, returns
 the mean (average) and the standard error
-(= the width of distribution of the numbers)
+of the mean (= the width of distribution of the numbers).
 """
-function mean_and_err(v::Vector)
+function mean_and_sem(v::Vector)
     N = length(v)
     mean = v[1] / N
     mean2 = v[1]^2 / N
@@ -146,13 +148,13 @@ function main(;
             if outputlevel > 0 && step % print_every == 0
                 @printf("  Energy of METTS %d = %.4f\n", step - Nwarm, energy)
                 @printf("  Energy of ground state from DMRG %.4f\n", energy_dmrg)
-                a_E, err_E = mean_and_err(energies)
+                mean_energy, sem_energy = mean_and_sem(energies)
                 @printf(
                     "  Estimated Energy = %.4f +- %.4f  [%.4f,%.4f]\n",
-                    a_E,
-                    err_E,
-                    a_E - err_E,
-                    a_E + err_E
+                    mean_energy,
+                    sem_energy,
+                    mean_energy - sem_energy,
+                    mean_energy + sem_energy
                 )
             end
         end
