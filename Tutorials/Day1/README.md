@@ -103,7 +103,7 @@ julia> res.error
 9.999899927226608e-6
 
 julia> keys(res)
-(:nterm, :pi_approx, :error)
+(:pi_approx, :error, :nterm)
 
 julia> (; pi_approx, error) = res
 
@@ -166,7 +166,7 @@ julia> pwd()
 "[...]/ITensorCCQSchool/Tutorials/Day1"
 
 julia> readdir()
-[...]-element Vector{String}:
+7-element Vector{String}:
  "1-julia-intro.jl"
  "2-dmrg.jl"
  "3-dmrg-measure.jl"
@@ -307,11 +307,11 @@ maxdim: [10, 20, 100, 100, 200]
 cutoff: [1.0e-10]
 MPO bond dimension: 5
 Initial MPS bond dimension: 10
-After sweep 1 energy=-13.096407053604542  maxlinkdim=10 maxerr=1.76E-03 time=0.031
-After sweep 2 energy=-13.11131477426564  maxlinkdim=20 maxerr=3.09E-07 time=0.036
-After sweep 3 energy=-13.111355746388746  maxlinkdim=47 maxerr=9.99E-11 time=0.126
-After sweep 4 energy=-13.11135575201415  maxlinkdim=47 maxerr=9.63E-11 time=0.115
-After sweep 5 energy=-13.111355752020133  maxlinkdim=47 maxerr=9.40E-11 time=0.114
+After sweep 1 energy=-13.096407053604542  maxlinkdim=10 maxerr=1.76E-03 time=7.821
+After sweep 2 energy=-13.11131477426564  maxlinkdim=20 maxerr=3.09E-07 time=0.053
+After sweep 3 energy=-13.111355746388746  maxlinkdim=47 maxerr=9.99E-11 time=0.101
+After sweep 4 energy=-13.11135575201415  maxlinkdim=47 maxerr=9.63E-11 time=0.168
+After sweep 5 energy=-13.111355752020133  maxlinkdim=47 maxerr=9.40E-11 time=0.130
 Optimized MPS bond dimension: 47
 DMRG energy: -13.111355752020133
 
