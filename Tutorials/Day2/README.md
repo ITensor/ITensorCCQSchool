@@ -164,7 +164,7 @@ What do you notice about the dynamics of the quench now? Hint: think about the s
 Plot the entanglement entropy as a function of time.
 
 ```julia
-julia> plot(res.times, res.entanglements, xlabel = "Time", ylabel = "Entanglement")
+julia> plot(res.times, res.entanglements; xlabel = "Time", ylabel = "Entanglement")
             ┌────────────────────────────────────────┐  
       3.0758│⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⠔⠀│y1
             │⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⠴⠊⠀⠀⠀│  
