@@ -425,7 +425,7 @@ The specific heat of the spin 1/2 antiferromagnetic Heisenberg model is known to
 
 ```julia
 
-julia> plot([beta*beta for beta in betas], specific_heats, xlabel = "Beta", ylabel = "Specific Heat")
+julia> plot(betas .^ 2, specific_heats; xlabel = "Beta", ylabel = "Specific Heat")
              ┌────────────────────────────────────────┐  
      0.047881│⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠤⠀│y1
              │⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡠⠒⠁⠀⠀│  
