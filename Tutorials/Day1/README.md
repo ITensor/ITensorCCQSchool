@@ -91,7 +91,7 @@ pi_approx = 3.1416026534897203
 error = 9.999899927226608e-6
 
 julia> res
-(nterm = 100000, pi_approx = 3.1416026534897203, error = 9.999899927226608e-6)
+(pi_approx = 3.1416026534897203, error = 9.999899927226608e-6, nterm = 100000)
 
 ```
 `res = main()` captures the output of the script to the [NamedTuple](https://docs.julialang.org/en/v1/base/base/#Core.NamedTuple) `res`, which you can think of as an anonymous struct. You can access values from `res` as follows:
@@ -134,7 +134,7 @@ and you can learn about other parameters by printing the documentation using Jul
 julia> ?
 
 help?> main
-search: main @main min Main Pair map join in mark asin wait sin max tan map!
+search: main @main min Main Pair join map mark asin wait max map! sin in tan
 
   main(; kwargs...)
 
@@ -144,14 +144,17 @@ search: main @main min Main Pair map join in mark asin wait sin max tan map!
   ≡≡≡≡≡≡≡≡
 
     •  nterm::Int = 10^5: The number of terms to use in the approximation of pi.
-    •  outputlevel::Int = 1: Controls the verbosity of the output.
+    •  outputlevel::Int = 1: Controls how much information will be printed by the
+       script.
 
-  Outputs
+  Returns
   ≡≡≡≡≡≡≡
 
-    •  nterm::Int: The number of terms used in the approximation of pi.
+  A named tuple containing:
+
     •  pi_approx::Float64: The approximate value of pi.
     •  error::Float64: The absolute error in the approximation of pi.
+    •  nterm::Int: Same as above.
 
 julia>
 
