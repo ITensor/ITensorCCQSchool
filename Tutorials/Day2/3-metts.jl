@@ -1,4 +1,4 @@
-using ITensorMPS: MPO, MPS, OpSum, dmrg, maxlinkdim, random_mps, sample!, siteinds
+using ITensorMPS: MPS, MPO, OpSum, dmrg, maxlinkdim, random_mps, sample!, siteinds
 # Functions for performing measurements of MPS
 using ITensorMPS: expect, inner
 # Functions for time evolution
@@ -25,19 +25,21 @@ function animate_tebd_sz(res; fps = res.nsite)
 end
 
 """
+    mean_and_sem(v::Vector)
+
 Given a Vector of numbers, returns
-the average and the standard error
-(= the width of distribution of the numbers)
+the mean (average) and the standard error
+of the mean (= the width of distribution of the numbers).
 """
-function avg_err(v::Vector)
+function mean_and_sem(v::Vector)
     N = length(v)
-    avg = v[1] / N
-    avg2 = v[1]^2 / N
+    mean = v[1] / N
+    mean2 = v[1]^2 / N
     for j in 2:N
-        avg += v[j] / N
-        avg2 += v[j]^2 / N
+        mean += v[j] / N
+        mean2 += v[j]^2 / N
     end
-    return avg, √((avg2 - avg^2) / N)
+    return mean, √((mean2 - mean^2) / N)
 end
 
 """
@@ -112,7 +114,6 @@ function main(;
     # Make starting state
     rng = StableRNG(123)
     psi = random_mps(rng, sites)
-    psi = normalize(psi)
 
     # Make y-rotation gates to use in METTS collapses
     Ry_gates = [op("Ry", sites[j]; θ = π / 2) for j in 1:nsite]
@@ -147,13 +148,13 @@ function main(;
             if outputlevel > 0 && step % print_every == 0
                 @printf("  Energy of METTS %d = %.4f\n", step - Nwarm, energy)
                 @printf("  Energy of ground state from DMRG %.4f\n", energy_dmrg)
-                a_E, err_E = avg_err(energies)
+                mean_energy, sem_energy = mean_and_sem(energies)
                 @printf(
                     "  Estimated Energy = %.4f +- %.4f  [%.4f,%.4f]\n",
-                    a_E,
-                    err_E,
-                    a_E - err_E,
-                    a_E + err_E
+                    mean_energy,
+                    sem_energy,
+                    mean_energy - sem_energy,
+                    mean_energy + sem_energy
                 )
             end
         end
@@ -161,10 +162,10 @@ function main(;
         # Measure in X or Z basis on alternating steps
         if step % 2 == 1
             psi = apply(Ry_gates, psi)
-            samp = sample!(psi)
+            samp = sample!(rng, psi)
             state = [samp[j] == 1 ? "X+" : "X-" for j in 1:nsite]
         else
-            samp = sample!(psi)
+            samp = sample!(rng, psi)
             state = [samp[j] == 1 ? "Z+" : "Z-" for j in 1:nsite]
         end
         if outputlevel > 0 && step % print_every == 0

@@ -1,9 +1,9 @@
-using ITensorMPS: MPO, OpSum, dmrg, maxlinkdim, random_mps, siteinds
+using ITensorMPS: MPS, MPO, OpSum, dmrg, maxlinkdim, random_mps, siteinds, linkinds
 # Functions for performing measurements of MPS
-using ITensorMPS: expect, inner
+using ITensorMPS: expect, inner, orthogonalize
 # Functions for time evolution
 using ITensorMPS: apply, op
-using LinearAlgebra: normalize
+using LinearAlgebra: normalize, diag, svd
 # Use to set the RNG seed for reproducibility
 using StableRNGs: StableRNG
 # Load the Plots package for plotting
@@ -20,6 +20,15 @@ end
 
 function animate_tebd_sz(res; fps = res.nsite)
     return animate(i -> plot_tebd_sz(res; step = i); nframes = length(res.szs), fps)
+end
+
+function entanglement_entropy(ψ::MPS, bond::Int = length(ψ) ÷ 2; cutoff = 1.0e-12)
+    ψ = normalize(ψ)
+    ψ = orthogonalize(ψ, bond)
+    U, S, V = svd(ψ[bond], (linkinds(ψ, bond - 1)..., siteinds(ψ, bond)...))
+    Sd = Array(diag(S))
+    Sd2 = Sd .^ 2
+    return sum(d -> (d > cutoff) ? -d * log(d) : 0.0, Sd2)
 end
 
 """
@@ -53,7 +62,7 @@ function main(;
         # Number of sites
         nsite = 30,
         # TEBD parameters
-        time = 5.0,
+        time = 6.0,
         timestep = 0.1,
         cutoff = 1.0e-10,
         outputlevel = 1,
@@ -61,7 +70,8 @@ function main(;
     # Build the physical indices for nsite spins (spin 1/2)
     sites = siteinds("S=1/2", nsite)
 
-    # Run DMRG to get starting state for time evolution
+    # Build the Heisenberg Hamiltonian as an MPO for computing energies,
+    # running DMRG, etc.
     terms = OpSum()
     for j in 1:(nsite - 1)
         terms += 1 / 2, "S+", j, "S-", j + 1
@@ -69,11 +79,16 @@ function main(;
         terms += "Sz", j, "Sz", j + 1
     end
     H = MPO(terms, sites)
+
+    # Run DMRG to get a starting state for time evolution
     psi0 = random_mps(sites; linkdims = 10)
-    energy, psi = dmrg(
+    _, psi = dmrg(
         H, psi0; nsweeps = 5, maxdim = [10, 20, 100, 100, 200],
         cutoff = [1.0e-10], outputlevel = min(outputlevel, 1)
     )
+    # Make the starting state by applying `S+` to the center of the chain
+    j = nsite ÷ 2
+    psit = normalize(apply(op("S+", sites[j]), psi))
 
     # Make gates (1, 2), (2, 3), (3, 4), ...
     gates = map(1:(nsite - 1)) do j
@@ -87,22 +102,18 @@ function main(;
     # (N, N - 1), (N - 1, N - 2), ...
     append!(gates, reverse(gates))
 
-    # Make starting state
-    j = nsite ÷ 2
-    psit = apply(op("S+", sites[j]), psi)
-    psit = normalize(psit)
-
     szs = [expect(psit, "Sz")]
     energies = ComplexF64[inner(psit', H, psit)]
+    entanglements = [entanglement_entropy(psit, nsite ÷ 2)]
     times = 0.0:timestep:time
     print_every = 1
     for current_time in times[2:end]
-        psit = apply(gates, psit; cutoff)
-        psit = normalize(psit)
+        psit = normalize(apply(gates, psit; cutoff))
         energy_t = inner(psit', H, psit)
         sz_t = expect(psit, "Sz")
         push!(szs, sz_t)
         push!(energies, energy_t)
+        push!(entanglements, entanglement_entropy(psit, nsite ÷ 2))
         if floor(current_time - timestep + 10eps()) ≠ floor(current_time) &&
                 floor(current_time) % print_every == 0
             if outputlevel > 0
@@ -116,7 +127,10 @@ function main(;
         end
     end
 
-    res = (; energy, H, psi, times, szs, energies, nsite, time, timestep, cutoff)
+    res = (;
+        H, psi, times, szs, energies, entanglements, nsite, time,
+        timestep, cutoff,
+    )
     if outputlevel > 1
         animate_tebd_sz(res)
     end

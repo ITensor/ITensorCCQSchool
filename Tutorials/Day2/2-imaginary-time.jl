@@ -1,4 +1,4 @@
-using ITensorMPS: MPO, OpSum, dmrg, maxlinkdim, random_mps, siteinds
+using ITensorMPS: MPS, MPO, OpSum, dmrg, maxlinkdim, random_mps, siteinds
 # Functions for performing measurements of MPS
 using ITensorMPS: expect, inner
 # Functions for time evolution
@@ -37,9 +37,10 @@ imaginary time evolution to find the ground state.
 
 # Returns
 A named tuple containing:
-- `energy::Float64`: The final energy after time evolution.
 - `H::MPO`: The Hamiltonian as an MPO.
-- `psi::MPS`: The final wavefunction after time evolution as an MPS.
+- `psit::MPS`: The final wavefunction after time evolution as an MPS.
+- `psi_ground_state::MPS`: The ground state from DMRG.
+- `energy_ground_state::Float64`: The ground state energy from DMRG.
 - `times::Vector{Float64}`: Vector of time points at which measurements were taken.
 - `szs::Vector{Vector{Float64}}`: Vector of ⟨Sz⟩ measurements at each time point.
 - `energies::Vector{Float64}`: Vector of energy measurements at each time point.
@@ -60,7 +61,6 @@ function main(;
     # Build the physical indices for nsite spins (spin 1/2)
     sites = siteinds("S=1/2", nsite)
 
-    # Run DMRG to get starting state for time evolution
     terms = OpSum()
     for j in 1:(nsite - 1)
         terms += 1 / 2, "S+", j, "S-", j + 1
@@ -68,8 +68,10 @@ function main(;
         terms += "Sz", j, "Sz", j + 1
     end
     H = MPO(terms, sites)
+
+    # Run DMRG to get a reference energy for imaginary time evolution
     psi0 = random_mps(sites; linkdims = 10)
-    energy, psi = dmrg(
+    energy_ground_state, psi_ground_state = dmrg(
         H, psi0; nsweeps = 5, maxdim = [10, 20, 100, 100, 200],
         cutoff = [1.0e-10], outputlevel = min(outputlevel, 1)
     )
@@ -89,15 +91,13 @@ function main(;
     # Make starting state
     rng = StableRNG(123)
     psit = random_mps(rng, sites)
-    psit = normalize(psit)
 
     szs = [expect(psit, "Sz")]
     energies = [inner(psit', H, psit)]
     times = 0.0:timestep:time
     print_every = 5
     for current_time in times[2:end]
-        psit = apply(gates, psit; cutoff)
-        psit = normalize(psit)
+        psit = normalize(apply(gates, psit; cutoff))
         energy_t = inner(psit', H, psit)
         sz_t = expect(psit, "Sz")
         push!(szs, sz_t)
@@ -115,7 +115,9 @@ function main(;
         end
     end
 
-    res = (; energy, H, psi, times, szs, energies, nsite, time, timestep, cutoff)
+    res = (;
+        H, psit, psi_ground_state, energy_ground_state, times, szs, energies, nsite, time, timestep, cutoff,
+    )
     if outputlevel > 1
         animate_tebd_sz(res)
     end
