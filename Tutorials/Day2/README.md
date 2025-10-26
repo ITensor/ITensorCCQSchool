@@ -358,96 +358,92 @@ julia> include("3-metts.jl")
 
 julia> res = main();
 Making warmup METTS number 10
-  Sampled state: ["Z-", "Z+", "Z+", "Z-", "Z+", "Z-", "Z+", "Z-", "Z+", "Z-"]
-Making METTS number 10
-  Energy of METTS 10 = -4.0978
-  Energy of ground state from DMRG -4.2580
-  Estimated Energy = -4.1171 +- 0.0318  [-4.1489,-4.0853]
-  Sampled state: ["Z-", "Z-", "Z+", "Z-", "Z-", "Z+", "Z+", "Z-", "Z-", "Z+"]
-Making METTS number 20
-  Energy of METTS 20 = -3.5787
-  Energy of ground state from DMRG -4.2580
-  Estimated Energy = -4.0288 +- 0.0453  [-4.0741,-3.9836]
-  Sampled state: ["Z+", "Z-", "Z-", "Z+", "Z-", "Z+", "Z+", "Z-", "Z-", "Z+"]
-Making METTS number 30
-  Energy of METTS 30 = -4.1557
-  Energy of ground state from DMRG -4.2580
-  Estimated Energy = -4.0074 +- 0.0370  [-4.0443,-3.9704]
   Sampled state: ["Z-", "Z+", "Z+", "Z+", "Z-", "Z-", "Z+", "Z-", "Z+", "Z-"]
+Making METTS number 10
+  Energy of METTS 10 = -3.8574
+  Energy of ground state from DMRG -4.2580
+  Estimated Energy = -4.0282 +- 0.0470  [-4.0751,-3.9812]
+  Sampled state: ["Z-", "Z-", "Z+", "Z+", "Z-", "Z+", "Z-", "Z+", "Z+", "Z-"]
+Making METTS number 20
+  Energy of METTS 20 = -3.8099
+  Energy of ground state from DMRG -4.2580
+  Estimated Energy = -4.0215 +- 0.0353  [-4.0567,-3.9862]
+  Sampled state: ["Z-", "Z-", "Z+", "Z-", "Z-", "Z+", "Z+", "Z-", "Z-", "Z+"]
+Making METTS number 30
+  Energy of METTS 30 = -3.7525
+  Energy of ground state from DMRG -4.2580
+  Estimated Energy = -3.9553 +- 0.0403  [-3.9956,-3.9149]
+  Sampled state: ["Z-", "Z-", "Z+", "Z-", "Z+", "Z+", "Z-", "Z-", "Z+", "Z-"]
 Making METTS number 40
-  Energy of METTS 40 = -3.8662
+  Energy of METTS 40 = -3.7525
   Energy of ground state from DMRG -4.2580
-  Estimated Energy = -3.9767 +- 0.0333  [-4.0100,-3.9434]
-  Sampled state: ["Z-", "Z+", "Z-", "Z-", "Z-", "Z+", "Z+", "Z-", "Z+", "Z-"]
+  Estimated Energy = -3.9531 +- 0.0325  [-3.9856,-3.9207]
+  Sampled state: ["Z-", "Z-", "Z+", "Z-", "Z+", "Z-", "Z+", "Z-", "Z-", "Z+"]
 Making METTS number 50
-  Energy of METTS 50 = -3.8099
+  Energy of METTS 50 = -3.8910
   Energy of ground state from DMRG -4.2580
-  Estimated Energy = -3.9556 +- 0.0301  [-3.9856,-3.9255]
-  Sampled state: ["Z+", "Z+", "Z-", "Z+", "Z-", "Z-", "Z+", "Z-", "Z-", "Z+"]
+  Estimated Energy = -3.9307 +- 0.0306  [-3.9613,-3.9001]
+  Sampled state: ["Z-", "Z+", "Z+", "Z-", "Z+", "Z-", "Z+", "Z-", "Z-", "Z+"]
 Making METTS number 60
-  Energy of METTS 60 = -3.8595
+  Energy of METTS 60 = -4.1383
   Energy of ground state from DMRG -4.2580
-  Estimated Energy = -3.9723 +- 0.0264  [-3.9987,-3.9459]
-  Sampled state: ["Z+", "Z-", "Z+", "Z-", "Z+", "Z+", "Z-", "Z+", "Z-", "Z+"]
+  Estimated Energy = -3.9222 +- 0.0350  [-3.9572,-3.8872]
+  Sampled state: ["Z+", "Z-", "Z-", "Z+", "Z-", "Z+", "Z-", "Z+", "Z+", "Z-"]
 Making METTS number 70
-  Energy of METTS 70 = -4.1383
+  Energy of METTS 70 = -3.7682
   Energy of ground state from DMRG -4.2580
-  Estimated Energy = -3.9683 +- 0.0236  [-3.9919,-3.9447]
-  Sampled state: ["Z-", "Z+", "Z-", "Z+", "Z-", "Z+", "Z-", "Z-", "Z+", "Z-"]
+  Estimated Energy = -3.9442 +- 0.0313  [-3.9755,-3.9129]
+  Sampled state: ["Z-", "Z+", "Z-", "Z+", "Z-", "Z-", "Z+", "Z-", "Z+", "Z-"]
 Making METTS number 80
-  Energy of METTS 80 = -4.1383
+  Energy of METTS 80 = -3.6767
   Energy of ground state from DMRG -4.2580
-  Estimated Energy = -3.9765 +- 0.0217  [-3.9982,-3.9548]
-  Sampled state: ["Z-", "Z+", "Z-", "Z+", "Z-", "Z+", "Z+", "Z-", "Z+", "Z-"]
+  Estimated Energy = -3.9308 +- 0.0286  [-3.9594,-3.9022]
+  Sampled state: ["Z-", "Z+", "Z+", "Z-", "Z+", "Z-", "Z+", "Z-", "Z-", "Z+"]
 Making METTS number 90
-  Energy of METTS 90 = -4.1383
+  Energy of METTS 90 = -3.4279
   Energy of ground state from DMRG -4.2580
-  Estimated Energy = -3.9760 +- 0.0203  [-3.9963,-3.9557]
-  Sampled state: ["Z-", "Z+", "Z-", "Z-", "Z-", "Z+", "Z+", "Z-", "Z+", "Z-"]
+  Estimated Energy = -3.9253 +- 0.0268  [-3.9521,-3.8984]
+  Sampled state: ["Z+", "Z-", "Z+", "Z-", "Z+", "Z-", "Z+", "Z+", "Z-", "Z+"]
 Making METTS number 100
-  Energy of METTS 100 = -3.8843
+  Energy of METTS 100 = -4.1412
   Energy of ground state from DMRG -4.2580
-  Estimated Energy = -3.9652 +- 0.0190  [-3.9842,-3.9462]
-  Sampled state: ["Z-", "Z-", "Z+", "Z-", "Z+", "Z+", "Z-", "Z+", "Z+", "Z-"]
+  Estimated Energy = -3.9331 +- 0.0247  [-3.9578,-3.9084]
+  Sampled state: ["Z-", "Z-", "Z+", "Z+", "Z+", "Z-", "Z-", "Z+", "Z-", "Z+"]
 ```
 
-The specific heat can be approximated from the METTS algorithm via the following formula
+The specific heat can be approximated from the METTS algorithm via the following formula:
 
 $C_{v}(\beta) = \frac{\beta^{2}}{\rm NMETTS}\left(\overline{\langle H^{2} \rangle} - \overline{\langle H \rangle^{2}} \right)$
 
 where $\overline{X}$ denotes the METTS ensemble average. You can measure the square energy of a given METTS via 
 
 ```julia
-julia> inner(H, psi, H, psi)
+inner(H, psi, H, psi)
 ```
 
 1. Modify `main()` to keep track of the square energy of each METT after it has been evolved. Average over these, and the energies (which are already kept track off) at the end of the simulation to calculate $C_{v}(\beta)$ for the given $\beta$ and have it returned by main. Check that this gives a sensible answer from `main()`. For the default parameters ($\beta = 4.0$, NMETTS $=100$) provided you should find $C_{v}(\beta = 4.0) \approx 0.19$ (the RNG for the initial state and sampling is seeded to be reproducable).
-
 ```julia
 julia> res = main(; outputlevel = 0);
 
 julia> res.specific_heat
 0.1906972673732355
 ```
+Next we are going to measure the specific heat as a function of inverse temperature.
 
-No we are going to measure the specific heat as a function of inverse temperature.
-
-2. Construct an array of $\beta$ values spanning $0 \leq \beta \leq 8.0$, for instance
-
+2. Construct an array of $\beta$ values:
 ```julia
+julia> betas = 0.2 * (1:41)
+0.2:0.2:8.2
 
-julia> betas = [0.2 * i for i in 1:41];
 ```
-
-and then create a vector of simulation outputs for these `betas`. E.g
-
+and then create a vector of simulation outputs for these `betas`:
 ```julia
-julia> results = [main(; beta, betastep = 0.1, NMETTS=25) for beta in betas]
+julia> results = [main(; beta, betastep = 0.1, NMETTS = 25) for beta in betas];
 ```
-
-This might take a few minutes to run, so play around with the setting of `NMETTS`. We suggest setting NMETTS = 25 to get a coarse grained result. Plot the result.
-
+This might take a few minutes to run, so play around with the setting of `NMETTS`. We suggest setting `NMETTS = 25` to get a coarse grained result. Try plotting the result:
 ```julia
+julia> specific_heats = [res.specific_heat for res in results];
+
 julia> plot(betas, specific_heats; xlabel = "Beta", ylabel = "Specific Heat", legend = false)
              ┌────────────────────────────────────────┐  
      0.393288│⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⠀⠀⠀⠀⠀⣀⠀⠀⠀⠀⡦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
@@ -468,13 +464,10 @@ Specific Heat│⡇⠀⠀⠀⠀⡸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇�
              └────────────────────────────────────────┘  
              ⠀-0.034⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Beta⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀8.234⠀ 
 ```
+The specific heat of the spin 1/2 antiferromagnetic Heisenberg model is known to display a broad peak at $T = 0.48J$ (here we have $J = 1$) with a maximum value of $~0.35J$. Do your results agree with this?
 
-The specific heat of the spin 1/2 antiferromagnetic Heisenberg model is known to display a broad peak at $T = 0.48J$ (here we have $J=  1$) with a maximum value of $~0.35J$. Do your results agree with this? 
-
-3. The high temperature regime should display an inverse square dependence of the specific heat with temperature, i.e $C_{v} \propto \frac{1}{T^{2}}$. Use a range $0 \leq \beta \leq 0.5$ to try to confirm this. When using a finer range of betas, make sure to adjust the step size in `main` to be commensurate or you will get an error message.
-
+3. The high temperature regime should display an inverse square dependence of the specific heat with temperature, i.e $C_{v} \propto \frac{1}{T^{2}}$. Use a range $0 \leq \beta \leq 0.5$ to try to confirm this. When using a finer range of betas, make sure to adjust the step size in `main` to be commensurate or you will get an error message. You should be able to reproduce a plot like:
 ```julia
-
 julia> plot(betas .^ 2, specific_heats; xlabel = "Beta", ylabel = "Specific Heat", legend = false)
              ┌────────────────────────────────────────┐  
      0.047881│⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠤⠀│
@@ -494,7 +487,10 @@ Specific Heat│⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠎⠁�
    -0.0010349│⢼⠴⠯⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤│  
              └────────────────────────────────────────┘  
              ⠀-0.004925⠀⠀⠀⠀⠀⠀⠀⠀Beta⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀0.257425⠀
+
 ```
+
+This is the end of the current tutorial, continue on to the next tutorial or click [here](#table-of-contents) to return to the table of contents.
 
 </details>
 
@@ -503,9 +499,9 @@ Specific Heat│⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠎⠁�
   <summary><h2>Stretch Goals</h2></summary>
   <hr>
 
-If you completed all the tutorials and would like more of a challenge, choose from among the following "stretch goal" activities.
+If you completed all the tutorials and would like more of a challenge, you can try the following "stretch goal".
 
-1. In the low temperature regime the spin 1/2 1D Heisenberg model is known to be a gapless Luttinger Liquid which is a phase of matter characterised by a specific heat $C_{v} \propto T$. See if you can confirm this by running the METTS code in the low temperature regime (say $8.0 \leq \beta \leq 10.0$) and measuring the specific heat capacity. Note that in this low-temperature regime, fluctuations and finite-size effects will be more significant (we have been working on a small chain), so you will have to be careful about the parameters you choose and simulations could take some time. It can help to take a large enough `betastep` (say `betastep = O(0.1)`) so your simulations run in reasonable time.
+In the low temperature regime the spin 1/2 1D Heisenberg model is known to be a gapless Luttinger Liquid which is a phase of matter characterised by a specific heat $C_{v} \propto T$. See if you can confirm this by running the METTS code in the low temperature regime (say $8.0 \leq \beta \leq 10.0$) and measuring the specific heat capacity. Note that in this low-temperature regime, fluctuations and finite-size effects will be more significant (we have been working on a small chain), so you will have to be careful about the parameters you choose and simulations could take some time. It can help to take a large enough `betastep` (say `betastep = O(0.1)`) so your simulations run in reasonable time.
 
 This is the end of the current tutorial, continue on to the next tutorial or click [here](#table-of-contents) to return to the table of contents.
 
