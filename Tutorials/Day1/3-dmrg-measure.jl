@@ -106,7 +106,7 @@ function main(;
         display(
             plot(
                 sz; xlim = (1, nsite), ylim = (-0.25, 0.25),
-                xlabel = "Site", ylabel = "⟨Sz⟩", legend = false
+                xlabel = "Site j", ylabel = "⟨Szⱼ⟩", legend = false
             )
         )
     end
@@ -116,7 +116,7 @@ function main(;
         display(
             plot(
                 szsz[nsite ÷ 2, :]; xlim = (1, nsite), ylim = (-0.25, 0.25),
-                xlabel = "Site", ylabel = "⟨SzⱼSz⟩", legend = false
+                xlabel = "Site k", ylabel = "⟨SzⱼSzₖ⟩", legend = false
             )
         )
     end
