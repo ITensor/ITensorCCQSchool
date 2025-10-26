@@ -14,6 +14,32 @@
 
 We are going to combine the `NamedGraphs.jl` and `ITensors.jl` packages to build tensor networks of varying topology. 
 
+To get started with today's tutorials, first make sure you are in the correct directory (`Tutorials/Day3`). Once you are, activate the project for the day and instantiate the dependencies:
+```julia
+julia> pwd()
+"[...]/ITensorCCQSchool/Tutorials/Day3"
+
+julia> readdir()
+8-element Vector{String}:
+ "1-tensornetworks.jl"
+ "2-beliefpropagation.jl"
+ "3-clusterexpansion.jl"
+[...]
+
+julia> ]
+
+(@v1.12) pkg> activate .
+  Activating project at `[...]/ITensorCCQSchool/Tutorials/Day3`
+
+(Day3) pkg> instantiate
+    Updating registry at `~/.julia/registries/General.toml`
+    Updating `[...]/ITensorCCQSchool/Tutorials/Day3/Project.toml`
+  [86223c79] + Graphs v1.13.1
+  [9136182c] + ITensors v0.9.14
+  [678767b0] + NamedGraphs v0.7.3
+[...]
+```
+
 A simple graph `g` is just a series of vertices and edges between pairs of those vertices. There are no multiedges or self edges. The package `NamedGraphs.jl` is built around the `NamedGraph` object `g`, which can be constructed using either the pre-built graph constructors or our own via code like 
 
 ```julia

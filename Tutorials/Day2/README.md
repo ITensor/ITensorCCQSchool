@@ -17,7 +17,32 @@ Hamiltonian using the time evolving block decimation (TEBD) algorithm. See
 the [ITensorMPS.jl tutorial on TEBD](https://docs.itensor.org/ITensorMPS/stable/tutorials/MPSTimeEvolution.html)
 for more background on the algorithm. We will work off of the script [1-tebd.jl](./1-tebd.jl).
 
-The initial state constructed in `main` is the ground state of the Hamiltonian with the central spin excited. If we run this, the dynamics up until time $t=5.0$ will be simulated
+To get started with today's tutorials, first make sure you are in the correct directory (`Tutorials/Day2`). Once you are, activate the project for the day and instantiate the dependencies:
+```julia
+julia> pwd()
+"[...]/ITensorCCQSchool/Tutorials/Day2"
+
+julia> readdir()
+6-element Vector{String}:
+ "1-tebd.jl"
+ "2-imaginary-time.jl"
+ "3-metts.jl"
+[...]
+
+julia> ]
+
+(@v1.12) pkg> activate .
+  Activating project at `[...]/ITensorCCQSchool/Tutorials/Day2`
+
+(Day2) pkg> instantiate
+    Updating registry at `~/.julia/registries/General.toml`
+    Updating `[...]/ITensorCCQSchool/Tutorials/Day2/Project.toml`
+  [0d1a4710] + ITensorMPS v0.3.23
+  [9136182c] + ITensors v0.9.14
+[...]
+```
+
+The initial state constructed in `main` is the ground state of the Hamiltonian with the central spin excited. Running this with `main()` simulates the dynamics up until time $t=5.0$:
 ```julia
 julia> include("1-tebd.jl")
 main
