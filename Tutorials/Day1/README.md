@@ -237,12 +237,12 @@ julia> nterms = [10^k for k in 3:7]
  10000000
 
 julia> results = [main(; nterm, outputlevel=0) for nterm in nterms]
-5-element Vector{@NamedTuple{n::Int64, pi_approx::Float64, error::Float64}}:
- (nterm = 1000, pi_approx = 3.1425916543395442, error = 0.0009990007497511222)
- (nterm = 10000, pi_approx = 3.1416926435905346, error = 9.99900007414567e-5)
- (nterm = 100000, pi_approx = 3.1416026534897203, error = 9.999899927226608e-6)
- (nterm = 1000000, pi_approx = 3.1415936535887745, error = 9.999989813991306e-7)
- (nterm = 10000000, pi_approx = 3.1415927535897814, error = 9.999998829002266e-8)
+5-element Vector{@NamedTuple{pi_approx::Float64, error::Float64, nterm::Int64}}:
+ (pi_approx = 3.1425916543395442, error = 0.0009990007497511222, nterm = 1000)
+ (pi_approx = 3.1416926435905346, error = 9.99900007414567e-5, nterm = 10000)
+ (pi_approx = 3.1416026534897203, error = 9.999899927226608e-6, nterm = 100000)
+ (pi_approx = 3.1415936535887745, error = 9.999989813991306e-7, nterm = 1000000)
+ (pi_approx = 3.1415927535897814, error = 9.999998829002266e-8, nterm = 10000000)
 
 julia> errors = [res.error for res in results]
 5-element Vector{Float64}:
