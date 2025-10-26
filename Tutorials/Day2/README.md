@@ -256,7 +256,7 @@ julia> res.energies .- res.energy
 We can calculate the variance of `psit` to observe how close it is to an eigenstate of `H`. Specifically the variance is given by
 
 ```julia
-julia> energy_var = inner(apply(H, psit),apply(H, psit)) - inner(psit',H,psit)^2
+julia> energy_var = inner(H, psit, H, psit) - inner(psit', H, psit)^2
 ```
 
 2. Calculate the variance of the energy as a function of time in your simulation and have `main` return it. Plot it. 
