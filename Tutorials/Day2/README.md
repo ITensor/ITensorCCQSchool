@@ -196,7 +196,7 @@ Click [here](#table-of-contents) to return to the table of contents.
   <summary><h2>Tutorial 2: Imaginary Time Evolution</h2></summary>
   <hr>
 
-Now we are going to switch from real time to imaginary time evolution. This is incredibly easy with tensor networks, as we can just perform the substitution $dt \rightarrow - {\rm i} d \beta`. 
+Now we are going to switch from real time to imaginary time evolution. This is incredibly easy with tensor networks, as we can just perform the substitution $dt \rightarrow - {\rm i} d \beta$.
 
 We will be working off the script [2-imaginary-time.jl](./2-imaginary-time.jl) which does this for you and implements the imaginary time dynamics of a random initial state under the Heisenberg Hamiltonian.
 
