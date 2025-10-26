@@ -284,7 +284,7 @@ Energy Variance│⠀⡇⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀�
 ```
 
 The initial state we used is a random `MPS`constructed via the lines
-```julia>
+```julia
     rng = StableRNG(123)
     psit = random_mps(rng, sites)
 ```
