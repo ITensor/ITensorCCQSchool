@@ -143,7 +143,7 @@ Is this what you would expect for a quench? Why or why not? What happens around 
 
 2. We can change the initial state to something different. Let's try a state where all the spins are polarised along the z-axis. This can be done via the line
 ```julia
-julia> psit = ITensorMPS.MPS(sites, ["Z+" for i in 1:nsite])
+julia> psit = MPS(sites, ["Z+" for i in 1:nsite])
 ```
 Note that you should comment out parts of the code where the initial state was created by DMRG and then excited (lines 81-85 and 100-102) and substitute them for:
 
