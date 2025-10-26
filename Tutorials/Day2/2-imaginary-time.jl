@@ -1,4 +1,4 @@
-using ITensorMPS: MPO, OpSum, dmrg, maxlinkdim, random_mps, siteinds
+using ITensorMPS: MPS, MPO, OpSum, dmrg, maxlinkdim, random_mps, siteinds
 # Functions for performing measurements of MPS
 using ITensorMPS: expect, inner
 # Functions for time evolution
@@ -60,7 +60,6 @@ function main(;
     # Build the physical indices for nsite spins (spin 1/2)
     sites = siteinds("S=1/2", nsite)
 
-    # Run DMRG to get starting state for time evolution
     terms = OpSum()
     for j in 1:(nsite - 1)
         terms += 1 / 2, "S+", j, "S-", j + 1
@@ -68,6 +67,8 @@ function main(;
         terms += "Sz", j, "Sz", j + 1
     end
     H = MPO(terms, sites)
+
+    # Run DMRG to get a reference energy for imaginary time evolution
     psi0 = random_mps(sites; linkdims = 10)
     energy, psi = dmrg(
         H, psi0; nsweeps = 5, maxdim = [10, 20, 100, 100, 200],
@@ -89,15 +90,13 @@ function main(;
     # Make starting state
     rng = StableRNG(123)
     psit = random_mps(rng, sites)
-    psit = normalize(psit)
 
     szs = [expect(psit, "Sz")]
     energies = [inner(psit', H, psit)]
     times = 0.0:timestep:time
     print_every = 5
     for current_time in times[2:end]
-        psit = apply(gates, psit; cutoff)
-        psit = normalize(psit)
+        psit = normalize(apply(gates, psit; cutoff))
         energy_t = inner(psit', H, psit)
         sz_t = expect(psit, "Sz")
         push!(szs, sz_t)
