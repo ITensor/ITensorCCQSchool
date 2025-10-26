@@ -139,7 +139,7 @@ Entanglement│⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡜⠀⠀⠀⠀⠀⠀�
             └────────────────────────────────────────┘  
             ⠀-0.18⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Time⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀6.18⠀ 
 ```
-Is this what you would expect for a quench? Why or why not? What happens around time `t ~ 5.0`? Try increasing the time of the simulation to `time = 8.0` to resolve the long-time behaviour better.
+Is this what you would expect for a local quench? Why or why not? What happens around time `t ~ 5.0`? Try increasing the time of the simulation to `time = 8.0` to resolve the long-time behavior better.
 
 2. We can change the initial state to something different. Let's try a state where all the spins are polarised along the z-axis. This can be done via the line
 ```julia
