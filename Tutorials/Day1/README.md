@@ -578,9 +578,9 @@ The S=1 version of the 1D Heisenberg chain is in a topological phase (the "Halda
 
 We can explore this phase using ITensor DMRG by making the following changes to the Tutorial 3 file `3-dmrg-measure.jl` and re-running the main function in this file.
 
-a. First, change the local Hilbert space type to "S=1". This is the first argument to the `siteinds` function which appears near the top of the `main` function.
+1. First, change the local Hilbert space type to "S=1". This is the first argument to the `siteinds` function which appears near the top of the `main` function.
 
-b. Now, include your changed file and rerun the calculation. We recommend using `nsite=100` and calling `main` for this part as
+2. Now, include your changed file and rerun the calculation. We recommend using `nsite=100` and calling `main` for this part as
 ```julia
 julia> res = main(; nsweeps = 6, nsite = 100);
 ```
@@ -588,7 +588,7 @@ If the calculation is too slow, try passing a larger `cutoff` parameter such as 
 
 In the plot of ⟨Sz⟩ shown after the calculation runs, what do you notice about the shape of ⟨Sz⟩?
 
-c. Now we will attempt to 'quench' one of the emergent S=1/2 edge states by placing an actual S=1/2 spin at the left edge. The idea is that the Heisenberg coupling between this spin and the edge state will form a singlet and quench any non-zero magnetization at that edge.
+3. Now we will attempt to 'quench' one of the emergent S=1/2 edge states by placing an actual S=1/2 spin at the left edge. The idea is that the Heisenberg coupling between this spin and the edge state will form a singlet and quench any non-zero magnetization at that edge.
 
 To make this change, after the line defining the `sites` array, prepend a `"S=1/2"` site by       doing
 ```julia
