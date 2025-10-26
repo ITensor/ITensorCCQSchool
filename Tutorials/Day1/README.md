@@ -188,7 +188,7 @@ shell> vi 1-julia-intro.jl
 and press delete/backspace to go back to the Julia REPL. When you are done editing the tutorial script, simply save the file and `include` the file again to get a new `main` function to execute in your existing Julia session to see your changes reflected in the output:
 ```julia
 julia> include("1-julia-intro.jl")
-main (generic function with 1 method)
+main
 
 julia> res = main();
 [...]
@@ -220,7 +220,7 @@ Tutorial 1 of day 1 is based on the script [1-julia-intro.jl](./1-julia-intro.jl
 1. Run the script like you did as part of the [installation instructions](#installation-instructions):
 ```julia
 julia> include("1-julia-intro.jl")
-main (generic function with 1 method)
+main
 
 julia> main();
 nterm = 100000
@@ -438,7 +438,7 @@ julia> abs.((diff(energies) ./ 10) .- energy_exact)
  5.6694222822395446e-5
 
 ```
-which is pretty impressive considering the largest system size we ran was only 60 sites! The reason why this is more accurate is that we can think of computing energies differences as subtracting out boundary effects, and more generally can be thought of as a 1D version of a cluster expansion method such as [numerical linked cluster expansion](https://arxiv.org/abs/1401.3504).
+which is pretty impressive considering the largest system size we ran was only 60 sites! The reason why this is more accurate is that we can think of computing energies differences as subtracting out boundary effects, and more generally can be thought of as a 1D version of a cluster expansion method such as [numerical linked cluster expansion (NLCE)](https://arxiv.org/abs/1401.3504).
 
 Click [here](#table-of-contents) to return to the table of contents.
 
@@ -454,7 +454,7 @@ In this tutorial you will explore measurements of MPS ground states, and use the
 1. Run the `main` function provided in the file [3-dmrg-measure.jl](./3-dmrg-measure.jl). DMRG will run and you will see a plot of the expected value of Sz on each site and the ⟨SzⱼSz⟩ correlator between the central site "j" and all other sites.
 
 ```julia
-julia> include("3-dmrg-meaure.jl")
+julia> include("3-dmrg-measure.jl")
 main
 
 julia> res = main(; outputlevel = 2);
