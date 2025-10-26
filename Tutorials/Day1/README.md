@@ -70,7 +70,7 @@ julia> ]
   [...]
 
 ```
-Executing `]` at the REPL enables the Pkg REPL, which is more convenient for entering Pkg commands. Press delete/backspace to exit the Pkg REPL and go back to the standard Julia REPL prompt. `activate .` enables the local environment/project in [Tutorials/Day1](.), where the package dependencies for the tutorials on the first day of the school are defined. `instantiate` installs those dependencies and performs some compilation. It may take some time but it will only need to be done once for each project (so in our case, once for each day of the school).
+Executing `]` at the REPL enables the Pkg REPL, which is more convenient for entering Pkg commands. Press delete/backspace to exit the Pkg REPL and go back to the standard Julia REPL prompt. `activate .` enables the local environment/project in [Tutorials/Day1](.), where the package dependencies for the tutorials on the first day of the school are defined (in case you are curious, they are defined in the [Project.toml](./Project.toml)). `instantiate` installs those dependencies and performs some compilation. It may take some time but it will only need to be done once for each project (so in our case, once for each day of the school).
 
 5. Use `include` to load the [first tutorial](./Day1/1-julia-intro.jl) into the REPL. That will introduce the function `main` which you can execute to run the tutorial:
 ```julia
