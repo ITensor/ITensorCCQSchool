@@ -1,5 +1,6 @@
+using Graphs: add_edge!, edges, nv, rem_vertex!, vertices
 using ITensors: dim, inds
-using NamedGraphs: NamedGraph, add_edge!, edges, nv, rem_vertex!, vertices
+using NamedGraphs: NamedGraph
 
 """
     contract_network(tn::Dict, g::NamedGraph)

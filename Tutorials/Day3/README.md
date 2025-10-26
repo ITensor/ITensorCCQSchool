@@ -21,9 +21,11 @@ julia> using NamedGraphs: NamedGraph, NamedEdge
 
 julia> g = NamedGraph([1,2,3]);
 
-julia> edges = [1 => 2, 2 => 3];
+julia> es = [1 => 2, 2 => 3];
 
-julia> g = add_edges(g, edges);
+julia> for e in es
+           add_edge!(g, e)
+       end
 ```
 
 First, lets run the  script [1-tensornetworks.jl](./1-tensornetworks.jl)
