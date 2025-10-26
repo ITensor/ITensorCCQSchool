@@ -368,7 +368,7 @@ $$C_{v}(\beta) = \frac{\beta^{2}}{\rm NMETTS}\left(\overline{\langle H^{2} \rang
 where $\overline$ denotes the METTS ensemble average. You can measure the square energy of a given METTS via 
 
 ```julia
-julia> inner(apply(H, psi),apply(H, psi))
+julia> inner(H, psi, H, psi)
 ```
 
 1. Modify `main()` to keep track of the square energy of each METT after it has been evolved. Average over these, and the energies (which are already kept track off) at the end of the simulation to calculate $C_{v}(\beta)$ for the given $\beta$ and have it returned by main. Check that this gives a sensible answer from `main()`. For the default parameters ($\beta = 4.0$, NMETTS $=100$) provided you should find $C_{v}(\beta = 4.0) \approx 0.19$ (the RNG for the initial state and sampling is seeded to be reproducable).
