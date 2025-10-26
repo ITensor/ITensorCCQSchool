@@ -648,4 +648,6 @@ sites = [[siteind("S=1/2")]; sites[2:end]]
 ```
 Include your changed file and rerun DMRG. What do you notice about the shape of ⟨Sz⟩ now?
 
+Click [here](#table-of-contents) to return to the table of contents.
+
 </details>
