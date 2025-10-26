@@ -16,10 +16,16 @@
 
 To run the tutorials:
 
-1. Download and install the latest release (v1.12) of Julia following the official
-instructions here: https://julialang.org/install/
+1. Download and install the latest release (v1.12.1) of Julia following the official
+instructions here: https://julialang.org/install/. If you already have Julia installed,
+please upgrade to Julia v1.12.1, which you can install by using the same installation
+instructions which will install `juliaup`, which you can use from the command line to
+upgrade to the latest version of Julia with:
+```
+$ juliaup update
+```
 
-2. Start the Julia REPL by executing the `julia` command, which should now be available
+3. Start the Julia REPL by executing the `julia` command, which should now be available
 on your computer if you followed the installation instructions in step 1.:
 ```
 $ julia
