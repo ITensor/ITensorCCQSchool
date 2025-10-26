@@ -424,7 +424,7 @@ julia> diff(energies) ./ 10
  -0.4430904863371229
 
 ```
-where we use the Julia [`diff`](https://docs.julialang.org/en/v1/base/arrays/#Base.diff) function and divide by `10` since the system sizes between DMRG runs differ by `10` sites. We can see these averaged differences start to approach the exact result for the energy in the thermodynamic limit from the Bethe ansatz:
+where we use the Julia [`diff`](https://docs.julialang.org/en/v1/base/arrays/#Base.diff) function to get the differences between adjacent energies and divide by `10` since the system sizes between DMRG runs differ by `10` sites. We can see these averaged differences start to approach the exact result for the energy in the thermodynamic limit from the Bethe ansatz:
 ```julia
 julia> energy_exact = 1 / 4 - log(2)
 -0.4431471805599453
@@ -438,7 +438,7 @@ julia> abs.((diff(energies) ./ 10) .- energy_exact)
  5.6694222822395446e-5
 
 ```
-which is pretty impressive considering the largest system size we ran was only 60 sites! The reason why this is more accurate is that we can think of computing energies differences as subtracting out boundary effects, and more generally can be thought of as a 1D version of a cluster expansion.
+which is pretty impressive considering the largest system size we ran was only 60 sites! The reason why this is more accurate is that we can think of computing energies differences as subtracting out boundary effects, and more generally can be thought of as a 1D version of a cluster expansion method such as [numerical linked cluster expansion](https://arxiv.org/abs/1401.3504).
 
 Click [here](#table-of-contents) to return to the table of contents.
 
