@@ -206,7 +206,7 @@ to activate the environment, which will ensure you have the correct dependencies
 
 Also note that if you want to cancel a calculation that is in-progress, you can use execute Control-C on your keyboard, which will cancel the calculation and return you to the Julia REPL prompt.
 
-Click [here](#table-of-contents) to return to the table of contents.
+This is the end of the current tutorial, continue on to the next tutorial or click [here](#table-of-contents) to return to the table of contents.
 
 </details>
 
@@ -284,7 +284,7 @@ julia> plot(inv.(nterms), errors; legend = false)
 
 ```
 
-Click [here](#table-of-contents) to return to the table of contents.
+This is the end of the current tutorial, continue on to the next tutorial or click [here](#table-of-contents) to return to the table of contents.
 
 </details>
 
@@ -440,7 +440,7 @@ julia> abs.((diff(energies) ./ 10) .- energy_exact)
 ```
 which is pretty impressive considering the largest system size we ran was only 60 sites! The reason why this is more accurate is that we can think of computing energies differences as subtracting out boundary effects, and more generally can be thought of as a 1D version of a cluster expansion method such as [numerical linked cluster expansion (NLCE)](https://arxiv.org/abs/1401.3504).
 
-Click [here](#table-of-contents) to return to the table of contents.
+This is the end of the current tutorial, continue on to the next tutorial or click [here](#table-of-contents) to return to the table of contents.
 
 </details>
 
@@ -565,7 +565,7 @@ julia> animate_dmrg_sz(res)
 
 ```
 
-Click [here](#table-of-contents) to return to the table of contents.
+This is the end of the current tutorial, continue on to the next tutorial or click [here](#table-of-contents) to return to the table of contents.
 
 </details>
 
@@ -608,7 +608,7 @@ julia> animate_hubbard(res)
 
 ```
 
-Click [here](#table-of-contents) to return to the table of contents.
+This is the end of the current tutorial, continue on to the next tutorial or click [here](#table-of-contents) to return to the table of contents.
 
 </details>
 
@@ -648,6 +648,6 @@ sites = [[siteind("S=1/2")]; sites[2:end]]
 ```
 Include your changed file and rerun DMRG. What do you notice about the shape of ⟨Sz⟩ now?
 
-Click [here](#table-of-contents) to return to the table of contents.
+This is the end of the current tutorial, continue on to the next tutorial or click [here](#table-of-contents) to return to the table of contents.
 
 </details>

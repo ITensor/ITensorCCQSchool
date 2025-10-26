@@ -117,7 +117,7 @@ for periodic boundaries.
 
 2. Compare the output of `res.z` with these values for both periodic and open boundaries. Do they agree? If they do, then congratulations, you just solved the 1D PBC and OBC Ising model with a tensor network approach.
 
-Click [here](#table-of-contents) to return to the table of contents.
+This is the end of the current tutorial, continue on to the next tutorial or click [here](#table-of-contents) to return to the table of contents.
 
 </details>
 
@@ -254,7 +254,7 @@ julia> plot(betas, abs_errs, xlabel = "Beta", ylabel = "Abs Error")
             ⠀-0.03⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Beta⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀1.03⠀ 
 ```
 
-Click [here](#table-of-contents) to return to the table of contents.
+This is the end of the current tutorial, continue on to the next tutorial or click [here](#table-of-contents) to return to the table of contents.
 
 </details>
 
@@ -302,7 +302,7 @@ Absolute Err│⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡜⠀⢸⠀⡿⡀⠀⠀⠀�
 Using cluster expanded results to improve tensor network contraction is an active research area. Just last week two papers appeared on the arXiv about this (https://arxiv.org/abs/2510.05647 and https://arxiv.org/abs/2510.02290) and we used the expansion written in Eq. (5) of the former - so you are now at the bleeding edge of research in this area.
 
 
-Click [here](#table-of-contents) to return to the table of contents.
+This is the end of the current tutorial, continue on to the next tutorial or click [here](#table-of-contents) to return to the table of contents.
 
 <a id="stretch-goals"></a>
 <details>
@@ -325,6 +325,6 @@ g2 = named_comb_tree((4,3))
 g3 = named_grid((4,4,4))
 ```
 
-Click [here](#table-of-contents) to return to the table of contents.
+This is the end of the current tutorial, continue on to the next tutorial or click [here](#table-of-contents) to return to the table of contents.
 
 </details>
