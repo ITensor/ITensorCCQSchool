@@ -1,6 +1,6 @@
-using NamedGraphs: NamedEdge, NamedGraph, vertices, edges, src, dst, neighbors,
-    simplecycles_limited_length
-using NamedGraphs.GraphsExtensions: all_edges, boundary_edges, edges
+using Graphs: vertices, edges, src, dst, neighbors, simplecycles_limited_length
+using NamedGraphs: NamedEdge, NamedGraph
+using NamedGraphs.GraphsExtensions: all_edges, boundary_edges
 using LinearAlgebra: dot, normalize
 using ITensors: ITensor, Index, inds, onehot
 

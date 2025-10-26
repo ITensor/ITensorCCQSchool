@@ -5,6 +5,7 @@
 - [Tutorial 1: Tensor Networks](#tutorial-1)
 - [Tutorial 2: Belief Propagation](#tutorial-2)
 - [Tutorial 3: BP Cluster Expansion](#tutorial-3)
+- [Stretch Goals](#stretch-goals)
 
 <a id="tutorial-1"></a>
 <details>
@@ -20,9 +21,11 @@ julia> using NamedGraphs: NamedGraph, NamedEdge
 
 julia> g = NamedGraph([1,2,3]);
 
-julia> edges = [1 => 2, 2 => 3];
+julia> es = [1 => 2, 2 => 3];
 
-julia> g = add_edges(g, edges);
+julia> for e in es
+           add_edge!(g, e)
+       end
 ```
 
 First, lets run the  script [1-tensornetworks.jl](./1-tensornetworks.jl)
@@ -298,7 +301,29 @@ Absolute Err│⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡜⠀⢸⠀⡿⡀⠀⠀⠀�
 
 Using cluster expanded results to improve tensor network contraction is an active research area. Just two papers appeared on the arXiv last week about this (https://arxiv.org/abs/2510.05647 and https://arxiv.org/abs/2510.02290) and we used the expansion written in Eq. (5) of the former - so you are now at the bleeding edge of research in this area.
 
-9. You can use the `named_grid((nx,ny,nz,...); periodic)` to construct any hypercubic lattice in your choice of dimension. Try using the code to use BP (and the cluster expansion if you're feeling confident) to solve the 3D Ising model. Do you think the errors are better or worse than in 2D? Why? What about in 4D?
+
+Click [here](#table-of-contents) to return to the table of contents.
+
+<a id="stretch-goals"></a>
+<details>
+  <summary><h2>Stretch Goals</h2></summary>
+  <hr>
+
+If you completed all the tutorials and would like more of a challenge, choose from among the following "stretch goal" activities.
+
+1. You can use the `named_grid((nx,ny,nz,...); periodic)` to construct any hypercubic lattice in your choice of dimension. Try using the code to use BP (and the cluster expansion if you're feeling confident) to solve the 3D Ising model. Do you think the errors are better or worse than in 2D? Why? What about in 4D?
+
+2. Try writing a function to construct a tensornetwork on a graph `g` with some bond dimension $\chi$ and random entries in the tensors. Use the function `ising_tensornetwork` in `[ising_tensornetwork.jl](./ising_tensornetwork.jl)` for a template. The `phi_bp` function, when passed converged `messages`, approximates the logarithm of the contraction of the given tensornetwork you pass it. Compare that result to exact contraction of the network, for which a function is provided in `[contract_network.jl](./contract_network.jl)`
+
+Study how the error from the BP contraction depends on the geometry of the tensor network.
+
+You might find it useful to know that you can import various pre-defined constructors for your favourite lattices such as
+```julia
+julia> using NamedGraphs.NamedGraphGenerators
+g1 = named_hexagonal_lattice_graph(4,4; periodic = true)
+g2 = named_comb_tree((4,3))
+g3 = named_grid((4,4,4))
+```
 
 Click [here](#table-of-contents) to return to the table of contents.
 
