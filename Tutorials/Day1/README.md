@@ -316,7 +316,7 @@ Optimized MPS bond dimension: 47
 DMRG energy: -13.111355752020133
 
 ```
-Note that the first sweep takes a lot longer than the subsequent sweeps. This is because Julia is just-in-time compiled, so it compiles functions the first time they are run in a new Julia session, but then repeated calls to the same function with the same types of inputs don't need to be compiled again.
+Note that the first sweep takes a lot longer than the subsequent sweeps. This is because Julia is just-in-time compiled, so it compiles functions the first time they are run in a new Julia session, but then repeated calls to the same function with the same types of inputs don't need to be compiled again. (In future versions of ITensors.jl/ITensorMPS.jl we will automate some of that precompilation so it is performed when those packages are installed but that is a work-in-progress.)
 
 You can see the energy converges rapidly to a fixed value with the number of sweeps. That isn't always the case for DMRG, in particular the convergence of fermionic systems and 2D systems can be much slower, depend on the initial state used, and even get stuck in local minimima if the optimization isn't performed carefully.
 
