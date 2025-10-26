@@ -365,7 +365,7 @@ The specific heat can be approximated from the METTS algorithm via the following
 
 $C_{v}(\beta) = \frac{\beta^{2}}{\rm NMETTS}\left(\overline{\langle H^{2} \rangle} - \overline{\langle H \rangle^{2}} \right)$
 
-where $\overline$ denotes the METTS ensemble average. You can measure the square energy of a given METTS via 
+where $\overline{X}$ denotes the METTS ensemble average. You can measure the square energy of a given METTS via 
 
 ```julia
 julia> inner(H, psi, H, psi)
