@@ -27,8 +27,8 @@ function entanglement_entropy(ψ::MPS, bond::Int = length(ψ) ÷ 2; cutoff = 1.0
     ψ = orthogonalize(ψ, bond)
     U, S, V = svd(ψ[bond], (linkinds(ψ, bond - 1)..., siteinds(ψ, bond)...))
     Sd = Array(diag(S))
-    Sd = Sd .^ 2
-    return sum(d -> (d > cutoff) ? -d * log(d) : 0.0, Sd)
+    Sd2 = Sd .^ 2
+    return sum(d -> (d > cutoff) ? -d * log(d) : 0.0, Sd2)
 end
 
 """
