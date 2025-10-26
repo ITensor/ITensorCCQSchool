@@ -113,7 +113,7 @@ julia> animate_tebd_sz(res) # Animation of ⟨Szⱼ⟩ as a function of time
 ```
 The animation lets us visualize how the excitation propagates through the system as a function of time.
 
-1. Included in `main()` is a function `entanglement_entropy(ψ::MPS, bond::Int = round(Int, length(ψ) / 2))` to compute the von Neumann entanglement entropy between sites `1..bond` and `bond+1...N` of the MPS. The vector of half-chain entanglement entropies is outputted by `main` as `entanglements`.
+1. Included in `main()` is a function `entanglement_entropy(ψ::MPS, bond::Int = length(ψ) ÷ 2)` to compute the von Neumann entanglement entropy between sites `1..bond` and `bond+1...N` of the MPS. The vector of half-chain entanglement entropies is output by `main` as `entanglements`.
 Plot this half chain entanglement entropy as a function of time, how does it behave?
 
 ```julia
