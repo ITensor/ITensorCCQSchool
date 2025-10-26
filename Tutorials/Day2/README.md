@@ -158,7 +158,7 @@ What do you notice about the dynamics of the quench now? Hint: think about the s
 
 3. Now try initializing the system in an anti-ferromagnetic state instead
 ```julia
-    psit = ITensorMPS.MPS(sites, [iseven(i) ? "Z+" : "Z-" for i in 1:nsite])
+    psit = MPS(sites, [iseven(i) ? "Z+" : "Z-" for i in 1:nsite])
 ```
 
 Plot the entanglement entropy as a function of time.
