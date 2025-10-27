@@ -6,7 +6,7 @@
 - [Tutorial 1: Julia Intro](#tutorial-1)
 - [Tutorial 2: DMRG](#tutorial-2)
 - [Tutorial 3: DMRG Measurments](#tutorial-3)
-- [Tutorial 4: 2D Hubbard Model](#tutorial-4)
+- [Tutorial 4: 2D Ising Model](#tutorial-4)
 - [Stretch Goals](#stretch-goals)
 
 <a id="installation-instructions"></a>
@@ -24,6 +24,8 @@ upgrade to the latest version of Julia with:
 ```
 $ juliaup update
 ```
+
+2. Navigate to a folder on your machine, such as your home folder, where you want the tutorials to be located. (They will be put into a subfolder.)
 
 3. Start the Julia REPL by executing the `julia` command, which should now be available
 on your computer if you followed the installation instructions in step 1.:
@@ -45,7 +47,7 @@ julia> 1 + 1
 ```
 Try typing a command (such as `1 + 1` shown above) to get a feel for how it works. A number of math operations are available out-of-the-box, such as `sin`, `cos`, etc., while other functionality (such as [linear algebra](https://docs.julialang.org/en/v1/stdlib/LinearAlgebra/)) requires loading packages. The surface level syntax is similar to other high level interactive languages like Python and MATLAB. The Julia documentation provides a helpful guide [comparing Julia to other comparable languages](https://docs.julialang.org/en/v1/manual/noteworthy-differences/).
 
-3. Create a local copy of the tutorial code in a new directory `ITensorCCQSchool` in your current directory by running:
+4. Create a local copy of the tutorial code in a new directory `ITensorCCQSchool` in your current directory by running:
 ```julia
 julia> using LibGit2: clone
 
@@ -53,7 +55,7 @@ julia> clone("https://github.com/ITensor/ITensorCCQSchool", "ITensorCCQSchool")
 ```
 Here we use Julia's  [LibGit2 standard library](https://docs.julialang.org/en/v1/stdlib/LibGit2/) to clone the repository containing the tutorials. Alternatively you can execute `git clone https://github.com/ITensor/ITensorCCQSchool` directly from the command line (outside of the Julia REPL).
 
-4. Now that you have Julia installed and the tutorial code available, we will give an introduction to running the first tutorial for day 1 ([Day1/1-julia-intro.jl](./1-julia-intro.jl)). Enter the `ITensorCCQSchool/Tutorials/Day1` directory using Julia's [`cd`](https://docs.julialang.org/en/v1/base/file/#Base.Filesystem.cd-Tuple{AbstractString}) function and install the dependencies from the Julia REPL:
+5. Now that you have Julia installed and the tutorial code available, we will give an introduction to running the first tutorial for day 1 ([1-julia-intro.jl](./1-julia-intro.jl)). Enter the `ITensorCCQSchool/Tutorials/Day1` directory using Julia's [`cd`](https://docs.julialang.org/en/v1/base/file/#Base.Filesystem.cd-Tuple{AbstractString}) function and install the dependencies from the Julia REPL:
 ```julia
 julia> cd("ITensorCCQSchool/Tutorials/Day1")
 
@@ -72,7 +74,7 @@ julia> ]
 ```
 Executing `]` at the REPL enables the Pkg REPL, which is more convenient for entering Pkg commands. Press delete/backspace to exit the Pkg REPL and go back to the standard Julia REPL prompt. `activate .` enables the local environment/project in [Tutorials/Day1](.), where the package dependencies for the tutorials on the first day of the school are defined (in case you are curious, they are defined in the [Project.toml](./Project.toml)). `instantiate` installs those dependencies and performs some compilation. It may take some time but it will only need to be done once for each project (so in our case, once for each day of the school).
 
-5. Use `include` to load the [first tutorial](./Day1/1-julia-intro.jl) into the REPL. That will introduce the function `main` which you can execute to run the tutorial:
+6. Use `include` to load the [first tutorial](./Day1/1-julia-intro.jl) into the REPL. That will introduce the function `main` which you can execute to run the tutorial:
 ```julia
 julia> include("1-julia-intro.jl")
 main
@@ -115,7 +117,7 @@ julia> error
 
 ```
 
-6. You can run the script with different parameters as follows:
+7. You can run the script with different parameters as follows:
 ```julia
 julia> res = main(; nterm=10^7);
 Number of terms: 10000000
@@ -160,7 +162,7 @@ julia>
 
 ```
 
-7. Note that you can analyze which directory you are in and what tutorial files are available directly from the Julia REPL using functions such as [`pwd`](https://docs.julialang.org/en/v1/base/file/#Base.Filesystem.pwd) and [`readdir`](https://docs.julialang.org/en/v1/base/file/#Base.Filesystem.readdir):
+8. Note that you can analyze which directory you are in and what tutorial files are available directly from the Julia REPL using functions such as [`pwd`](https://docs.julialang.org/en/v1/base/file/#Base.Filesystem.pwd) and [`readdir`](https://docs.julialang.org/en/v1/base/file/#Base.Filesystem.readdir):
 ```julia
 julia> pwd()
 "[...]/ITensorCCQSchool/Tutorials/Day1"
@@ -572,41 +574,56 @@ This is the end of the current tutorial, continue on to the next tutorial or cli
 
 <a id="tutorial-4"></a>
 <details>
-  <summary><h2>Tutorial 4: 2D Hubbard Model</h2></summary>
+  <summary><h2>Tutorial 4: 2D Ising Model</h2></summary>
   <hr>
 
+In this tutorial, you will explore 2D DMRG calculations, using the transverse-field Ising model on a square-lattice cylinder. 
+
+
+1. Run the `main` function provided in the file [4-2d-tfim.jl](./4-2d-tfim.jl). DMRG will run and you will see information about each sweep.
 ```julia
-julia> include("4-hubbard.jl")
+julia> include("4-2d-tfim.jl")
 main
 
-julia> res = main(; nx = 4, ny = 2, U = 8.0, nsweeps = 5);
-MPO bond dimension: 10
-Initial MPS bond dimension: 10
-After sweep 1 energy=-2.5282321813602855  maxlinkdim=89 maxerr=9.77E-07 time=8.969
-After sweep 2 energy=-2.953856048445134  maxlinkdim=109 maxerr=9.64E-07 time=0.370
-After sweep 3 energy=-3.02261986309084  maxlinkdim=94 maxerr=9.94E-07 time=0.369
-After sweep 4 energy=-3.0258111835433  maxlinkdim=91 maxerr=9.96E-07 time=0.368
-After sweep 5 energy=-3.0258762938950725  maxlinkdim=83 maxerr=9.73E-07 time=0.368
+julia> res = main();
+MPO bond dimension: 5
+Initial MPS bond dimension: 4
+After sweep 1 energy=-223.74572376546493  maxlinkdim=2 maxerr=2.08E-02 time=12.120
+After sweep 2 energy=-224.38416688578914  maxlinkdim=4 maxerr=4.31E-04 time=3.093
+After sweep 3 energy=-224.79019989335737  maxlinkdim=9 maxerr=9.93E-07 time=3.096
+After sweep 4 energy=-224.79244529239656  maxlinkdim=10 maxerr=9.40E-07 time=3.163
+```
 
-julia> res.ns[end]
-2×4 Matrix{Float64}:
- 0.0341762  0.0431004  0.0430981  0.0341731
- 0.0341752  0.0430984  0.0430954  0.0341711
-
+2. You can explore the results by displaying the expected ⟨Sz⟩ values stored in `res.szs` or expected ⟨Sx⟩ values stored in `res.sxs`. 
+```julia
 julia> res.szs[end]
-2×4 Matrix{Float64}:
-  0.000395183  -0.000480938   0.000704163  -0.000843082
- -0.000404015   0.000484498  -0.000699671   0.000843861
+3×30 Matrix{Float64}:
+ -0.5  -0.5  -0.499999  -0.499998  -0.499994  …  -0.0423845  -0.0328509  -0.0259664  -0.0222705
+ -0.5  -0.5  -0.499999  -0.499998  -0.499994     -0.0423846  -0.032851   -0.0259668  -0.0222707
+ -0.5  -0.5  -0.499999  -0.499998  -0.499994     -0.0423839  -0.0328507  -0.025967   -0.0222708
+```
+
+3. Plot the results by calling `plot_spins(res)` or see an animation of the entire calculation by calling `animate_spins(res)`.
+```julia
 
 julia> Plots.gr(); # Enable the GR backend to plot in a window
 
-julia> plot_hubbard(res)
+julia> plot_spins(res)
 [...]
 
-julia> animate_hubbard(res)
+julia> animate_spins(res)
 [...]
-
 ```
+
+4. Try changing some of the key parameters such as `nx`, `ny`, `h_max`, and `ramp_width`. You can see all the parameters of `main` by viewing the docstring for `main`:
+```julia
+julia> ?
+
+help?> main
+[...]
+```
+
+In particular, try raising `ny` to larger and larger values (staying below 20) and pass a `maxdim` array that allows the maximum bond dimension to grow, such as `maxdim=[50,100,200,400,800]`. How large of an `ny` can you do in a practical amount of time? Why do the resources needed grow?
 
 This is the end of the current tutorial, continue on to the next tutorial or click [here](#table-of-contents) to return to the table of contents.
 
