@@ -623,6 +623,8 @@ help?> main
 [...]
 ```
 
+In particular, try raising `ny` to larger and larger values (staying below 20) and pass a `maxdim` array that allows the maximum bond dimension to grow, such as `maxdim=[50,100,200,400,800]`. How large of an `ny` can you do in a practical amount of time? Why do the resources needed grow?
+
 This is the end of the current tutorial, continue on to the next tutorial or click [here](#table-of-contents) to return to the table of contents.
 
 </details>
