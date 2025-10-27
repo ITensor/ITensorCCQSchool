@@ -5,6 +5,8 @@ using ITensorMPS: square_lattice
 using ITensorMPS: ITensorMPS, AbstractObserver, expect
 # Use to set the RNG seed for reproducibility
 using StableRNGs: StableRNG
+# Used for computing average magnetization
+using Statistics: mean
 # Load the Plots package for plotting
 using Plots: Plots, @layout, plot, plot!, quiver
 
@@ -42,22 +44,14 @@ function ITensorMPS.measure!(obs::SxSzObserver; psi, kwargs...)
     return nothing
 end
 
-function compute_average_magnetization(s::Matrix)
-  as = zeros(eltype(s),size(s,2))
-  for j = 1:size(s,2)
-    as[j] = sum(s[:,j])/length(s[:,j])
-  end
-  return as
-end
-
 function plot_rescaled(pairs::Pair...)
   isempty(pairs) && return
   res1, fac1 = pairs[1]
-  az1 = compute_average_magnetization(res1.szs[end])
+  az1 = vec(mean(res1.szs[end]; dims = 1))
   plt = plot(fac1*collect(1:res1.nx), az1)
-  for p=2:length(pairs)
+  for p in 2:length(pairs)
     res_p, fac_p = pairs[p]
-    az_p = compute_average_magnetization(res_p.szs[end])
+    az_p = vec(mean(res_p.szs[end]; dims = 1))
     plt = plot!(plt,fac_p*collect(1:res_p.nx), az_p)
   end
   return plt
