@@ -19,10 +19,10 @@ function plot_spins(res, i::Int = length(res.szs))
     sxs = vec(res.sxs[i])
     szs = vec(res.szs[i])
     quiver_data = (sxs, szs)
-    xlims = (0.2,res.nx+0.4)
-    ylims = (0.2,res.ny+0.4)
-    q_plt = quiver(xs, ys, quiver=quiver_data; title="Magnetization", color = :blue, arrow = :closed, xlims, ylims)
-    h_plt = plot(1:res.nx, res.fields; color = :red, label="h(x)")
+    xlims = (0.2, res.nx + 0.4)
+    ylims = (0.2, res.ny + 0.4)
+    q_plt = quiver(xs, ys, quiver = quiver_data; title = "Magnetization", color = :blue, arrow = :closed, xlims, ylims)
+    h_plt = plot(1:res.nx, res.fields; color = :red, label = "h(x)")
     layout = @layout [a{0.8h}; b{0.2h}]
     plt = plot(q_plt, h_plt; layout)
     return plt
@@ -45,16 +45,16 @@ function ITensorMPS.measure!(obs::SxSzObserver; psi, kwargs...)
 end
 
 function plot_rescaled(pairs::Pair...)
-  isempty(pairs) && return
-  res1, fac1 = pairs[1]
-  az1 = vec(mean(res1.szs[end]; dims = 1))
-  plt = plot(fac1*collect(1:res1.nx), az1)
-  for p in 2:length(pairs)
-    res_p, fac_p = pairs[p]
-    az_p = vec(mean(res_p.szs[end]; dims = 1))
-    plt = plot!(plt,fac_p*collect(1:res_p.nx), az_p)
-  end
-  return plt
+    isempty(pairs) && return
+    res1, fac1 = pairs[1]
+    az1 = vec(mean(res1.szs[end]; dims = 1))
+    plt = plot(fac1 * collect(1:res1.nx), az1)
+    for p in 2:length(pairs)
+        res_p, fac_p = pairs[p]
+        az_p = vec(mean(res_p.szs[end]; dims = 1))
+        plt = plot!(plt, fac_p * collect(1:res_p.nx), az_p)
+    end
+    return plt
 end
 
 
@@ -107,7 +107,7 @@ function main(;
     nsite = nx * ny
 
     # Magnetic field profile at each x value
-    field(x) = h_max*(1/2+1/2*tanh((x-nx÷2)/ramp_width))
+    field(x) = h_max * (1 / 2 + 1 / 2 * tanh((x - nx ÷ 2) / ramp_width))
 
     # Build the physical indices
     sites = siteinds("S=1/2", nsite)
@@ -121,8 +121,8 @@ function main(;
         i, j = b.s1, b.s2
         xi, xj = Int(b.x1), Int(b.x2)
         terms -= "Z", i, "Z", j
-        terms -= field(xi)/2, "X", i
-        terms -= field(xj)/2, "X", j
+        terms -= field(xi) / 2, "X", i
+        terms -= field(xj) / 2, "X", j
     end
     H = MPO(terms, sites)
 
