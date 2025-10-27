@@ -72,7 +72,7 @@ julia> ]
   [...]
 
 ```
-Executing `]` at the REPL enables the Pkg REPL, which is more convenient for entering Pkg commands. Press delete/backspace to exit the Pkg REPL and go back to the standard Julia REPL prompt. `activate .` enables the local environment/project in [Tutorials/Day1](.), where the package dependencies for the tutorials on the first day of the school are defined (in case you are curious, they are defined in the [Project.toml](./Project.toml)). `instantiate` installs those dependencies and performs some compilation. It may take some time but it will only need to be done once for each project (so in our case, once for each day of the school).
+Executing `]` at the REPL enables the Pkg REPL, which is more convenient for entering Pkg commands. Press delete/backspace to exit the Pkg REPL and go back to the standard Julia REPL prompt. `activate .` enables the local environment/project in `Tutorials/Day1` (your current directory), where the package dependencies for the tutorials on the first day of the school are defined (in case you are curious, they are defined in the [Project.toml](./Project.toml)). `instantiate` installs those dependencies and performs some compilation. It may take some time but it will only need to be done once for each project (so in our case, once for each day of the school).
 
 6. Use `include` to load the [first tutorial](./Day1/1-julia-intro.jl) into the REPL. That will introduce the function `main` which you can execute to run the tutorial:
 ```julia
@@ -96,7 +96,7 @@ julia> res
 (pi_approx = 3.1416026534897203, error = 9.999899927226608e-6, nterm = 100000)
 
 ```
-`res = main()` captures the output of the script to the [NamedTuple](https://docs.julialang.org/en/v1/base/base/#Core.NamedTuple) `res`, which you can think of as an anonymous struct. You can access values from `res` as follows:
+`res = main()` captures the output of the script to the [NamedTuple](https://docs.julialang.org/en/v1/base/base/#Core.NamedTuple) `res`, which you can think of as an anonymous struct, i.e. like a struct it has fields that can store different kinds of objects but that's all it is. You can access values from `res` as follows:
 ```julia
 julia> res.pi_approx
 3.1416026534897203
@@ -119,7 +119,7 @@ julia> error
 
 7. You can run the script with different parameters as follows:
 ```julia
-julia> res = main(; nterm=10^7);
+julia> res = main(; nterm = 10^7);
 Number of terms: 10000000
 Approximate pi: 3.1415927535897814
 Error: 9.999998829002266e-8
