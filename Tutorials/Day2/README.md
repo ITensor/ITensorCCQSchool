@@ -413,7 +413,7 @@ Making METTS number 100
 
 The specific heat can be approximated from the METTS algorithm via the following formula:
 
-$$C_{v}(\beta) = \frac{\beta^{2}}{\rm nsite}\left(\overline{\langle H^{2} \rangle} - (\overline{\langle H \rangle})^{2} \right)$$
+$$C_{v}(\beta) = \frac{\beta^{2}}{\rm nsite}\left(\overline{\langle H^{2} \rangle} - \left(\overline{\langle H \rangle}\right)^{2} \right)$$
 
 where $\overline{X} = \frac{1}{\rm NMETTS}\sum_{i=1}^{\rm NMETTS}\langle X\rangle_{i}$ denotes the METTS ensemble average. You can measure the square energy of a given METTS via 
 
