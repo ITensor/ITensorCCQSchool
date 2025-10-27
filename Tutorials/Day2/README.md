@@ -42,7 +42,7 @@ julia> ]
 [...]
 ```
 
-The initial state constructed in `main` is the ground state of the Hamiltonian with the central spin excited. Running this with `main()` simulates the dynamics up until time $t=5.0$:
+The initial state constructed in `main` is the ground state of the Hamiltonian with the central spin excited. Running this with `main()` simulates the dynamics up until time `time = 5.0`:
 ```julia
 julia> include("1-tebd.jl")
 main
@@ -254,25 +254,25 @@ After sweep 4 energy=-13.111355751942149  maxlinkdim=47 maxerr=1.00E-10 time=0.1
 After sweep 5 energy=-13.111355751949796  maxlinkdim=47 maxerr=1.00E-10 time=0.112
 
 Starting imaginary time evolution
-time: 5.0
+beta: 5.0
 Bond dimension: 24
 ⟨ψₜ|Szⱼ|ψₜ⟩: -0.07015198148930198
 ∑ⱼ⟨ψₜ|Szⱼ|ψₜ⟩: -0.3554642454935465
 ⟨ψₜ|H|ψₜ⟩: -12.918726195417213
 
-time: 10.0
+beta: 10.0
 Bond dimension: 38
 ⟨ψₜ|Szⱼ|ψₜ⟩: -0.0007049850288560583
 ∑ⱼ⟨ψₜ|Szⱼ|ψₜ⟩: -0.12498385296119857
 ⟨ψₜ|H|ψₜ⟩: -13.082551163963094
 
-time: 15.0
+beta: 15.0
 Bond dimension: 40
 ⟨ψₜ|Szⱼ|ψₜ⟩: 0.007906094151056576
 ∑ⱼ⟨ψₜ|Szⱼ|ψₜ⟩: -0.035190911135993715
 ⟨ψₜ|H|ψₜ⟩: -13.105243727446057
 
-time: 20.0
+beta: 20.0
 Bond dimension: 40
 ⟨ψₜ|Szⱼ|ψₜ⟩: 0.005455558345839978
 ∑ⱼ⟨ψₜ|Szⱼ|ψₜ⟩: -0.010092112111528002
@@ -310,9 +310,9 @@ julia> inner(res.H, res.psit, res.H, res.psit) - inner(res.psit', res.H, res.psi
 0.00020948820113630973
 
 ```
-Edit the `main` function in the file `2-imaginary-time.jl` to calculate the variance of the energy as a function of time in your simulation and have `main` return it as a new output `energy_vars`. As a reference, see how the `energies` are saved and computed, and note that as an optimization you could use the energy that was already computed at each step in the second term of the variance. Once you get that working, rerun the `main` function to compute the energy variance at each time step and plot them as follows:
+Edit the `main` function in the file `2-imaginary-time.jl` to calculate the variance of the energy as a function of time in your simulation and have `main` return it as a new output `energy_vars`. As a reference, see how the `energies` are saved and computed, and note that as an optimization you could use the energy that was already computed at each step in the second term of the variance. Once you get that working, rerun the `main` function to compute the energy variance at each imaginary time step and plot them as follows:
 ```julia
-julia> plot(res.times, res.energy_vars; xlabel = "Imaginary Time", ylabel = "Energy Variance", legend = false)
+julia> plot(res.betas, res.energy_vars; xlabel = "Imaginary Time", ylabel = "Energy Variance", legend = false)
                ┌────────────────────────────────────────┐  
         4.67397│⠀⡷⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
                │⠀⡇⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
@@ -432,8 +432,7 @@ Next we are going to measure the specific heat as a function of inverse temperat
 
 2. Construct an array of $\beta$ values:
 ```julia
-julia> betas = 0.2 * (1:41)
-0.2:0.2:8.2
+julia> betas = 0.2:0.2:8.2
 
 ```
 and then create a vector of simulation outputs for these `betas`:

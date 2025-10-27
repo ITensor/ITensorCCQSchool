@@ -14,7 +14,7 @@ include("../src/animate.jl")
 function plot_tebd_sz(res; step::Int)
     return plot(
         res.szs[step]; xlim = (1, res.nsite), ylim = (-0.5, 0.5), xlabel = "Site j",
-        ylabel = "⟨Szⱼ(t=$(res.times[step]))⟩", legend = false
+        ylabel = "⟨Szⱼ(β=$(res.betas[step]))⟩", legend = false
     )
 end
 
@@ -30,8 +30,8 @@ imaginary time evolution to find the ground state.
 
 # Keywords
 - `nsite::Int = 30`: Number of sites in the spin chain.
-- `time::Float64 = 20.0`: Total time for evolution.
-- `timestep::Float64 = 0.2`: Time step for each TEBD application.
+- `beta::Float64 = 20.0`: Total inverse temperature for evolution.
+- `betastep::Float64 = 0.2`: Time step for each TEBD application.
 - `cutoff::Float64 = 1.0e-10`: Cutoff for truncation during TEBD.
 - `outputlevel::Int = 1`: Controls how much information will be printed by the script.
 
@@ -41,20 +41,20 @@ A named tuple containing:
 - `psit::MPS`: The final wavefunction after time evolution as an MPS.
 - `psi_ground_state::MPS`: The ground state from DMRG.
 - `energy_ground_state::Float64`: The ground state energy from DMRG.
-- `times::Vector{Float64}`: Vector of time points at which measurements were taken.
+- `betas::Vector{Float64}`: Vector of imaginary time points at which measurements were taken.
 - `szs::Vector{Vector{Float64}}`: Vector of ⟨Sz⟩ measurements at each time point.
 - `energies::Vector{Float64}`: Vector of energy measurements at each time point.
 - `nsite::Int`: Same as above.
-- `time::Float64`: Same as above.
-- `timestep::Float64`: Same as above.
+- `beta::Float64`: Same as above.
+- `betastep::Float64`: Same as above.
 - `cutoff::Float64`: Same as above.
 """
 function main(;
         # Number of sites
         nsite = 30,
         # TEBD parameters
-        time = 20.0,
-        timestep = 0.2,
+        beta = 20.0,
+        betastep = 0.2,
         cutoff = 1.0e-10,
         outputlevel = 1,
     )
@@ -79,13 +79,14 @@ function main(;
     )
 
     # Make gates (1, 2), (2, 3), (3, 4), ...
-    gates = map(1:(nsite - 1)) do j
+    function gate(j)
         si, sj = sites[j], sites[j + 1]
         hj = 1 / 2 * op("S+", si) * op("S-", sj) +
             1 / 2 * op("S-", si) * op("S+", sj) +
             op("Sz", si) * op("Sz", sj)
-        return exp(-timestep / 2 * hj)
+        return exp(-betastep / 2 * hj)
     end
+    gates = [gate(j) for j in 1:(nsite - 1)]
     # Include gates in reverse order too
     # (N, N - 1), (N - 1, N - 2), ...
     append!(gates, reverse(gates))
@@ -99,18 +100,18 @@ function main(;
     end
     szs = [expect(psit, "Sz")]
     energies = [inner(psit', H, psit)]
-    times = 0.0:timestep:time
+    betas = 0.0:betastep:beta
     print_every = 5
-    for current_time in times[2:end]
+    for current_beta in betas[2:end]
         psit = normalize(apply(gates, psit; cutoff))
         energy_t = inner(psit', H, psit)
         sz_t = expect(psit, "Sz")
         push!(szs, sz_t)
         push!(energies, energy_t)
-        if floor(current_time - timestep + 10eps()) ≠ floor(current_time) &&
-                floor(current_time) % print_every == 0
+        if floor(current_beta - betastep + 10eps()) ≠ floor(current_beta) &&
+                floor(current_beta) % print_every == 0
             if outputlevel > 0
-                println("time: ", current_time)
+                println("beta: ", current_beta)
                 println("Bond dimension: ", maxlinkdim(psit))
                 println("⟨ψₜ|Szⱼ|ψₜ⟩: ", sz_t[nsite ÷ 2])
                 println("∑ⱼ⟨ψₜ|Szⱼ|ψₜ⟩: ", sum(sz_t))
@@ -121,8 +122,8 @@ function main(;
     end
 
     res = (;
-        H, psit, psi_ground_state, energy_ground_state, times, szs, energies, nsite, time,
-        timestep, cutoff,
+        H, psit, psi_ground_state, energy_ground_state, betas, szs, energies, nsite, beta,
+        betastep, cutoff,
     )
     if outputlevel > 1
         animate_tebd_sz(res)

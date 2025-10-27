@@ -6,6 +6,7 @@ using ITensorMPS: apply, op
 using LinearAlgebra: norm, normalize
 # Use to set the RNG seed for reproducibility
 using StableRNGs: StableRNG
+using Statistics: mean
 # Load the Plots package for plotting
 using Plots: Plots, plot
 
@@ -32,10 +33,9 @@ the mean (average) and the standard error
 of the mean (= the width of distribution of the numbers).
 """
 function mean_and_sem(v::Vector)
-    N = length(v)
-    mean = sum(v) / N
-    mean2 = sum(v .^ 2) / N
-    return mean, √((mean2 - mean^2) / N)
+    mn = mean(v)
+    mn2 = sum(v .^ 2) / length(v)
+    return mn, √((mn2 - mn^2) / length(v))
 end
 
 """
@@ -64,6 +64,8 @@ A named tuple containing:
 - `beta::Float64`: Same as above.
 - `betastep::Float64`: Same as above.
 - `cutoff::Float64`: Same as above.
+- `NMETTS::Int`: Same as above.
+- `Nwarm::Int`: Same as above.
 """
 function main(;
         # Number of sites
@@ -81,13 +83,14 @@ function main(;
     sites = siteinds("S=1/2", nsite)
 
     # Make gates (1, 2), (2, 3), (3, 4), ...
-    gates = map(1:(nsite - 1)) do j
+    function gate(j)
         si, sj = sites[j], sites[j + 1]
         hj = 1 / 2 * op("S+", si) * op("S-", sj) +
             1 / 2 * op("S-", si) * op("S+", sj) +
             op("Sz", si) * op("Sz", sj)
         return exp(-betastep / 2 * hj)
     end
+    gates = [gate(j) for j in 1:(nsite - 1)]
     # Include gates in reverse order too
     # (N, N - 1), (N - 1, N - 2), ...
     append!(gates, reverse(gates))
@@ -120,6 +123,7 @@ function main(;
     end
 
     energies = Float64[]
+    energy_sqrs = Float64[]
     print_every = 10
     for step in 1:(Nwarm + NMETTS)
         if outputlevel > 0 && step % print_every == 0
@@ -132,15 +136,16 @@ function main(;
 
         # Do the time evolution by applying the gates
         for _ in betas
-            psi = apply(gates, psi; cutoff)
-            psi = normalize(psi)
+            psi = normalize(apply(gates, psi; cutoff))
         end
 
         # Measure properties after >= Nwarm
         # METTS have been made
         if step > Nwarm
             energy = inner(psi', H, psi)
+            energy_sqr = inner(H, psi, H, psi)
             push!(energies, energy)
+            push!(energy_sqrs, energy_sqr)
             if outputlevel > 0 && step % print_every == 0
                 @printf("  Energy of METTS %d = %.4f\n", step - Nwarm, energy)
                 @printf("  Energy of ground state from DMRG %.4f\n", energy_dmrg)
@@ -170,5 +175,5 @@ function main(;
         psi = MPS(sites, state)
     end
 
-    return (; H, psi, betas, energies, energy_dmrg, nsite, beta, betastep, cutoff)
+    return (; H, psi, betas, energies, energy_sqrs, energy_dmrg, nsite, beta, betastep, cutoff, NMETTS, Nwarm)
 end
