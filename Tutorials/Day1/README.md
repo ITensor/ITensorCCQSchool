@@ -206,7 +206,7 @@ pkg> activate .
 ```
 to activate the environment, which will ensure you have the correct dependencies available to run the tutorial scripts for that day.
 
-Also note that if you want to cancel a calculation that is in-progress, you can use execute Control-C on your keyboard, which will cancel the calculation and return you to the Julia REPL prompt.
+Also note that if you want to cancel a calculation that is in-progress, you can execute Control-C on your keyboard, which will cancel the calculation and return you to the Julia REPL prompt.
 
 This is the end of the current tutorial, continue on to the next tutorial or click [here](#table-of-contents) to return to the table of contents.
 
