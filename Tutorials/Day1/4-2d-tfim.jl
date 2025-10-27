@@ -126,9 +126,9 @@ function main(;
     for b in lattice
         i, j = b.s1, b.s2
         xi, xj = Int(b.x1), Int(b.x2)
-        terms += -1,"Z", i, "Z", j
-        terms += -field(xi)/2, "X", i
-        terms += -field(xj)/2, "X", j
+        terms -= "Z", i, "Z", j
+        terms -= field(xi)/2, "X", i
+        terms -= field(xj)/2, "X", j
     end
     H = MPO(terms, sites)
 
