@@ -80,6 +80,9 @@ function main(;
     end
     H = MPO(terms, sites)
 
+    if outputlevel > 0
+        println("Constructing the starting state for time evolution")
+    end
     # Run DMRG to get a starting state for time evolution
     psi0 = random_mps(sites; linkdims = 10)
     _, psi = dmrg(
@@ -102,6 +105,9 @@ function main(;
     # (N, N - 1), (N - 1, N - 2), ...
     append!(gates, reverse(gates))
 
+    if outputlevel > 0
+        println("\nStarting real time evolution")
+    end
     szs = [expect(psit, "Sz")]
     energies = ComplexF64[inner(psit', H, psit)]
     entanglements = [entanglement_entropy(psit, nsite ÷ 2)]
@@ -128,8 +134,7 @@ function main(;
     end
 
     res = (;
-        H, psi, times, szs, energies, entanglements, nsite, time,
-        timestep, cutoff,
+        H, psi, times, szs, energies, entanglements, nsite, time, timestep, cutoff,
     )
     if outputlevel > 1
         animate_tebd_sz(res)

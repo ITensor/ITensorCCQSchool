@@ -58,7 +58,7 @@ First, lets run the  script [1-tensornetworks.jl](./1-tensornetworks.jl)
 
 ```julia
 julia> include("1-tensornetworks.jl")
-main (generic function with 1 method)
+main
 ```
 
 By looking inside it you will see that it builds the 3-site path graph, which can be accessed and viewed via
@@ -163,7 +163,7 @@ $$\phi(\beta) = -\beta f(\beta) = \frac{1}{L_{x}L_{y}}\ln(Z(\beta))$$
 We can do the following to get the BP computed value for $\phi$ on a 10x1 OBC square grid. This is just a path graph, like in the previous example.
 ```julia
 julia> include("2-beliefpropagation.jl")
-main (generic function with 1 method)
+main
 
 julia> res = main(; Lx = 3, Ly = 1, beta = 0.2, periodic = false);
 BP Algorithm Converged after 3 iterations
@@ -329,6 +329,8 @@ Using cluster expanded results to improve tensor network contraction is an activ
 
 
 This is the end of the current tutorial, continue on to the next tutorial or click [here](#table-of-contents) to return to the table of contents.
+
+</details>
 
 <a id="stretch-goals"></a>
 <details>
