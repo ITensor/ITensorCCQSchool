@@ -585,7 +585,7 @@ In this tutorial, you will explore 2D DMRG calculations, using the transverse-fi
 julia> include("4-2d-tfim.jl")
 main
 
-julia> res = main(; nx = 4, ny = 2, U = 8.0, nsweeps = 5);
+julia> res = main();
 MPO bond dimension: 5
 Initial MPS bond dimension: 4
 After sweep 1 energy=-223.74572376546493  maxlinkdim=2 maxerr=2.08E-02 time=12.120
