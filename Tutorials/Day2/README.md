@@ -339,7 +339,7 @@ Energy Variance│⠀⡇⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀�
     psit = random_mps(rng, sites)
 ```
 
-Try changing the seed of the initial state. Does the result still converge to the ground state? Can you think of what initial states might prevent this happening? Hint: think about the symmetries of the model. Try to construct some. Does the variance still go to zero?
+Try changing the seed of the random number generator (the number `123` above) to generate a different random initial state. Does the result still converge to the ground state? Can you think of what initial states might prevent this happening? Hint: think about the symmetries of the model. Try to construct some. Does the variance still go to zero?
 
 
 This is the end of the current tutorial, continue on to the next tutorial or click [here](#table-of-contents) to return to the table of contents.
@@ -465,7 +465,7 @@ julia> specific_heat(res) = [...]
 julia> specific_heat(res)
 0.2563153342962835
 ```
-For the default parameters ($\beta = 4.0$, NMETTS $=100, nsite = 10$) provided you should find $C_{v}(\beta = 4.0) \approx 0.26$ (the RNG for the initial state and sampling is seeded to be reproducable).
+For the default parameters ($\beta = 4.0$, NMETTS $=100, nsite = 10$) provided you should find $C_{v}(\beta = 4.0) \approx 0.26$ (the random number generator (RNG) for the initial state and sampling is seeded so that the results are numerically reproducable).
 Next we are going to measure the specific heat as a function of inverse temperature.
 
 2. Construct an array of $\beta$ values:
