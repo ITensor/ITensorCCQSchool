@@ -310,7 +310,7 @@ julia> inner(res.H, res.psit, res.H, res.psit) - inner(res.psit', res.H, res.psi
 0.00020948820113630973
 
 ```
-Edit the `main` function in the file `2-imaginary-time.jl` to calculate the variance of the energy as a function of time in your simulation and have `main` return it as a new output `energy_vars`. Once that is working, rerun the `main` function to compute the energy variance at each time step and plot them as follows:
+Edit the `main` function in the file `2-imaginary-time.jl` to calculate the variance of the energy as a function of time in your simulation and have `main` return it as a new output `energy_vars`. As a reference, see how the `energies` are saved and computed, and note that as an optimization you could use the energy that was already computed at each step in the second term of the variance. Once you get that working, rerun the `main` function to compute the energy variance at each time step and plot them as follows:
 ```julia
 julia> plot(res.times, res.energy_vars; xlabel = "Imaginary Time", ylabel = "Energy Variance", legend = false)
                ┌────────────────────────────────────────┐  
