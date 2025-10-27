@@ -413,80 +413,79 @@ Making METTS number 100
 
 The specific heat can be approximated from the METTS algorithm via the following formula:
 
-$C_{v}(\beta) = \frac{\beta^{2}}{\rm NMETTS}\left(\overline{\langle H^{2} \rangle} - \overline{\langle H \rangle^{2}} \right)$
+$$C_{v}(\beta) = \frac{\beta^{2}}{\rm nsite}\left(\overline{\langle H^{2} \rangle} - \left(\overline{\langle H \rangle}\right)^{2} \right)$$
 
-where $\overline{X}$ denotes the METTS ensemble average. You can measure the square energy of a given METTS via 
+where $\overline{X} = \frac{1}{\rm NMETTS}\sum_{i=1}^{\rm NMETTS}\langle X\rangle_{i}$ denotes the METTS ensemble average. You can measure the square energy of a given METTS via 
 
 ```julia
 inner(H, psi, H, psi)
 ```
 
-1. Modify `main()` to keep track of the square energy of each METT after it has been evolved. Average over these, and the energies (which are already kept track off) at the end of the simulation to calculate $C_{v}(\beta)$ for the given $\beta$ and have it returned by main. Check that this gives a sensible answer from `main()`. For the default parameters ($\beta = 4.0$, NMETTS $=100$) provided you should find $C_{v}(\beta = 4.0) \approx 0.19$ (the RNG for the initial state and sampling is seeded to be reproducable).
+1. Modify `main()` to keep track of the square energy of each METT after it has been evolved. Average over these, and the energies (which are already kept track off) at the end of the simulation to calculate $C_{v}(\beta)$ for the given $\beta$ and have it returned by main. Check that this gives a sensible answer from `main()`. For the default parameters ($\beta = 4.0$, NMETTS $=100, nsite = 10$) provided you should find $C_{v}(\beta = 4.0) \approx 0.26$ (the RNG for the initial state and sampling is seeded to be reproducable).
 ```julia
 julia> res = main(; outputlevel = 0);
 
 julia> res.specific_heat
-0.1906972673732355
+0.2563153342962835
 ```
 Next we are going to measure the specific heat as a function of inverse temperature.
 
 2. Construct an array of $\beta$ values:
 ```julia
-julia> betas = 0.2 * (1:41)
-0.2:0.2:8.2
+julia> betas = 0.4:0.4:8;
 
 ```
 and then create a vector of simulation outputs for these `betas`:
 ```julia
-julia> results = [main(; beta, betastep = 0.1, NMETTS = 25) for beta in betas];
+julia> results = [main(; beta, betastep = 0.1, NMETTS = 10, nsite = 15) for beta in betas];
 ```
-This might take a few minutes to run, so play around with the setting of `NMETTS`. We suggest setting `NMETTS = 25` to get a coarse grained result. Try plotting the result:
+This might take a few minutes to run, so play around with the setting of `NMETTS`. We suggest setting `NMETTS = 10` and `nsite = 15` to get a coarse grained result on a slightly bigger system. Try plotting the result:
 ```julia
 julia> specific_heats = [res.specific_heat for res in results];
 
 julia> plot(betas, specific_heats; xlabel = "Beta", ylabel = "Specific Heat", legend = false)
-             ┌────────────────────────────────────────┐  
-     0.393288│⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⠀⠀⠀⠀⠀⣀⠀⠀⠀⠀⡦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
-             │⡇⠀⠀⠀⠀⠀⠀⢰⡄⠀⠀⠀⢀⢿⠀⠀⠀⠀⢰⢹⠀⠀⠀⠀⡇⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
-             │⡇⠀⠀⠀⠀⠀⠀⡜⠈⠢⠔⠢⠊⠀⡇⠀⠀⢰⠁⢸⠀⠀⠀⢀⠇⢣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
-             │⡇⠀⠀⠀⠀⠀⢀⠇⠀⠀⠀⠀⠀⠀⡇⠀⠀⡇⠀⢸⠀⠀⠀⢸⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
-             │⡇⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⢇⠀⠀⡇⠀⢸⠀⠀⠀⢸⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
-             │⡇⠀⠀⠀⠀⠀⡇⠀⠀⠀⠀⠀⠀⠀⢸⡀⢸⠀⠀⠀⡇⠀⠀⡸⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
-             │⡇⠀⠀⠀⠀⢠⠃⠀⠀⠀⠀⠀⠀⠀⠀⠈⠺⠀⠀⠀⡇⠀⠀⡇⠀⠸⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
-Specific Heat│⡇⠀⠀⠀⠀⡸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇⡦⡸⠀⠀⠀⡇⣦⠀⠀⠀⠀⠀⠀⠀⢀⠀⠀⠀⠀│  
-             │⡇⠀⠀⠀⢀⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡿⠀⠀⠀⠀⠀⣿⠀⡇⠀⡠⢄⡀⠀⠀⡜⡇⠀⠀⠀│  
-             │⡇⠀⠀⠀⡜⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠃⠀⢱⢰⠁⠀⢣⠀⢰⠁⢱⠀⠀⠀│  
-             │⡇⠀⠀⢰⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⡸⠀⠀⠈⠒⠃⠀⠘⠲⡀⠀│  
-             │⡇⠀⠀⡜⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠇⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀│  
-             │⡇⠀⢠⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⠀│  
-             │⡇⢀⠎⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
-  -0.00416347│⣇⣎⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀│  
-             └────────────────────────────────────────┘  
-             ⠀-0.034⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Beta⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀8.234⠀ 
+             ┌────────────────────────────────────────┐
+     0.332206│⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠶⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+             │⠀⠀⠀⠀⠀⠀⠀⢀⡠⠃⠀⠘⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+             │⠀⠀⠀⠀⠀⠀⢸⠁⠀⠀⠀⠀⠈⢢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+             │⠀⠀⠀⠀⠀⠀⡇⠀⠀⠀⠀⠀⠀⠀⢣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+             │⠀⠀⠀⠀⠀⢠⠃⠀⠀⠀⠀⠀⠀⠀⠈⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+             │⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⢱⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+             │⠀⠀⠀⠀⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢢⠀⠀⡠⠒⢤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+Specific Heat│⠀⠀⠀⠀⢰⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠑⡔⠁⠀⠈⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+             │⠀⠀⠀⠀⡎⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+             │⠀⠀⠀⢰⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+             │⠀⠀⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+             │⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+             │⠀⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠑⠢⠤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+             │⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠒⠒⠒⠤⠤⠤⢄⣀⡀⠀│
+    0.0269131│⠀⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+             └────────────────────────────────────────┘
+             ⠀0.16⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Beta⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀8.64⠀
 ```
 The specific heat of the spin 1/2 antiferromagnetic Heisenberg model is known to display a broad peak at $T = 0.48J$ (here we have $J = 1$) with a maximum value of $~0.35J$. Do your results agree with this?
 
-3. The high temperature regime should display an inverse square dependence of the specific heat with temperature, i.e $C_{v} \propto \frac{1}{T^{2}}$. Use a range $0 \leq \beta \leq 0.5$ to try to confirm this. When using a finer range of betas, make sure to adjust the step size in `main` to be commensurate or you will get an error message. You should be able to reproduce a plot like:
+3. The high temperature regime should display an inverse square dependence of the specific heat with temperature, i.e $C_{v} \propto \frac{1}{T^{2}}$. Use a range $0 \leq \beta \leq 0.4$ to try to confirm this. When using a finer range of betas, make sure to adjust the step size in `main` to be commensurate or you will get an error message. You should be able to reproduce a plot like:
 ```julia
-julia> plot(betas .^ 2, specific_heats; xlabel = "Beta", ylabel = "Specific Heat", legend = false)
-             ┌────────────────────────────────────────┐  
-     0.047881│⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠤⠀│
-             │⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡠⠒⠁⠀⠀│  
-             │⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⠔⠁⠀⠀⠀⠀⠀│  
-             │⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⠔⠊⠀⠀⠀⠀⠀⠀⠀⠀│  
-             │⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⠔⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
-             │⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⠒⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
-             │⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠔⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
-Specific Heat│⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠎⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
-             │⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠔⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
-             │⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠔⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
-             │⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⠔⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
-             │⢸⠀⠀⠀⠀⠀⠀⠀⠀⡠⠔⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
-             │⢸⠀⠀⠀⠀⠀⣠⠔⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
-             │⢸⠀⠀⡠⠔⠊⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│  
-   -0.0010349│⢼⠴⠯⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤│  
-             └────────────────────────────────────────┘  
-             ⠀-0.004925⠀⠀⠀⠀⠀⠀⠀⠀Beta⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀0.257425⠀
+julia> plot(betas .^ 2, specific_heats; xlabel = "Beta Squared", ylabel = "Specific Heat", legend = false)
+             ┌────────────────────────────────────────┐
+    0.0366007│⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⠄⠀│
+             │⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡠⠊⠀⠀⠀│
+             │⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⠔⠁⠀⠀⠀⠀⠀│
+             │⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠤⠊⠀⠀⠀⠀⠀⠀⠀⠀│
+             │⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠔⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+             │⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⠔⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+             │⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⠊⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+Specific Heat│⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠔⠊⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+             │⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠤⠊⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+             │⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡠⠒⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+             │⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡠⠒⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+             │⢸⠀⠀⠀⠀⠀⠀⠀⢀⡠⠔⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+             │⢸⠀⠀⠀⠀⢀⡠⠒⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+             │⢸⠀⢀⡠⠒⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+ -0.000559235│⣸⣔⣉⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀│
+             └────────────────────────────────────────┘
+             ⠀-0.002225⠀⠀⠀⠀Beta Squared⠀⠀⠀⠀⠀⠀⠀0.164725⠀
 
 ```
 
