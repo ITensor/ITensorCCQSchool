@@ -6,7 +6,7 @@
 - [Tutorial 1: Julia Intro](#tutorial-1)
 - [Tutorial 2: DMRG](#tutorial-2)
 - [Tutorial 3: DMRG Measurments](#tutorial-3)
-- [Tutorial 4: 2D Hubbard Model](#tutorial-4)
+- [Tutorial 4: 2D Ising Model](#tutorial-4)
 - [Stretch Goals](#stretch-goals)
 
 <a id="installation-instructions"></a>
@@ -574,40 +574,53 @@ This is the end of the current tutorial, continue on to the next tutorial or cli
 
 <a id="tutorial-4"></a>
 <details>
-  <summary><h2>Tutorial 4: 2D Hubbard Model</h2></summary>
+  <summary><h2>Tutorial 4: 2D Ising Model</h2></summary>
   <hr>
 
+In this tutorial, you will explore 2D DMRG calculations, using the transverse-field Ising model on a square-lattice cylinder. 
+
+
+1. Run the `main` function provided in the file [4-2d-tfim.jl](./4-2d-tfim.jl). DMRG will run and you will see information about each sweep.
 ```julia
-julia> include("4-hubbard.jl")
+julia> include("4-2d-tfim.jl")
 main
 
 julia> res = main(; nx = 4, ny = 2, U = 8.0, nsweeps = 5);
-MPO bond dimension: 10
-Initial MPS bond dimension: 10
-After sweep 1 energy=-2.5282321813602855  maxlinkdim=89 maxerr=9.77E-07 time=8.969
-After sweep 2 energy=-2.953856048445134  maxlinkdim=109 maxerr=9.64E-07 time=0.370
-After sweep 3 energy=-3.02261986309084  maxlinkdim=94 maxerr=9.94E-07 time=0.369
-After sweep 4 energy=-3.0258111835433  maxlinkdim=91 maxerr=9.96E-07 time=0.368
-After sweep 5 energy=-3.0258762938950725  maxlinkdim=83 maxerr=9.73E-07 time=0.368
+MPO bond dimension: 5
+Initial MPS bond dimension: 4
+After sweep 1 energy=-223.74572376546493  maxlinkdim=2 maxerr=2.08E-02 time=12.120
+After sweep 2 energy=-224.38416688578914  maxlinkdim=4 maxerr=4.31E-04 time=3.093
+After sweep 3 energy=-224.79019989335737  maxlinkdim=9 maxerr=9.93E-07 time=3.096
+After sweep 4 energy=-224.79244529239656  maxlinkdim=10 maxerr=9.40E-07 time=3.163
+```
 
-julia> res.ns[end]
-2×4 Matrix{Float64}:
- 0.0341762  0.0431004  0.0430981  0.0341731
- 0.0341752  0.0430984  0.0430954  0.0341711
-
+2. You can explore the results by displaying the expected ⟨Sz⟩ values stored in `res.szs` or expected ⟨Sx⟩ values stored in `res.sxs`. 
+```julia
 julia> res.szs[end]
-2×4 Matrix{Float64}:
-  0.000395183  -0.000480938   0.000704163  -0.000843082
- -0.000404015   0.000484498  -0.000699671   0.000843861
+3×30 Matrix{Float64}:
+ -0.5  -0.5  -0.499999  -0.499998  -0.499994  …  -0.0423845  -0.0328509  -0.0259664  -0.0222705
+ -0.5  -0.5  -0.499999  -0.499998  -0.499994     -0.0423846  -0.032851   -0.0259668  -0.0222707
+ -0.5  -0.5  -0.499999  -0.499998  -0.499994     -0.0423839  -0.0328507  -0.025967   -0.0222708
+```
+
+3. Plot the results by calling `plot_spins(res)` or see an animation of the entire calculation by calling `animate_spins(res)`.
+```julia
 
 julia> Plots.gr(); # Enable the GR backend to plot in a window
 
-julia> plot_hubbard(res)
+julia> plot_spins(res)
 [...]
 
-julia> animate_hubbard(res)
+julia> animate_spins(res)
 [...]
+```
 
+4. Try changing some of the key parameters such as `nx`, `ny`, `h_max`, and `ramp_width`. You can see all the parameters of `main` by viewing the docstring for `main`:
+```julia
+julia> ?
+
+help?> main
+[...]
 ```
 
 This is the end of the current tutorial, continue on to the next tutorial or click [here](#table-of-contents) to return to the table of contents.
