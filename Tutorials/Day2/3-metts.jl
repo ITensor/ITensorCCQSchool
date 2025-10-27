@@ -33,12 +33,8 @@ of the mean (= the width of distribution of the numbers).
 """
 function mean_and_sem(v::Vector)
     N = length(v)
-    mean = v[1] / N
-    mean2 = v[1]^2 / N
-    for j in 2:N
-        mean += v[j] / N
-        mean2 += v[j]^2 / N
-    end
+    mean = sum(v) / N
+    mean2 = sum(v .^ 2) / N
     return mean, √((mean2 - mean^2) / N)
 end
 
