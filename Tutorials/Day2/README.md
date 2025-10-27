@@ -432,8 +432,7 @@ Next we are going to measure the specific heat as a function of inverse temperat
 
 2. Construct an array of $\beta$ values:
 ```julia
-julia> betas = 0.4 * (1:21)
-0.4:0.4:8.4
+julia> betas = 0.4:0.4:8;
 
 ```
 and then create a vector of simulation outputs for these `betas`:
