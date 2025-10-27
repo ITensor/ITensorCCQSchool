@@ -45,7 +45,7 @@ Perform METTS (minimally entangled typical thermal states) algorithm on a 1D
 Heisenberg spin-1/2 chain to compute thermal expectation values at finite temperature.
 
 # Keywords
-- `nsite::Int = 30`: Number of sites in the spin chain.
+- `nsite::Int = 10`: Number of sites in the spin chain.
 - `beta::Float64 = 4.0`: Inverse temperature β = 1/T.
 - `betastep::Float64 = 0.1`: Time step for imaginary time evolution.
 - `cutoff::Float64 = 1.0e-8`: Cutoff for truncation during imaginary time evolution.
@@ -123,7 +123,6 @@ function main(;
     end
 
     energies = Float64[]
-    energy_sqrs = Float64[]
     print_every = 10
     for step in 1:(Nwarm + NMETTS)
         if outputlevel > 0 && step % print_every == 0
@@ -143,9 +142,7 @@ function main(;
         # METTS have been made
         if step > Nwarm
             energy = inner(psi', H, psi)
-            energy_sqr = inner(H, psi, H, psi)
             push!(energies, energy)
-            push!(energy_sqrs, energy_sqr)
             if outputlevel > 0 && step % print_every == 0
                 @printf("  Energy of METTS %d = %.4f\n", step - Nwarm, energy)
                 @printf("  Energy of ground state from DMRG %.4f\n", energy_dmrg)
@@ -175,5 +172,8 @@ function main(;
         psi = MPS(sites, state)
     end
 
-    return (; H, psi, betas, energies, energy_sqrs, energy_dmrg, nsite, beta, betastep, cutoff, NMETTS, Nwarm)
+    return (;
+        H, psi, betas, energies, energy_dmrg, nsite, beta, betastep, cutoff,
+        NMETTS, Nwarm,
+    )
 end

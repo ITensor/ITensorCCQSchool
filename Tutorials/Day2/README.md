@@ -351,8 +351,9 @@ This is the end of the current tutorial, continue on to the next tutorial or cli
   <summary><h2>Tutorial 3: Finite Temperature</h2></summary>
   <hr>
 
-We are now going to run the METTS (minimally entangled thermal states) algorithm to extract finite temperature properties of the system whilst remaining in the pure state picture. This is done in the file [3-metts.jl](./3-metts.jl).
+We are now going to run the METTS (minimally entangled thermal states) algorithm to extract finite temperature properties of the system while remaining in the pure state picture. This is done in the file [3-metts.jl](./3-metts.jl).
 
+1. Run the `main` function from `3-metts.jl` to get an estimate of the energy of the 1D Heisenberg chain at finite temperature (by default, `nsite = 10` and `beta = 4.0`):
 ```julia
 julia> include("3-metts.jl")
 
@@ -409,42 +410,78 @@ Making METTS number 100
   Energy of ground state from DMRG -4.2580
   Estimated Energy = -3.9331 +- 0.0247  [-3.9578,-3.9084]
   Sampled state: ["Z-", "Z-", "Z+", "Z+", "Z+", "Z-", "Z-", "Z+", "Z-", "Z+"]
+
 ```
 
-The specific heat can be approximated from the METTS algorithm via the following formula:
+2. Next we will approximate the specific heat as a function of $\beta$. The specific heat can be approximated from the METTS algorithm via the following formula:
 
-$$C_{v}(\beta) = \frac{\beta^{2}}{\rm nsite}\left(\overline{\langle H^{2} \rangle} - \left(\overline{\langle H \rangle}\right)^{2} \right)$$
+$$C_{v}(\beta) = \frac{\beta^2}{\rm nsite}\left(\overline{\langle H^2 \rangle} - \left(\overline{\langle H \rangle}\right)^2 \right)$$
 
-where $\overline{X} = \frac{1}{\rm NMETTS}\sum_{i=1}^{\rm NMETTS}\langle X\rangle_{i}$ denotes the METTS ensemble average. You can measure the square energy of a given METTS via 
+where $\overline{X} = \frac{1}{\rm NMETTS}\sum_{i=1}^{\rm NMETTS}\langle X\rangle_{i}$ denotes the METTS ensemble average.
 
+Start by modifying `main()` to keep track of the mean square energy ($\langle H^2 \rangle$) of each METTS after it has been evolved in a vector of values `square_energies` that you output from `main`. Use `energies` as a reference how to do that, and remember that you can compute $\langle H^2 \rangle$ for an operator `H` and a state `psi` in ITensor using:
 ```julia
 inner(H, psi, H, psi)
 ```
 
-1. Modify `main()` to keep track of the square energy of each METT after it has been evolved. Average over these, and the energies (which are already kept track off) at the end of the simulation to calculate $C_{v}(\beta)$ for the given $\beta$ and have it returned by main. Check that this gives a sensible answer from `main()`. For the default parameters ($\beta = 4.0$, NMETTS $=100, nsite = 10$) provided you should find $C_{v}(\beta = 4.0) \approx 0.26$ (the RNG for the initial state and sampling is seeded to be reproducable).
+Include the updated file and run `main` again to get the mean square energies of each METTS:
 ```julia
+julia> include("3-metts.jl")
+main
+
 julia> res = main(; outputlevel = 0);
 
-julia> res.specific_heat
+julia> res.energies
+100-element Vector{Float64}:
+ -4.074445803221543
+ -4.09784222998449
+ -4.097842229984583
+ -4.212509962722872
+ -4.143542986283167
+  ⋮
+ -4.138309287997185
+ -4.188511217371247
+ -4.141192907671604
+ -4.1411719927464885
+
+julia> res.square_energies
+100-element Vector{Float64}:
+ 16.71674724578452
+ 16.900519950999097
+ 16.900519950999833
+ 17.803180810357997
+ 17.278567742109843
+  ⋮
+ 17.16646036669021
+ 17.61775065669934
+ 17.214861545581314
+ 17.214678861292388
+
+```
+Use the formula above to compute the specific heat $C_{v}(\beta)$ using the energies and square energies. Note that Julia's [Statistics.jl](https://docs.julialang.org/en/v1/stdlib/Statistics/) standard library function `mean` is of use here, and we've already loaded it in the script for convenience. Specifically, define a function `specific_heat(res)` using `res.beta`, `res.nsite`, `res.energies`, and `res.square_energies` which you can call on results `res` to compute the specific heat:
+```julia
+julia> specific_heat(res) = [...]
+
+julia> specific_heat(res)
 0.2563153342962835
 ```
+For the default parameters ($\beta = 4.0$, NMETTS $=100, nsite = 10$) provided you should find $C_{v}(\beta = 4.0) \approx 0.26$ (the RNG for the initial state and sampling is seeded to be reproducable).
 Next we are going to measure the specific heat as a function of inverse temperature.
 
 2. Construct an array of $\beta$ values:
 ```julia
-julia> betas = 0.4:0.4:8.0
-0.4:0.4:8.0
+julia> betas = 0.4:0.4:8.0;
 
 ```
 and then create a vector of simulation outputs for these `betas`:
 ```julia
 julia> results = [main(; beta, betastep = 0.1, NMETTS = 10, nsite = 15) for beta in betas];
-```
-This might take a few minutes to run, so play around with the setting of `NMETTS`. We suggest setting `NMETTS = 10` and `nsite = 15` to get a coarse grained result on a slightly bigger system. Try plotting the result:
-```julia
-julia> specific_heats = [res.specific_heat for res in results];
+[...]
 
-julia> plot(betas, specific_heats; xlabel = "Beta", ylabel = "Specific Heat", legend = false)
+```
+This might take a few minutes to run. Also feel free to play around with the setting of `NMETTS`, which will trade off speed for better or worse statistical noise. We suggest setting `NMETTS = 10` and `nsite = 15` to get a coarse grained result on a slightly bigger system. Try plotting the result using the function `specific_heat(res)` you defined above by calling it on each of the results obtained:
+```julia
+julia> plot(betas, specific_heat.(results); xlabel = "Beta", ylabel = "Specific Heat", legend = false)
              ┌────────────────────────────────────────┐
      0.332206│⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠶⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
              │⠀⠀⠀⠀⠀⠀⠀⢀⡠⠃⠀⠘⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
@@ -463,30 +500,31 @@ Specific Heat│⠀⠀⠀⠀⢰⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠑⡔⠁⠀�
     0.0269131│⠀⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
              └────────────────────────────────────────┘
              ⠀0.16⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Beta⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀8.64⠀
-```
-The specific heat of the spin 1/2 antiferromagnetic Heisenberg model is known to display a broad peak at $T = 0.48J$ (here we have $J = 1$) with a maximum value of $~0.35J$. Do your results agree with this?
 
-3. The high temperature regime should display an inverse square dependence of the specific heat with temperature, i.e $C_{v} \propto \frac{1}{T^{2}}$. Use a range $0 \leq \beta \leq 0.4$ to try to confirm this. When using a finer range of betas, make sure to adjust the step size in `main` to be commensurate or you will get an error message. You should be able to reproduce a plot like:
+```
+Feel free to enable another plotting backend by executing `Plots.gr()` if you want a clearer look at the data (and you can switch back to plotting in the REPL with `Plots.unicodeplots()`). The specific heat of the spin 1/2 antiferromagnetic Heisenberg model is known to display a broad peak at $T = 0.48J$ (here we have $J = 1$) with a maximum value of $~0.35J$. Do your results agree with this?
+
+3. The high temperature regime should display an inverse square dependence of the specific heat with temperature, i.e $C_{v} \propto \frac{1}{T^{2}}$. Use a range $0 \leq \beta \leq 0.4$ to try to confirm this. When using a finer range of betas, make sure to adjust the `betastep` input of `main` to be commensurate or you won't be able to reach the desired `beta` and the script will error. For example, you may want to use `betas = 0.1:0.1:0.5` and `betastep = 0.01`. You should be able to reproduce a plot like:
 ```julia
-julia> plot(betas .^ 2, specific_heats; xlabel = "Beta Squared", ylabel = "Specific Heat", legend = false)
+julia> plot(betas .^ 2, specific_heat.(results); xlabel = "Beta Squared", ylabel = "Specific Heat", legend = false)
              ┌────────────────────────────────────────┐
-    0.0366007│⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⠄⠀│
-             │⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡠⠊⠀⠀⠀│
-             │⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⠔⠁⠀⠀⠀⠀⠀│
-             │⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠤⠊⠀⠀⠀⠀⠀⠀⠀⠀│
-             │⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠔⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
-             │⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⠔⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
-             │⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⠊⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
-Specific Heat│⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠔⠊⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
-             │⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠤⠊⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
-             │⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡠⠒⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
-             │⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡠⠒⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
-             │⢸⠀⠀⠀⠀⠀⠀⠀⢀⡠⠔⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
-             │⢸⠀⠀⠀⠀⢀⡠⠒⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
-             │⢸⠀⢀⡠⠒⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
- -0.000559235│⣸⣔⣉⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀│
+    0.0365955│⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠔⠀│
+             │⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⠊⠁⠀⠀│
+             │⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠔⠊⠀⠀⠀⠀⠀│
+             │⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⠒⠁⠀⠀⠀⠀⠀⠀⠀│
+             │⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠤⠊⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+             │⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⠔⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+             │⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡠⠊⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+Specific Heat│⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⠔⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+             │⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠤⠊⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+             │⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡠⠊⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+             │⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡠⠒⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+             │⠀⡇⠀⠀⠀⠀⠀⠀⢀⠤⠒⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+             │⠀⡇⠀⠀⠀⢀⡠⠊⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+             │⠀⡇⠀⡠⠒⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+  -0.00106589│⠤⡷⠭⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤│
              └────────────────────────────────────────┘
-             ⠀-0.002225⠀⠀⠀⠀Beta Squared⠀⠀⠀⠀⠀⠀⠀0.164725⠀
+             ⠀-0.0048⠀⠀⠀⠀⠀⠀Beta Squared⠀⠀⠀⠀⠀⠀⠀⠀⠀0.1648⠀
 
 ```
 
