@@ -3,7 +3,7 @@ using ITensors: ITensor, inds, sim, prime, noprime, apply
 using StableRNGs: StableRNG
 using Plots: Plots, plot
 
-function main()
+function main(; outputlevel = 1)
     N = 10
     s = siteinds("S=1/2", N)
     rng = StableRNG(123)
@@ -32,6 +32,9 @@ function main()
 
     # Check the results against `expect(psi, O)` for each site `j`.
     Os = expect(psi, O)
+    if outputlevel > 0
+        println("<$(O)ⱼ>: ", Os)
+    end
 
     return (; Os, psi, L, Ls)
 end
