@@ -551,6 +551,12 @@ ids!), and also print the tensors themselves to see their values. You can use
 Also it may be helpful to output intermediate objects from `main` as part of the
 NamedTuple so you can inspect them in the REPL.
 
+How does your implementation scale with system size? Try constructing other states using
+the MPS constructor (see previous tutorials and slides as a reference) and try computing other
+expectation values.
+
+As an extra challenge, try writing your own `correlation_matrix` function.
+
 This is the end of the current tutorial, continue on to the next tutorial or click [here](#table-of-contents) to return to the table of contents.
 
 </details>

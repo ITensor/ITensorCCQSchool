@@ -1,4 +1,4 @@
-using ITensorMPS: random_mps, expect, op, siteinds, linkinds
+using ITensorMPS: MPS, random_mps, expect, correlation_matrix, op, siteinds, linkinds
 using ITensors: ITensor, inds, sim, prime, noprime, apply
 using StableRNGs: StableRNG
 using Plots: Plots, plot
