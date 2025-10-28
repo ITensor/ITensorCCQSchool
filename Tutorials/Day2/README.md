@@ -5,6 +5,7 @@
 - [Tutorial 1: Real Time Evolution](#tutorial-1)
 - [Tutorial 2: Imaginary Time Evolution](#tutorial-2)
 - [Tutorial 3: Finite Temperature](#tutorial-3)
+- [Tutorial 4: Expect](#tutorial-4)
 - [Stretch Goals](#stretch-goals)
 
 <a id="tutorial-1"></a>
@@ -527,6 +528,28 @@ Specific Heat│⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀�
              ⠀-0.0048⠀⠀⠀⠀⠀⠀Beta Squared⠀⠀⠀⠀⠀⠀⠀⠀⠀0.1648⠀
 
 ```
+
+This is the end of the current tutorial, continue on to the next tutorial or click [here](#table-of-contents) to return to the table of contents.
+
+</details>
+
+<a id="tutorial-4"></a>
+<details>
+  <summary><h2>Tutorial 4: Expect</h2></summary>
+  <hr>
+
+In this tutorial, the goal is to write your own `expect` function. See the hints in the file "4-expect.jl".
+
+Use the ["ITensors.jl Under the Hood" slides from today](https://itensor.org/school/04_ITensors.jl_Under_the_Hood.pdf)
+as a reference for how to apply the operator to a site of the MPS.
+
+For debugging your code, you can print the indices of the tensors
+you are contracting to make sure they match up as expected (pay attention to the Index
+ids!), and also print the tensors themselves to see their values. You can use
+`println(t)`, `@show t`, `@show inds(t)`, etc.
+
+Also it may be helpful to output intermediate objects from `main` as part of the
+NamedTuple so you can inspect them in the REPL.
 
 This is the end of the current tutorial, continue on to the next tutorial or click [here](#table-of-contents) to return to the table of contents.
 
