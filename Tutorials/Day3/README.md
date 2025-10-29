@@ -297,7 +297,7 @@ $$Z \approx Z_{BP} \prod_{l}Z_{l}$$
 
 where $Z_{\rm BP}$ is the BP approximation of the partition function and the product is over the smallest loops $l$ in the lattice, with $Z_{l}$ defined as the contraction of the loop of tensors, with bp messages incident to it.
 
-This formula is implemented in `[3-clusterexpansion.jl](./3-clusterexpansion.jl)` at the level of the rescaled free energy $\phi(\beta) = -\beta f(\beta)$. We use the `NamedGraphs.simple_cycles_limited_length` function to enumerate these loops. 
+This formula is implemented in [3-clusterexpansion.jl](./3-clusterexpansion.jl) at the level of the rescaled free energy $\phi(\beta) = -\beta f(\beta)$. We use the `NamedGraphs.simple_cycles_limited_length` function to enumerate these loops. 
 
 For the periodic square lattice, setting $L >= 5$ will give us a first order cluster expanded result for $\phi(\beta)$ directly in the thermodynamic limit. This is due to the homogenity of the tensor network and that there is exactly one loop of size $4$ per vertex when $L >= 5$. The parameters $L_{x} = 5, L_{y} = 5$ and `periodic = true` have all been set for you and `main` returns the bp value for `phi` (`phi_bp_tn`), the corrected value for `phi` (`phi_bp_corrected_tn`) and Onsager's exact result (`phi_exact`) - all in the thermodynamic limit for your choice of $\beta$.
 
